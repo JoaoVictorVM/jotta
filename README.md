@@ -1,90 +1,160 @@
-# Personal Harness
+<a id="readme-top"></a>
 
-Harness local e open source para desenvolvimento assistido por IA com PRD, specs, implementacao, estado recuperavel, controle de custo, quality gates e worktrees gerenciadas pelo Orca.
+<br />
+<div align="center">
+  <a href="https://github.com/JoaoVictorVM/personal-harness">
+    <img src="./assets/jotta-icon.png" alt="Personal Harness logo" width="160">
+  </a>
 
-[English documentation](README.en.md)
+  <h1 align="center">Personal Harness</h1>
 
-## O que ele resolve
+  <p align="center">
+    <b>A structured workflow for AI-assisted development.</b>
+    <br />
+    From PRD to verified delivery, with progressive context, local state and budget controls.
+    <br />
+    <a href="./README.pt-BR.md">Português (Brasil)</a>
+  </p>
 
-O Personal Harness organiza o trabalho da IA sem exigir que todo o contexto seja carregado em cada tarefa.
+  <p align="center">
+    <a href="https://github.com/JoaoVictorVM/personal-harness/actions/workflows/validate.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/JoaoVictorVM/personal-harness/validate.yml?branch=main&amp;label=ci&amp;style=flat-square"></a>
+    <a href="./LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"></a>
+    <img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?style=flat-square">
+    <a href="https://github.com/JoaoVictorVM/personal-harness/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/JoaoVictorVM/personal-harness?style=flat-square"></a>
+  </p>
 
-- `manual-classic` preserva o fluxo detalhado com entrevistas e gates G1 a G4.
-- `lean` usa contexto progressivo, smoke checks por feature e revisao final.
-- `strict` usa validacao e revisao mais completas por feature.
-- PRDs, specs, planos, memoria e estado ficam locais no projeto consumidor.
-- GitHub autonomo usa worktree Orca e merge commit.
-- O budget gate pode interromper a execucao quando o consumo atingir o limite configurado.
-- OpenAI, Anthropic e o modelo herdado pela plataforma podem ser roteados por tarefa.
+  <p align="center">
+    <a href="#install">Install</a>
+    · <a href="#getting-started">Getting started</a>
+    · <a href="https://github.com/JoaoVictorVM/personal-harness/issues">Bugs &amp; ideas</a>
+    · <a href="./SECURITY.md">Security</a>
+    · <a href="#contributing">Contributing</a>
+  </p>
+</div>
 
-## Requisitos
+## What Personal Harness Is
 
-- Python 3.10 ou mais recente.
-- Git, apenas para os fluxos GitHub.
-- Orca CLI, apenas para worktrees e sessoes visiveis gerenciadas pelo Orca.
-- Um agente compativel com os arquivos `AGENTS.md` ou `CLAUDE.md`.
+AI coding work needs requirements, a bounded task, the right context and evidence that the result works.
 
-O harness continua utilizavel localmente sem Git e sem Orca. O fluxo GitHub autonomo bloqueia com seguranca quando o Orca nao esta disponivel.
+**Personal Harness connects those steps inside your project.** It provides agent instructions, skills and a Python runtime to move from a PRD to feature specs, implementation, quality checks and delivery. Recoverable state keeps track of the work between sessions.
 
-## Instalacao em um projeto
+Planning documents and execution state stay local to the consumer project. Agents still use their configured model providers, and GitHub delivery uses GitHub and Orca.
 
-Clone este repositorio e execute o instalador apontando para o projeto consumidor:
+## What It Does
+
+**Give each task the context it needs**
+
+- Route product, change and validation requests through focused workflows.
+- Load compact task packets instead of the entire project history.
+- Keep PRDs, specs, plans and memory in the consumer project.
+
+**Make execution recoverable**
+
+- Record tasks, checkpoints and execution status in local JSON files.
+- Preserve blocked or unverifiable worktrees for inspection and recovery.
+- Use Orca-managed worktrees for autonomous GitHub delivery.
+
+**Control validation and cost**
+
+- Configure smoke, feature and full quality checks for your project.
+- Apply budget gates that can stop execution at configured limits.
+- Route tasks to OpenAI, Anthropic or the model inherited from the platform.
+
+## Execution Profiles
+
+| Profile | Workflow |
+|---|---|
+| `manual-classic` | Detailed interviews and human gates G1 to G4. |
+| `lean` | Progressive context, smoke checks per feature and final review. The autonomous default. |
+| `strict` | Deeper validation and review for each feature. |
+
+High-risk work in `lean` is elevated to `strict` during preparation. See the [runtime guide](./.harness/README.md) for the lifecycle and internal commands.
+
+## Requirements
+
+| Tool | When it is needed |
+|---|---|
+| Python 3.10+ | Installation and harness scripts. |
+| Compatible coding agent | An agent that reads `AGENTS.md` or `CLAUDE.md`. |
+| Git | GitHub workflows. |
+| Orca CLI | Managed worktrees and visible agent sessions. |
+
+Local use works without Git or Orca. Autonomous GitHub execution blocks when Orca is unavailable.
+
+<a id="install"></a>
+
+## Install
+
+Clone this repository and point the installer at the project where you want to use the harness:
 
 ```bash
-git clone <url-do-repositorio> personal-harness
-python personal-harness/scripts/install.py --target /caminho/do/projeto
+git clone https://github.com/JoaoVictorVM/personal-harness.git
+python personal-harness/scripts/install.py --target /path/to/project
 ```
 
-No Windows:
+On Windows:
 
 ```powershell
-python personal-harness\scripts\install.py --target C:\caminho\do\projeto
+python personal-harness\scripts\install.py --target C:\path\to\project
 ```
 
-O instalador faz uma verificacao completa antes de escrever e recusa sobrescrever arquivos existentes. Depois da instalacao, ele executa o bootstrap local por padrao. Use `--no-bootstrap` somente quando quiser fazer essa etapa manualmente.
+The installer checks for conflicts before writing, refuses to overwrite existing files and runs the local bootstrap by default. Use `--no-bootstrap` to perform that step manually.
 
-Tambem e possivel copiar manualmente:
+<details>
+<summary>Manual installation</summary>
 
-- `.harness/`
-- `.planning/`
-- `AGENTS.md`
-- `CLAUDE.md`
-
-Depois execute no projeto consumidor:
+Copy `.harness/`, `.planning/`, `AGENTS.md` and `CLAUDE.md` into the consumer project. Then run from that project's root:
 
 ```bash
 python .harness/scripts/bootstrap.py
 python .harness/scripts/harness.py doctor
 ```
 
-Nao execute `bootstrap.py` dentro do repositorio fonte do Personal Harness. Ele foi feito para o projeto consumidor e adiciona os arquivos locais do harness ao `.git/info/exclude` desse projeto.
+</details>
 
-## Primeiro uso
+> [!IMPORTANT]
+> Run bootstrap in the consumer project. It adds local harness files to that project's `.git/info/exclude` and should not run inside the Personal Harness source repository.
 
-1. Escreva o produto em `.planning/PRD.md` usando `prd-writer`.
-2. Configure os comandos reais do projeto em `.harness/sensors/computational/gates.json`.
-3. Escolha um prompt em `.harness/prompts/` ou use linguagem natural.
-4. Consulte `.harness/README.md` para os comandos internos e perfis.
+<a id="getting-started"></a>
 
-Exemplo:
+## Getting Started
+
+1. Write your product requirements in `.planning/PRD.md` using `prd-writer`.
+2. Set your project's real validation commands in `.harness/sensors/computational/gates.json`.
+3. Run `python .harness/scripts/harness.py doctor` from the consumer project.
+4. Choose a prompt from `.harness/prompts/` or ask your agent in natural language.
+
+For example:
 
 ```text
-Implemente o produto descrito em .planning/PRD.md usando o perfil lean, de forma autonoma e com entrega no GitHub.
+Implement the product described in .planning/PRD.md using the lean profile,
+autonomously, with delivery on GitHub.
 ```
 
-## Estrutura
+You can also ask for smaller tasks:
 
 ```text
-.harness/                 mecanismo, skills, workflows e configuracao
-.planning/                template local para PRD, specs e planos
-scripts/install.py        instalador seguro para projetos consumidores
-scripts/repository_check.py auditoria do repositorio e do pacote
-AGENTS.md                 indice lido pelos agentes
-CLAUDE.md                 ponte para AGENTS.md
+Classify and implement this bug locally.
+Implement F03 using manual-classic.
+Resume the recorded run.
+Show harness status.
 ```
 
-Os contratos completos das skills de PRD, spec e implementacao foram preservados. O perfil lean carrega referencias menores, enquanto `manual-classic` e `strict` continuam com o comportamento detalhado.
+## Project Structure
 
-## Desenvolvimento do harness
+```text
+.harness/                    Runtime, skills, workflows and configuration
+.planning/                   Local templates for PRDs, specs and plans
+scripts/install.py           Installer for consumer projects
+scripts/repository_check.py  Public repository and package checks
+docs/                        Publishing guide and project assets
+AGENTS.md                    Entry point for coding agents
+CLAUDE.md                    Bridge to AGENTS.md
+```
+
+## Development
+
+Run the repository checks from the Personal Harness source checkout:
 
 ```bash
 python scripts/repository_check.py
@@ -93,16 +163,22 @@ python .harness/scripts/harness.py doctor
 python .harness/scripts/model_router.py validate
 ```
 
-O CI executa essas verificacoes em pushes e pull requests. Consulte [docs/PUBLISHING.md](docs/PUBLISHING.md) para o primeiro push e as configuracoes recomendadas no GitHub.
+CI runs these checks on pushes and pull requests. See the [publishing guide](./docs/PUBLISHING.md) for repository setup and GitHub configuration.
 
-## Seguranca e privacidade
+## Security and Local Data
 
-Nunca publique `.harness/runtime/`, documentos reais em `.planning/`, credenciais, logs ou estado de um projeto consumidor. O `.gitignore` deste repositorio cobre artefatos gerados durante o desenvolvimento do harness. Leia [SECURITY.md](SECURITY.md) antes de relatar uma vulnerabilidade.
+Keep consumer-project runtime files, real planning documents, credentials, logs and execution state out of the public repository. The source repository's `.gitignore` covers generated development artifacts.
 
-## Contribuicao
+Read [SECURITY.md](./SECURITY.md) to report a vulnerability.
 
-Leia [CONTRIBUTING.md](CONTRIBUTING.md). Mudancas de comportamento devem incluir ou atualizar um caso em `.harness/evals/cases/`.
+<a id="contributing"></a>
 
-## Licenca
+## Contributing
 
-MIT. Consulte [LICENSE](LICENSE).
+Read [CONTRIBUTING.md](./CONTRIBUTING.md) for the development workflow. You can help with bug reports, documentation and improvements to the harness. Behavior changes should include or update a case in `.harness/evals/cases/`.
+
+## License
+
+Distributed under the **MIT License**. See [LICENSE](./LICENSE).
+
+<p align="right"><a href="#readme-top">Back to top</a></p>

@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {".md", ".txt", ".py", ".json", ".yaml", ".yml", ".toml", ".gitignore", ".gitattributes"}
 SKIP_PARTS = {".git", "__pycache__", ".venv", "venv", "dist", "build"}
 REQUIRED = {
-    "README.md", "README.en.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md",
+    "README.md", "README.pt-BR.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md",
     "CHANGELOG.md", ".gitignore", ".gitattributes", "AGENTS.md", "CLAUDE.md",
     ".github/workflows/validate.yml", "scripts/install.py", "scripts/repository_check.py",
 }
