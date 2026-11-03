@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cross-platform runtime, validation and state CLI for personal harness v0.5."""
+"""Cross-platform runtime, validation and state CLI for jotta v0.5."""
 
 from __future__ import annotations
 

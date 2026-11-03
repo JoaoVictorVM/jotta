@@ -1,6 +1,6 @@
 # Contributing
 
-Obrigado por contribuir com o Personal Harness.
+Obrigado por contribuir com o jotta.
 
 ## Antes de alterar
 

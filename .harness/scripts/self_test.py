@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline regression checks for Personal Harness v0.5."""
+"""Offline regression checks for jotta v0.5."""
 
 from __future__ import annotations
 

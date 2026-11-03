@@ -2,11 +2,11 @@
 
 <br />
 <div align="center">
-  <a href="https://github.com/JoaoVictorVM/personal-harness">
-    <img src="./assets/jotta-icon.png" alt="Personal Harness logo" width="160">
+  <a href="https://github.com/JoaoVictorVM/jotta">
+    <img src="./assets/jotta-icon.png" alt="jotta logo" width="160">
   </a>
 
-  <h1 align="center">Personal Harness</h1>
+  <h1 align="center">jotta</h1>
 
   <p align="center">
     <b>A structured workflow for AI-assisted development.</b>
@@ -17,26 +17,26 @@
   </p>
 
   <p align="center">
-    <a href="https://github.com/JoaoVictorVM/personal-harness/actions/workflows/validate.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/JoaoVictorVM/personal-harness/validate.yml?branch=main&amp;label=ci&amp;style=flat-square"></a>
+    <a href="https://github.com/JoaoVictorVM/jotta/actions/workflows/validate.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/JoaoVictorVM/jotta/validate.yml?branch=main&amp;label=ci&amp;style=flat-square"></a>
     <a href="./LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"></a>
     <img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?style=flat-square">
-    <a href="https://github.com/JoaoVictorVM/personal-harness/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/JoaoVictorVM/personal-harness?style=flat-square"></a>
+    <a href="https://github.com/JoaoVictorVM/jotta/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/JoaoVictorVM/jotta?style=flat-square"></a>
   </p>
 
   <p align="center">
     <a href="#install">Install</a>
     · <a href="#getting-started">Getting started</a>
-    · <a href="https://github.com/JoaoVictorVM/personal-harness/issues">Bugs &amp; ideas</a>
+    · <a href="https://github.com/JoaoVictorVM/jotta/issues">Bugs &amp; ideas</a>
     · <a href="./SECURITY.md">Security</a>
     · <a href="#contributing">Contributing</a>
   </p>
 </div>
 
-## What Personal Harness Is
+## What jotta Is
 
 AI coding work needs requirements, a bounded task, the right context and evidence that the result works.
 
-**Personal Harness connects those steps inside your project.** It provides agent instructions, skills and a Python runtime to move from a PRD to feature specs, implementation, quality checks and delivery. Recoverable state keeps track of the work between sessions.
+**jotta connects those steps inside your project.** It provides agent instructions, skills and a Python runtime to move from a PRD to feature specs, implementation, quality checks and delivery. Recoverable state keeps track of the work between sessions.
 
 Planning documents and execution state stay local to the consumer project. Agents still use their configured model providers, and GitHub delivery uses GitHub and Orca.
 
@@ -88,14 +88,14 @@ Local use works without Git or Orca. Autonomous GitHub execution blocks when Orc
 Clone this repository and point the installer at the project where you want to use the harness:
 
 ```bash
-git clone https://github.com/JoaoVictorVM/personal-harness.git
-python personal-harness/scripts/install.py --target /path/to/project
+git clone https://github.com/JoaoVictorVM/jotta.git
+python jotta/scripts/install.py --target /path/to/project
 ```
 
 On Windows:
 
 ```powershell
-python personal-harness\scripts\install.py --target C:\path\to\project
+python jotta\scripts\install.py --target C:\path\to\project
 ```
 
 The installer checks for conflicts before writing, refuses to overwrite existing files and runs the local bootstrap by default. Use `--no-bootstrap` to perform that step manually.
@@ -113,7 +113,7 @@ python .harness/scripts/harness.py doctor
 </details>
 
 > [!IMPORTANT]
-> Run bootstrap in the consumer project. It adds local harness files to that project's `.git/info/exclude` and should not run inside the Personal Harness source repository.
+> Run bootstrap in the consumer project. It adds local harness files to that project's `.git/info/exclude` and should not run inside the jotta source repository.
 
 <a id="getting-started"></a>
 
@@ -154,7 +154,7 @@ CLAUDE.md                    Bridge to AGENTS.md
 
 ## Development
 
-Run the repository checks from the Personal Harness source checkout:
+Run the repository checks from the jotta source checkout:
 
 ```bash
 python scripts/repository_check.py

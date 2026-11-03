@@ -48,7 +48,7 @@ def main() -> int:
         with exclude.open("a", encoding="utf-8", newline="\n") as handle:
             if current and not current.endswith("\n"):
                 handle.write("\n")
-            handle.write("\n# Personal harness local\n")
+            handle.write("\n# jotta local\n")
             handle.write("\n".join(missing) + "\n")
     print(f"BOOTSTRAP OK: {exclude}")
     return 0

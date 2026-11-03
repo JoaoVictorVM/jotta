@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install Personal Harness into a consumer project without overwriting files."""
+"""Install jotta into a consumer project without overwriting files."""
 
 from __future__ import annotations
 

@@ -2,41 +2,41 @@
 
 <br />
 <div align="center">
-  <a href="https://github.com/JoaoVictorVM/personal-harness">
-    <img src="./assets/jotta-icon.png" alt="Personal Harness logo" width="160">
+  <a href="https://github.com/JoaoVictorVM/jotta">
+    <img src="./assets/jotta-icon.png" alt="jotta logo" width="160">
   </a>
 
-  <h1 align="center">Personal Harness</h1>
+  <h1 align="center">jotta</h1>
 
   <p align="center">
     <b>Um fluxo estruturado para desenvolvimento assistido por IA.</b>
     <br />
-    Do PRD · entrega verificada, com contexto progressivo, estado local e controle de orçamento.
+    Do PRD à entrega verificada, com contexto progressivo, estado local e controle de orçamento.
     <br />
     <a href="./README.md">English</a>
   </p>
 
   <p align="center">
-    <a href="https://github.com/JoaoVictorVM/personal-harness/actions/workflows/validate.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/JoaoVictorVM/personal-harness/validate.yml?branch=main&amp;label=ci&amp;style=flat-square"></a>
+    <a href="https://github.com/JoaoVictorVM/jotta/actions/workflows/validate.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/JoaoVictorVM/jotta/validate.yml?branch=main&amp;label=ci&amp;style=flat-square"></a>
     <a href="./LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"></a>
     <img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?style=flat-square">
-    <a href="https://github.com/JoaoVictorVM/personal-harness/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/JoaoVictorVM/personal-harness?style=flat-square"></a>
+    <a href="https://github.com/JoaoVictorVM/jotta/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/JoaoVictorVM/jotta?style=flat-square"></a>
   </p>
 
   <p align="center">
     <a href="#install">Instalação</a>
     · <a href="#getting-started">Primeiro uso</a>
-    · <a href="https://github.com/JoaoVictorVM/personal-harness/issues">Bugs e ideias</a>
+    · <a href="https://github.com/JoaoVictorVM/jotta/issues">Bugs e ideias</a>
     · <a href="./SECURITY.md">Segurança</a>
     · <a href="#contributing">Contribuição</a>
   </p>
 </div>
 
-## O que · o Personal Harness
+## O que é o jotta
 
 O trabalho de programação com IA precisa de requisitos, uma tarefa delimitada, contexto adequado e evidências de que o resultado funciona.
 
-**O Personal Harness conecta essas etapas dentro do seu projeto.** Ele reúne instruções para agentes, skills e um runtime em Python para passar do PRD às specs de features, implementação, verificações de qualidade e entrega. O estado recuperável registra o trabalho entre sessões.
+**O jotta conecta essas etapas dentro do seu projeto.** Ele reúne instruções para agentes, skills e um runtime em Python para passar do PRD às specs de features, implementação, verificações de qualidade e entrega. O estado recuperável registra o trabalho entre sessões.
 
 Documentos de planejamento e estado de execução ficam locais no projeto consumidor. Os agentes continuam usando seus provedores de modelos configurados, e a entrega no GitHub usa GitHub e Orca.
 
@@ -72,7 +72,7 @@ Trabalhos de alto risco em `lean` são elevados para `strict` na preparação. C
 
 ## Requisitos
 
-| Ferramenta | Quando · necessária |
+| Ferramenta | Quando é necessária |
 |---|---|
 | Python 3.10+ | Instalação e scripts do harness. |
 | Agente de programação compatível | Um agente que leia `AGENTS.md` ou `CLAUDE.md`. |
@@ -88,14 +88,14 @@ O uso local funciona sem Git ou Orca. A execução autônoma no GitHub bloqueia 
 Clone este repositório e aponte o instalador para o projeto em que deseja usar o harness:
 
 ```bash
-git clone https://github.com/JoaoVictorVM/personal-harness.git
-python personal-harness/scripts/install.py --target /caminho/do/projeto
+git clone https://github.com/JoaoVictorVM/jotta.git
+python jotta/scripts/install.py --target /caminho/do/projeto
 ```
 
 No Windows:
 
 ```powershell
-python personal-harness\scripts\install.py --target C:\caminho\do\projeto
+python jotta\scripts\install.py --target C:\caminho\do\projeto
 ```
 
 O instalador verifica conflitos antes de escrever, recusa sobrescrever arquivos existentes e executa o bootstrap local por padrão. Use `--no-bootstrap` para fazer essa etapa manualmente.
@@ -113,7 +113,7 @@ python .harness/scripts/harness.py doctor
 </details>
 
 > [!IMPORTANT]
-> Execute o bootstrap no projeto consumidor. Ele adiciona os arquivos locais do harness ao `.git/info/exclude` desse projeto e não deve ser executado no repositório fonte do Personal Harness.
+> Execute o bootstrap no projeto consumidor. Ele adiciona os arquivos locais do harness ao `.git/info/exclude` desse projeto e não deve ser executado no repositório fonte do jotta.
 
 <a id="getting-started"></a>
 
@@ -154,7 +154,7 @@ CLAUDE.md                    Ponte para AGENTS.md
 
 ## Desenvolvimento
 
-Execute as verificações na cópia do repositório fonte do Personal Harness:
+Execute as verificações na cópia do repositório fonte do jotta:
 
 ```bash
 python scripts/repository_check.py
