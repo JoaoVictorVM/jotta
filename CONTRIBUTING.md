@@ -1,6 +1,6 @@
 # Contributing
 
-Obrigado por contribuir com o jotta.
+Obrigado por contribuir com o Jotta.
 
 ## Antes de alterar
 

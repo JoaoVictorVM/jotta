@@ -3,10 +3,10 @@
 <br />
 <div align="center">
   <a href="https://github.com/JoaoVictorVM/jotta">
-    <img src="./assets/jotta-icon.png" alt="jotta logo" width="160">
+    <img src="./assets/jotta-icon.png" alt="Jotta logo" width="160">
   </a>
 
-  <h1 align="center">jotta</h1>
+  <h1 align="center">Jotta</h1>
 
   <p align="center">
     <b>A structured workflow for AI-assisted development.</b>
@@ -32,11 +32,11 @@
   </p>
 </div>
 
-## What jotta Is
+## What Jotta Is
 
 AI coding work needs requirements, a bounded task, the right context and evidence that the result works.
 
-**jotta connects those steps inside your project.** It provides agent instructions, skills and a Python runtime to move from a PRD to feature specs, implementation, quality checks and delivery. Recoverable state keeps track of the work between sessions.
+**Jotta connects those steps inside your project.** It provides agent instructions, skills and a Python runtime to move from a PRD to feature specs, implementation, quality checks and delivery. Recoverable state keeps track of the work between sessions.
 
 Planning documents and execution state stay local to the consumer project. Agents still use their configured model providers, and GitHub delivery uses GitHub and Orca.
 
@@ -113,7 +113,7 @@ python .harness/scripts/harness.py doctor
 </details>
 
 > [!IMPORTANT]
-> Run bootstrap in the consumer project. It adds local harness files to that project's `.git/info/exclude` and should not run inside the jotta source repository.
+> Run bootstrap in the consumer project. It adds local harness files to that project's `.git/info/exclude` and should not run inside the Jotta source repository.
 
 <a id="getting-started"></a>
 
@@ -154,7 +154,7 @@ CLAUDE.md                    Bridge to AGENTS.md
 
 ## Development
 
-Run the repository checks from the jotta source checkout:
+Run the repository checks from the Jotta source checkout:
 
 ```bash
 python scripts/repository_check.py

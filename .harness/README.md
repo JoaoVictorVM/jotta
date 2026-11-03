@@ -1,4 +1,4 @@
-# jotta v0.5
+# Jotta v0.5
 
 A local-first, spec-driven harness with progressive context, lean autonomous execution, preserved manual workflows and Orca-managed GitHub worktrees.
 

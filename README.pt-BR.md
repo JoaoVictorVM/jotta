@@ -3,10 +3,10 @@
 <br />
 <div align="center">
   <a href="https://github.com/JoaoVictorVM/jotta">
-    <img src="./assets/jotta-icon.png" alt="jotta logo" width="160">
+    <img src="./assets/jotta-icon.png" alt="Jotta logo" width="160">
   </a>
 
-  <h1 align="center">jotta</h1>
+  <h1 align="center">Jotta</h1>
 
   <p align="center">
     <b>Um fluxo estruturado para desenvolvimento assistido por IA.</b>
@@ -32,11 +32,11 @@
   </p>
 </div>
 
-## O que é o jotta
+## O que é o Jotta
 
 O trabalho de programação com IA precisa de requisitos, uma tarefa delimitada, contexto adequado e evidências de que o resultado funciona.
 
-**O jotta conecta essas etapas dentro do seu projeto.** Ele reúne instruções para agentes, skills e um runtime em Python para passar do PRD às specs de features, implementação, verificações de qualidade e entrega. O estado recuperável registra o trabalho entre sessões.
+**O Jotta conecta essas etapas dentro do seu projeto.** Ele reúne instruções para agentes, skills e um runtime em Python para passar do PRD às specs de features, implementação, verificações de qualidade e entrega. O estado recuperável registra o trabalho entre sessões.
 
 Documentos de planejamento e estado de execução ficam locais no projeto consumidor. Os agentes continuam usando seus provedores de modelos configurados, e a entrega no GitHub usa GitHub e Orca.
 
@@ -113,7 +113,7 @@ python .harness/scripts/harness.py doctor
 </details>
 
 > [!IMPORTANT]
-> Execute o bootstrap no projeto consumidor. Ele adiciona os arquivos locais do harness ao `.git/info/exclude` desse projeto e não deve ser executado no repositório fonte do jotta.
+> Execute o bootstrap no projeto consumidor. Ele adiciona os arquivos locais do harness ao `.git/info/exclude` desse projeto e não deve ser executado no repositório fonte do Jotta.
 
 <a id="getting-started"></a>
 
@@ -154,7 +154,7 @@ CLAUDE.md                    Ponte para AGENTS.md
 
 ## Desenvolvimento
 
-Execute as verificações na cópia do repositório fonte do jotta:
+Execute as verificações na cópia do repositório fonte do Jotta:
 
 ```bash
 python scripts/repository_check.py
