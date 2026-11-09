@@ -1,0 +1,71 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jotta"
+dynamic = ["version"]
+description = "A structured workflow harness for AI-assisted development."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "João Victor Ventura Martins" }]
+keywords = ["ai", "agents", "coding-agents", "harness", "llm", "workflow"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.11",
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[project.scripts]
+jotta = "jotta.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/JoaoVictorVM/jotta"
+Issues = "https://github.com/JoaoVictorVM/jotta/issues"
+Changelog = "https://github.com/JoaoVictorVM/jotta/blob/main/CHANGELOG.md"
+
+[tool.hatch.version]
+path = "src/jotta/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jotta"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/jotta", "tests", "README.md", "LICENSE", "CHANGELOG.md"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+files = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
