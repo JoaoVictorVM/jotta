@@ -2,7 +2,7 @@
 
 Execute pelos comandos em `.harness/scripts/harness.py` e `run_quality.py`.
 
-- `doctor`: integridade do harness e exclusoes locais.
+- `doctor`: integridade do harness.
 - `validate-prd`: tabela de features, dependencias e ciclos.
 - `validate-state`: JSON e estados conhecidos.
 - `gate text`: travessoes em conteudo versionado.

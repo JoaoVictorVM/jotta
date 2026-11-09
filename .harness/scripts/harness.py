@@ -217,15 +217,6 @@ def command_doctor() -> int:
         errors.append(f"model routing unavailable: {exc}")
     if not shutil.which("orca") and not shutil.which("orca-dev") and not shutil.which("orca-ide"):
         warnings.append("Orca CLI unavailable in this shell; autonomous GitHub worktree launch will stop")
-    if in_git():
-        result = run_git("rev-parse", "--git-path", "info/exclude")
-        exclude = Path(result.stdout.strip())
-        if not exclude.is_absolute():
-            exclude = ROOT / exclude
-        content = exclude.read_text(encoding="utf-8") if exclude.exists() else ""
-        for entry in ("/.harness/", "/.planning/", "/AGENTS.md", "/CLAUDE.md"):
-            if entry not in content.splitlines():
-                errors.append(f"missing Git exclusion: {entry}")
     print("DOCTOR FAILED" if errors else "DOCTOR OK")
     for error in errors:
         print(f"- {error}")
