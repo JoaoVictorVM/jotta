@@ -154,6 +154,16 @@ CLAUDE.md                    Bridge to AGENTS.md
 
 ## Development
 
+Install the package in editable mode with the development tools:
+
+```bash
+python -m pip install -e ".[dev]"
+jotta --help
+python -m pytest
+```
+
+The `jotta` command is being introduced gradually. Until its subcommands are implemented, use the scripts below.
+
 Run the repository checks from the Jotta source checkout:
 
 ```bash
