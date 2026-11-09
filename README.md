@@ -74,7 +74,7 @@ High-risk work in `lean` is elevated to `strict` during preparation. See the [ru
 
 | Tool | When it is needed |
 |---|---|
-| Python 3.10+ | Installation and harness scripts. |
+| Python 3.10+ | The `jotta` package, the installer and the harness scripts. |
 | Compatible coding agent | An agent that reads `AGENTS.md` or `CLAUDE.md`. |
 | Git | GitHub workflows. |
 | Orca CLI | Managed worktrees and visible agent sessions. |
@@ -89,14 +89,18 @@ Clone this repository and point the installer at the project where you want to u
 
 ```bash
 git clone https://github.com/JoaoVictorVM/jotta.git
+python -m pip install ./jotta
 python jotta/scripts/install.py --target /path/to/project
 ```
 
 On Windows:
 
 ```powershell
+python -m pip install .\jotta
 python jotta\scripts\install.py --target C:\path\to\project
 ```
+
+The harness scripts copied into the project forward to the `jotta` command, so install the package in the Python environment you use in that project.
 
 The installer checks for conflicts before writing, refuses to overwrite existing files and runs the local bootstrap by default. Use `--no-bootstrap` to perform that step manually.
 
@@ -106,8 +110,9 @@ The installer checks for conflicts before writing, refuses to overwrite existing
 Copy `.harness/`, `.planning/`, `AGENTS.md` and `CLAUDE.md` into the consumer project. Then run from that project's root:
 
 ```bash
+python -m pip install /path/to/jotta
 python .harness/scripts/bootstrap.py
-python .harness/scripts/harness.py doctor
+jotta doctor
 ```
 
 </details>
@@ -121,7 +126,7 @@ python .harness/scripts/harness.py doctor
 
 1. Write your product requirements in `.planning/PRD.md` using `prd-writer`.
 2. Set your project's real validation commands in `.harness/sensors/computational/gates.json`.
-3. Run `python .harness/scripts/harness.py doctor` from the consumer project.
+3. Run `jotta doctor` from the consumer project.
 4. Choose a prompt from `.harness/prompts/` or ask your agent in natural language.
 
 For example:
@@ -145,6 +150,8 @@ Show harness status.
 ```text
 .harness/                    Runtime, skills, workflows and configuration
 .planning/                   Local templates for PRDs, specs and plans
+src/jotta/                   Python package and the jotta command
+tests/                       Package tests
 scripts/install.py           Installer for consumer projects
 scripts/repository_check.py  Public repository and package checks
 docs/                        Publishing guide and project assets
@@ -162,7 +169,7 @@ jotta --help
 python -m pytest
 ```
 
-The `jotta` command is being introduced gradually. Until its subcommands are implemented, use the scripts below.
+The scripts under `.harness/scripts/` are compatibility wrappers that forward to the `jotta` command. For example, `python .harness/scripts/harness.py doctor` runs `jotta doctor`.
 
 Run the repository checks from the Jotta source checkout:
 
