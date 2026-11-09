@@ -30,6 +30,7 @@
     "quality"
   ],
   "runtime_scripts": [
+    "_jotta_shim.py",
     "bootstrap.py",
     "budget_guard.py",
     "harness.py",
