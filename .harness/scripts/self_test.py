@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
-"""Offline regression checks for jotta v0.5."""
+"""Offline regression checks for the jotta runtime."""
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 HARNESS = ROOT / ".harness"
-SCRIPTS = HARNESS / "scripts"
-sys.path.insert(0, str(SCRIPTS))
+SOURCE = ROOT / "src"
+if (SOURCE / "jotta" / "cli.py").is_file():
+    sys.path.insert(0, str(SOURCE))
 
-
-def load_module(name: str, path: Path):
-    spec = importlib.util.spec_from_file_location(name, path)
-    if spec is None or spec.loader is None:
-        raise AssertionError(f"cannot load {path}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+try:
+    from jotta.budget.guard import evaluate
+    from jotta.core.context import profile_token_estimates
+    from jotta.core.risk import risk_for
+    from jotta.quality.runner import compact
+except ImportError:
+    print("jotta package not found. Install it with: python -m pip install git+https://github.com/JoaoVictorVM/jotta")
+    raise SystemExit(2) from None
 
 
 def check(condition: bool, message: str) -> None:
@@ -29,27 +29,23 @@ def check(condition: bool, message: str) -> None:
 
 
 def main() -> int:
-    runtime = load_module("harness_runtime", SCRIPTS / "harness.py")
-    quality = load_module("quality_runtime", SCRIPTS / "run_quality.py")
-    budget_runtime = load_module("budget_runtime", SCRIPTS / "budget_guard.py")
-
-    estimates = runtime.profile_token_estimates()
+    estimates = profile_token_estimates(HARNESS / "skills")
     check(estimates["lean"] < estimates["strict"], "lean context must be smaller than strict")
     check(estimates["strict"] >= estimates["lean"] * 3, "strict must preserve the detailed contract")
 
-    high = runtime.risk_for("alterar autenticacao, pagamentos e migracao destrutiva")
-    low = runtime.risk_for("ajustar texto vazio na tela inicial")
+    high = risk_for("alterar autenticacao, pagamentos e migracao destrutiva")
+    low = risk_for("ajustar texto vazio na tela inicial")
     check(high["level"] == "high", "high risk classifier failed")
     check(low["level"] == "normal", "normal risk classifier failed")
 
-    compacted = quality.compact("\n".join(f"line {i}" for i in range(100)), limit=12)
+    compacted = compact("\n".join(f"line {i}" for i in range(100)), limit=12)
     check(len(compacted) <= 12, "quality output was not compacted")
     check(any("omitted" in line for line in compacted), "compact output must announce omission")
 
     policy = json.loads((HARNESS / "budgets" / "policy.json").read_text(encoding="utf-8"))
     synthetic_usage = json.loads((HARNESS / "state" / "usage.json").read_text(encoding="utf-8"))
     synthetic_usage["provider_usage_percent"] = 86
-    budget_result, budget_code = budget_runtime.evaluate(policy, synthetic_usage, "feature", "before-feature")
+    budget_result, budget_code = evaluate(policy, synthetic_usage, "feature", "before-feature")
     check(budget_code == 2 and budget_result["status"] == "human-gate", "provider threshold gate failed")
 
     routing = json.loads((HARNESS / "models" / "routing.json").read_text(encoding="utf-8"))
@@ -69,7 +65,9 @@ def main() -> int:
     check(not missing, f"missing required files: {missing}")
 
     old_specs = (HARNESS / "skills" / "spec-writer" / "references" / "manual-classic.md").read_text(encoding="utf-8")
-    old_impl = (HARNESS / "skills" / "implement-feature" / "references" / "manual-classic-and-strict.md").read_text(encoding="utf-8")
+    old_impl = (HARNESS / "skills" / "implement-feature" / "references" / "manual-classic-and-strict.md").read_text(
+        encoding="utf-8"
+    )
     for marker in ["G1", "G2", "G3", "G4"]:
         check(marker in old_specs or marker in old_impl, f"preserved contract is missing {marker}")
 
