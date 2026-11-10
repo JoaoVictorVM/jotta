@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-HARNESS_DIR = ".harness"
+HARNESS_DIR = ".jotta"
 PROJECT_MARKER = Path(HARNESS_DIR) / "config.yaml"
 
 
@@ -113,3 +113,8 @@ def find_root(start: Path) -> Path:
         if (candidate / PROJECT_MARKER).is_file():
             return candidate
     raise ProjectNotFoundError(f"no Jotta project found at or above {current}; use --root to point to one")
+
+
+def templates_root() -> Path:
+    """Directory with the files that ``jotta install`` copies into a project."""
+    return Path(__file__).resolve().parents[1] / "templates"
