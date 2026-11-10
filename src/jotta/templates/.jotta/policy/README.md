@@ -17,7 +17,7 @@ O budget guard combina duas medidas independentes:
 - uso global informado pelo provedor, quando disponivel;
 - consumo local da execucao, calculado por tokens e custo estimado.
 
-O maior percentual conhecido determina a decisao. Medicao ausente nunca deve ser apresentada como zero real. A origem fica registrada em `state/usage.json`.
+O maior percentual conhecido determina a decisao. Medicao ausente nunca deve ser apresentada como zero real. A origem fica registrada em `.jotta/runtime/state/usage.json`.
 
 `providers.json` declara a origem ativa. O harness nao inventa uma API de cota: quando a plataforma oferece uma ferramenta de uso, o agente consulta essa ferramenta e grava o percentual com `record`. Quando nao oferece, registra `unavailable` e usa somente os limites locais da execucao conforme a politica.
 

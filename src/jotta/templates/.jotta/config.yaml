@@ -56,7 +56,7 @@ context:
 
 budget:
   policy: .jotta/policy/budget.json
-  state: .jotta/state/usage.json
+  state: .jotta/runtime/state/usage.json
 
 models:
   routing: .jotta/policy/routing.json
