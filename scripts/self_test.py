@@ -14,6 +14,7 @@ from jotta.budget.guard import evaluate  # noqa: E402
 from jotta.core.context import profile_token_estimates  # noqa: E402
 from jotta.core.paths import templates_root  # noqa: E402
 from jotta.core.risk import risk_for  # noqa: E402
+from jotta.core.state import default_usage  # noqa: E402
 from jotta.quality.runner import compact  # noqa: E402
 
 ROOT = templates_root()
@@ -40,7 +41,7 @@ def main() -> int:
     check(any("omitted" in line for line in compacted), "compact output must announce omission")
 
     policy = json.loads((HARNESS / "policy" / "budget.json").read_text(encoding="utf-8"))
-    synthetic_usage = json.loads((HARNESS / "state" / "usage.json").read_text(encoding="utf-8"))
+    synthetic_usage = default_usage()
     synthetic_usage["provider_usage_percent"] = 86
     budget_result, budget_code = evaluate(policy, synthetic_usage, "feature", "before-feature")
     check(budget_code == 2 and budget_result["status"] == "human-gate", "provider threshold gate failed")
