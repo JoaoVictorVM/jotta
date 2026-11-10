@@ -1,34 +1,35 @@
 # AGENTS.md
 
-This file is only the harness index. Read the smallest applicable set of documents.
+Instructions for agents working on the Jotta source repository. The harness that Jotta installs into other projects lives in `src/jotta/templates/`; its own `AGENTS.md` is the entry point for agents in those projects.
 
-## Start
+## Layout
 
-- Runtime manual: `.harness/AGENT-MANUAL.md`
-- Project configuration: `.harness/config.yaml`
-- Human guide: `.harness/README.md`
-
-## Route the request
-
-| Need | Read |
+| Path | Contents |
 |---|---|
-| Product, wave or planned feature | `.harness/workflows/product.md` |
-| Bug, adjustment, refactor or new capability | `.harness/workflows/change.md` |
-| Test, review or final validation | `.harness/workflows/quality.md` |
-| Worktree, multi-agent or visible Orca session | `.harness/guides/operations/worktrees-and-agents.md` and `.harness/adapters/orca.md` |
-| Permissions or human gates | `.harness/permissions/` |
-| Model and budget | `.harness/models/` and `.harness/budgets/` |
-| Current run | `.harness/state/current-run.json` and `.harness/state/tasks.json` |
-| PRD, specs and local plans | `.planning/` |
+| `src/jotta/` | Python package and the `jotta` command |
+| `src/jotta/templates/` | Files copied into a project: `AGENTS.md`, `CLAUDE.md`, `.jotta/` and `.planning/` |
+| `tests/` | pytest suite |
+| `scripts/` | Repository tooling: installer, public repository check and template regressions |
+| `docs/` | Human documentation |
 
-## Skills
+## Development
 
-| Need | Skill |
-|---|---|
-| Create or revise PRD | `.harness/skills/prd-writer/SKILL.md` |
-| Coordinate product execution | `.harness/skills/product-orchestrator/SKILL.md` |
-| Classify an unplanned change | `.harness/skills/change-intake/SKILL.md` |
-| Create feature spec and plan | `.harness/skills/spec-writer/SKILL.md` |
-| Implement planned work | `.harness/skills/implement-feature/SKILL.md` |
-| Final or high-risk QA | `.harness/skills/final-qa/SKILL.md` |
-| Plan or apply commits | `.harness/skills/commit-manager/SKILL.md` |
+```bash
+python -m pip install -e ".[dev]"
+python -m pytest
+ruff check src tests
+ruff format --check src tests
+mypy
+python scripts/repository_check.py
+python scripts/self_test.py
+jotta --root src/jotta/templates doctor
+```
+
+## Rules
+
+- Keep the runtime free of third-party dependencies.
+- Behavior changes to the runtime need tests. Changes to agent behavior should add or update a case in `src/jotta/templates/.jotta/evals/cases/`.
+- Template files are product content: changing them changes what every installed project receives.
+- Never use the characters U+2013 or U+2014 in versioned files. In code, write them as Unicode escape sequences.
+- Commits follow Conventional Commits with a lowercase pt-BR description and no AI attribution. Stage files explicitly.
+- Branches use `type/short-description`. Pull requests are merged with a merge commit after green CI.

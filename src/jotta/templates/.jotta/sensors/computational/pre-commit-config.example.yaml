@@ -1,0 +1,14 @@
+repos:
+  - repo: local
+    hooks:
+      - id: harness-staged
+        name: harness staged files
+        entry: jotta gate staged
+        language: system
+        pass_filenames: false
+      - id: harness-text
+        name: harness text rules
+        entry: jotta gate text
+        language: system
+        pass_filenames: false
+

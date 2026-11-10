@@ -186,7 +186,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="A structured workflow harness for AI-assisted development.",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
-    parser.add_argument("--root", help="project root; defaults to the closest directory containing .harness/")
+    parser.add_argument("--root", help="project root; defaults to the closest directory containing .jotta/")
     subparsers = parser.add_subparsers(dest="command", metavar="<command>")
     _add_lifecycle_commands(subparsers)
     _add_gate_commands(subparsers)

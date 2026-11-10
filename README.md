@@ -68,7 +68,7 @@ Planning documents and execution state stay local to the consumer project. Agent
 | `lean` | Progressive context, smoke checks per feature and final review. The autonomous default. |
 | `strict` | Deeper validation and review for each feature. |
 
-High-risk work in `lean` is elevated to `strict` during preparation. See the [runtime guide](./.harness/README.md) for the lifecycle and internal commands.
+High-risk work in `lean` is elevated to `strict` during preparation. See the [runtime guide](./src/jotta/templates/.jotta/README.md) for the lifecycle and internal commands.
 
 ## Requirements
 
@@ -100,18 +100,18 @@ python -m pip install .\jotta
 python jotta\scripts\install.py --target C:\path\to\project
 ```
 
-The harness scripts copied into the project forward to the `jotta` command, so install the package in the Python environment you use in that project.
+The workflows and skills copied into the project call the `jotta` command, so install the package in the Python environment you use in that project.
 
 The installer checks for conflicts before writing, refuses to overwrite existing files and runs the local bootstrap by default. Use `--no-bootstrap` to perform that step manually.
 
 <details>
 <summary>Manual installation</summary>
 
-Copy `.harness/`, `.planning/`, `AGENTS.md` and `CLAUDE.md` into the consumer project. Then run from that project's root:
+Copy the contents of `src/jotta/templates/` (`.jotta/`, `.planning/`, `AGENTS.md` and `CLAUDE.md`) into the consumer project. Then run from that project's root:
 
 ```bash
 python -m pip install /path/to/jotta
-python .harness/scripts/bootstrap.py
+python .jotta/scripts/bootstrap.py
 jotta doctor
 ```
 
@@ -125,9 +125,9 @@ jotta doctor
 ## Getting Started
 
 1. Write your product requirements in `.planning/PRD.md` using `prd-writer`.
-2. Set your project's real validation commands in `.harness/sensors/computational/gates.json`.
+2. Set your project's real validation commands in `.jotta/sensors/computational/gates.json`.
 3. Run `jotta doctor` from the consumer project.
-4. Choose a prompt from `.harness/prompts/` or ask your agent in natural language.
+4. Choose a prompt from `.jotta/prompts/` or ask your agent in natural language.
 
 For example:
 
@@ -148,14 +148,14 @@ Show harness status.
 ## Project Structure
 
 ```text
-.harness/                    Runtime, skills, workflows and configuration
-.planning/                   Local templates for PRDs, specs and plans
 src/jotta/                   Python package and the jotta command
+src/jotta/templates/         Files installed into a project: .jotta/, .planning/, AGENTS.md and CLAUDE.md
 tests/                       Package tests
 scripts/install.py           Installer for consumer projects
 scripts/repository_check.py  Public repository and package checks
+scripts/self_test.py         Template regression checks
 docs/                        Publishing guide and project assets
-AGENTS.md                    Entry point for coding agents
+AGENTS.md                    Instructions for agents developing Jotta
 CLAUDE.md                    Bridge to AGENTS.md
 ```
 
@@ -169,15 +169,13 @@ jotta --help
 python -m pytest
 ```
 
-The scripts under `.harness/scripts/` are compatibility wrappers that forward to the `jotta` command. For example, `python .harness/scripts/harness.py doctor` runs `jotta doctor`.
-
 Run the repository checks from the Jotta source checkout:
 
 ```bash
 python scripts/repository_check.py
-python .harness/scripts/self_test.py
-python .harness/scripts/harness.py doctor
-python .harness/scripts/model_router.py validate
+python scripts/self_test.py
+jotta --root src/jotta/templates doctor
+jotta --root src/jotta/templates models validate
 ```
 
 CI runs these checks on pushes and pull requests. See the [publishing guide](./docs/PUBLISHING.md) for repository setup and GitHub configuration.
@@ -192,7 +190,7 @@ Read [SECURITY.md](./SECURITY.md) to report a vulnerability.
 
 ## Contributing
 
-Read [CONTRIBUTING.md](./CONTRIBUTING.md) for the development workflow. You can help with bug reports, documentation and improvements to the harness. Behavior changes should include or update a case in `.harness/evals/cases/`.
+Read [CONTRIBUTING.md](./CONTRIBUTING.md) for the development workflow. You can help with bug reports, documentation and improvements to the harness. Behavior changes should include or update a case in `src/jotta/templates/.jotta/evals/cases/`.
 
 ## License
 

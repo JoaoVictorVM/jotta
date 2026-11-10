@@ -14,7 +14,7 @@ Se o reporte privado nao estiver habilitado, abra uma issue sem detalhes sensive
 
 O repositorio publico nunca deve conter:
 
-- `.harness/runtime/`
+- `.jotta/runtime/`
 - PRDs, specs ou planos reais de um produto
 - `.env`, chaves, tokens ou credenciais
 - logs de comandos, respostas de provedores ou dumps de banco

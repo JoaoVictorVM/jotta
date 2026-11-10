@@ -1,0 +1,69 @@
+version: 0.5
+prd: .planning/PRD.md
+base_branch: main
+
+defaults:
+  execution_profile: lean
+  destination: local
+  scope: feature
+
+profiles_path: .jotta/profiles
+
+github:
+  merge_strategy: merge
+  delete_branch_after_merge: true
+  require_ci_green: true
+
+commits:
+  language: pt-BR
+  convention: conventional
+  strategy: compact-semantic
+  target_per_feature: 1
+  soft_limit_per_feature: 3
+
+orchestration:
+  parallelism: auto
+  implementation_retries: 3
+  continue_independent_features_when_blocked: true
+
+isolation:
+  engine: orca
+  autonomous_github: always
+  supervised_github: auto
+  local: never
+  open_visible_session: true
+  cleanup_after_merge: true
+  preserve_when_blocked: true
+  unavailable: stop
+
+quality:
+  per_feature_lean: smoke
+  per_wave_lean: feature
+  final: full
+  visual: on-demand
+  compact_output: true
+
+review:
+  lean_spec: risk-based
+  lean_code: final
+  strict_spec: always
+  strict_code: per-feature
+
+context:
+  include_full_prd: false
+  include_full_state: false
+  max_estimated_tokens: 15000
+
+budget:
+  policy: .jotta/budgets/policy.json
+  state: .jotta/state/usage.json
+
+models:
+  routing: .jotta/models/routing.json
+  record_effective_model: true
+
+artifacts:
+  harness_path: .jotta
+  planning_path: .planning
+  runtime_path: .jotta/runtime
+  local_only: true

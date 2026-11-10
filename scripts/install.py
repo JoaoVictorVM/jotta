@@ -10,7 +10,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-SOURCE = Path(__file__).resolve().parents[1]
+REPOSITORY = Path(__file__).resolve().parents[1]
+SOURCE = REPOSITORY / "src" / "jotta" / "templates"
 
 
 def ignore_generated(_: str, names: list[str]) -> set[str]:
@@ -21,7 +22,7 @@ def ignore_generated(_: str, names: list[str]) -> set[str]:
 
 def conflicts(target: Path) -> list[str]:
     candidates = [
-        target / ".harness",
+        target / ".jotta",
         target / ".planning" / "README.md",
         target / ".planning" / "PRD.md",
         target / "AGENTS.md",
@@ -37,7 +38,7 @@ def main() -> int:
     args = parser.parse_args()
 
     target = Path(args.target).expanduser().resolve()
-    source = SOURCE.resolve()
+    source = REPOSITORY.resolve()
     if target == source or source in target.parents:
         print(json.dumps({"status": "refused", "reason": "target cannot be the harness source or a child of it"}))
         return 2
@@ -52,7 +53,7 @@ def main() -> int:
         return 2
 
     target.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(SOURCE / ".harness", target / ".harness", ignore=ignore_generated)
+    shutil.copytree(SOURCE / ".jotta", target / ".jotta", ignore=ignore_generated)
     planning = target / ".planning"
     planning.mkdir(parents=True, exist_ok=True)
     shutil.copy2(SOURCE / ".planning" / "README.md", planning / "README.md")
@@ -63,7 +64,7 @@ def main() -> int:
     bootstrap = None
     if not args.no_bootstrap:
         process = subprocess.run(
-            [sys.executable, str(target / ".harness" / "scripts" / "bootstrap.py")],
+            [sys.executable, str(target / ".jotta" / "scripts" / "bootstrap.py")],
             cwd=target,
             text=True,
             capture_output=True,

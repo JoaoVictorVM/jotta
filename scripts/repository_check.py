@@ -9,12 +9,15 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+TEMPLATE_STATE = ROOT / "src" / "jotta" / "templates" / ".jotta" / "state"
 TEXT_SUFFIXES = {".md", ".txt", ".py", ".json", ".yaml", ".yml", ".toml", ".gitignore", ".gitattributes"}
 SKIP_PARTS = {".git", "__pycache__", ".venv", "venv", "dist", "build"}
 REQUIRED = {
     "README.md", "README.pt-BR.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md",
-    "CHANGELOG.md", ".gitignore", ".gitattributes", "AGENTS.md", "CLAUDE.md",
+    "CHANGELOG.md", ".gitignore", ".gitattributes", "AGENTS.md", "CLAUDE.md", "pyproject.toml",
     ".github/workflows/validate.yml", "scripts/install.py", "scripts/repository_check.py",
+    "src/jotta/templates/AGENTS.md", "src/jotta/templates/CLAUDE.md", "src/jotta/templates/.jotta/config.yaml",
+    "src/jotta/templates/.planning/PRD.md",
 }
 
 
@@ -27,9 +30,9 @@ def main() -> int:
     missing = sorted(path for path in REQUIRED if not (ROOT / path).exists())
     errors.extend(f"missing public repository file: {path}" for path in missing)
 
-    runtime = ROOT / ".harness" / "runtime"
+    runtime = TEMPLATE_STATE.parent / "runtime"
     if runtime.exists() and any(runtime.rglob("*")):
-        errors.append(".harness/runtime contains local execution artifacts")
+        errors.append("template runtime contains local execution artifacts")
 
     for path in ROOT.rglob("*"):
         if path.is_file() and ("__pycache__" in path.parts or path.suffix in {".pyc", ".pyo"}):
@@ -68,9 +71,9 @@ def main() -> int:
             except json.JSONDecodeError as exc:
                 errors.append(f"invalid JSON {relative}: {exc}")
 
-    state_path = ROOT / ".harness" / "state" / "current-run.json"
-    tasks_path = ROOT / ".harness" / "state" / "tasks.json"
-    usage_path = ROOT / ".harness" / "state" / "usage.json"
+    state_path = TEMPLATE_STATE / "current-run.json"
+    tasks_path = TEMPLATE_STATE / "tasks.json"
+    usage_path = TEMPLATE_STATE / "usage.json"
     try:
         state = json.loads(state_path.read_text(encoding="utf-8"))
         tasks = json.loads(tasks_path.read_text(encoding="utf-8"))
