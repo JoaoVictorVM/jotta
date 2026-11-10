@@ -19,7 +19,7 @@ venv/
 *.pfx
 
 # Harness runtime artifacts
-.harness/runtime/
+**/.jotta/runtime/
 
 # Project-specific planning generated after installation
 .planning/features/
