@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline regression checks for the jotta runtime."""
+"""Offline regression checks for the jotta runtime and its templates."""
 
 from __future__ import annotations
 
@@ -7,20 +7,17 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-HARNESS = ROOT / ".harness"
-SOURCE = ROOT / "src"
-if (SOURCE / "jotta" / "cli.py").is_file():
-    sys.path.insert(0, str(SOURCE))
+REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO / "src"))
 
-try:
-    from jotta.budget.guard import evaluate
-    from jotta.core.context import profile_token_estimates
-    from jotta.core.risk import risk_for
-    from jotta.quality.runner import compact
-except ImportError:
-    print("jotta package not found. Install it with: python -m pip install git+https://github.com/JoaoVictorVM/jotta")
-    raise SystemExit(2) from None
+from jotta.budget.guard import evaluate  # noqa: E402
+from jotta.core.context import profile_token_estimates  # noqa: E402
+from jotta.core.paths import templates_root  # noqa: E402
+from jotta.core.risk import risk_for  # noqa: E402
+from jotta.quality.runner import compact  # noqa: E402
+
+ROOT = templates_root()
+HARNESS = ROOT / ".jotta"
 
 
 def check(condition: bool, message: str) -> None:
