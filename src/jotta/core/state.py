@@ -35,3 +35,53 @@ def sha256(path: Path) -> str:
 
 def print_json(data: JSONDict, indent: int | None = 2) -> None:
     print(json.dumps(data, ensure_ascii=False, indent=indent))
+
+
+def default_run() -> JSONDict:
+    """State of a project with no recorded run."""
+    return {
+        "schema_version": 2,
+        "run_id": None,
+        "status": "idle",
+        "scope": None,
+        "profile": None,
+        "requested_profile": None,
+        "interaction": None,
+        "destination": None,
+        "current_task": None,
+        "stage": None,
+        "context_packet": None,
+        "risk": None,
+        "branch": None,
+        "worktree": None,
+        "workers": [],
+        "pull_request": None,
+        "merge_sha": None,
+        "last_checkpoint": None,
+        "blocker": None,
+        "cleanup": None,
+        "updated_at": None,
+    }
+
+
+def default_tasks() -> JSONDict:
+    """Task list of a project whose PRD was never synchronized."""
+    return {"schema_version": 2, "prd_path": ".planning/PRD.md", "prd_hash": None, "updated_at": None, "tasks": []}
+
+
+def default_usage() -> JSONDict:
+    """Usage of a project with nothing recorded yet."""
+    stages = ("planning", "spec", "implementation", "quality", "review")
+    return {
+        "schema_version": 2,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0,
+        "provider_usage_percent": None,
+        "provider_usage_source": "unavailable",
+        "provider_usage_checked_at": None,
+        "by_stage": {stage: {"input_tokens": 0, "output_tokens": 0, "measurement": "estimated"} for stage in stages},
+        "reservations": [],
+        "authorization": None,
+        "updated_at": None,
+    }

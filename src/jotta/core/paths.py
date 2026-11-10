@@ -29,7 +29,7 @@ class ProjectPaths:
 
     @property
     def state(self) -> Path:
-        return self.harness / "state"
+        return self.runtime / "state"
 
     @property
     def runtime(self) -> Path:
@@ -99,9 +99,6 @@ class ProjectPaths:
             self.profiles / "manual-classic.yaml",
             self.profiles / "lean.yaml",
             self.profiles / "strict.yaml",
-            self.tasks,
-            self.run,
-            self.usage,
             self.prd,
         ]
 

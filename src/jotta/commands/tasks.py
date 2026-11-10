@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from jotta.core.paths import ProjectPaths
 from jotta.core.prd import parse_prd
-from jotta.core.state import JSONDict, load_json, now, sha256, write_json_atomic
+from jotta.core.state import JSONDict, default_tasks, load_json, now, sha256, write_json_atomic
 
 DONE_STATUSES = {"merged", "completed-local", "completed"}
 
@@ -25,7 +25,7 @@ def sync_tasks(paths: ProjectPaths) -> int:
         for error in errors or ["no feature found"]:
             print(f"- {error}")
         return 1
-    current = load_json(paths.tasks, {"tasks": []})
+    current = load_json(paths.tasks, default_tasks())
     old = {item["id"]: item for item in current.get("tasks", [])}
     completed = {task_id for task_id, item in old.items() if item.get("status") in DONE_STATUSES}
     tasks: list[JSONDict] = []
@@ -60,7 +60,7 @@ def sync_tasks(paths: ProjectPaths) -> int:
 
 
 def progress(paths: ProjectPaths) -> int:
-    data = load_json(paths.tasks, {"tasks": []})
+    data = load_json(paths.tasks, default_tasks())
     groups: dict[str, list[str]] = {}
     for item in data.get("tasks", []):
         label = f"{item.get('id')} {item.get('name', '')}".strip()
@@ -68,6 +68,7 @@ def progress(paths: ProjectPaths) -> int:
     lines = ["# Progress", "", f"PRD hash: {data.get('prd_hash')}", ""]
     for status in sorted(groups):
         lines.extend([f"## {status}", "", *[f"- {label}" for label in groups[status]], ""])
+    paths.state.mkdir(parents=True, exist_ok=True)
     (paths.state / "progress.md").write_text("\n".join(lines), encoding="utf-8")
     print("PROGRESS UPDATED")
     return 0

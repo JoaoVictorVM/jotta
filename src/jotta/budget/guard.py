@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 
 from jotta.core.paths import ProjectPaths
-from jotta.core.state import JSONDict, load_json, now, print_json, write_json_atomic
+from jotta.core.state import JSONDict, default_usage, load_json, now, print_json, write_json_atomic
 
 EXIT_CONTINUE = 0
 EXIT_HUMAN_GATE = 2
@@ -111,7 +111,7 @@ def evaluate(policy: JSONDict, usage: JSONDict, scope: str, checkpoint: str | No
 
 def check(paths: ProjectPaths, scope: str, checkpoint: str | None) -> tuple[JSONDict, int]:
     """Evaluate the project's policy against its recorded usage."""
-    return evaluate(load_json(paths.budget_policy), load_json(paths.usage), scope, checkpoint)
+    return evaluate(load_json(paths.budget_policy), load_json(paths.usage, default_usage()), scope, checkpoint)
 
 
 def command_record(paths: ProjectPaths, args: argparse.Namespace, usage: JSONDict) -> int:
@@ -203,7 +203,7 @@ def command_clear_authorization(paths: ProjectPaths, usage: JSONDict) -> int:
 def run(paths: ProjectPaths, args: argparse.Namespace) -> int:
     """Dispatch a ``jotta budget`` subcommand."""
     policy = load_json(paths.budget_policy)
-    usage = load_json(paths.usage)
+    usage = load_json(paths.usage, default_usage())
     if args.budget_command == "record":
         return command_record(paths, args, usage)
     if args.budget_command == "reserve":
