@@ -27,7 +27,7 @@ A harness profile activates only when `product-orchestrator` supplies all of the
 
 - This section overrides Git mutations, approval prompts and commit scheduling only when a complete `HARNESS_RUN` envelope is present.
 - Requirements, dependency checks, lazy codebase reading, progress tracking, phase validation, runtime exercise, retry classification, Final Verification, Component Overview walk-through, AC re-check, deviations, soft-fails, pre-existing failures, manual test checklist and edge cases always remain in force.
-- Human gates in `.jotta/permissions/human-gates.md` override autonomous authorization. Stop before the gated action and resume only after a human decision.
+- Human gates in `.jotta/policy/human-gates.md` override autonomous authorization. Stop before the gated action and resume only after a human decision.
 - `.planning/` and `.jotta/` are local-only. Never stage, commit, push or mention their contents in versioned or GitHub content. Keep them out through `.git/info/exclude`.
 - GitHub profiles always use merge commits. Never use squash merge or rebase merge.
 - Local profiles may run inside a Git repository, but they must not mutate Git state or contact GitHub.

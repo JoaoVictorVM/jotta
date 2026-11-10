@@ -79,7 +79,7 @@ Use commands appropriate to the project. An empty profile returns `skipped`, nev
 
 ## Budget gate
 
-The runtime checks `.jotta/budgets/policy.json` before and after each feature. Provider usage can be recorded when the platform exposes it. At the human-gate threshold, execution stops until an explicit scoped authorization is recorded. The hard stop cannot be overridden by the harness.
+The runtime checks `.jotta/policy/budget.json` before and after each feature. Provider usage can be recorded when the platform exposes it. At the human-gate threshold, execution stops until an explicit scoped authorization is recorded. The hard stop cannot be overridden by the harness.
 
 ## Recovery
 

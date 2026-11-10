@@ -14,7 +14,7 @@ LOCAL_DIRS = [
     ROOT / ".planning" / "decisions",
     ROOT / ".planning" / "commit-plans",
     ROOT / ".planning" / "archive",
-    ROOT / ".jotta" / "state",
+    ROOT / ".jotta" / "runtime" / "state",
 ]
 EXCLUDES = ["/.jotta/", "/.planning/", "/AGENTS.md", "/CLAUDE.md", "/.claude/"]
 

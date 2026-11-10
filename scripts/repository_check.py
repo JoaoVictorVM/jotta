@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-TEMPLATE_STATE = ROOT / "src" / "jotta" / "templates" / ".jotta" / "state"
+TEMPLATE_HARNESS = ROOT / "src" / "jotta" / "templates" / ".jotta"
 TEXT_SUFFIXES = {".md", ".txt", ".py", ".json", ".yaml", ".yml", ".toml", ".gitignore", ".gitattributes"}
 SKIP_PARTS = {".git", "__pycache__", ".venv", "venv", "dist", "build"}
 REQUIRED = {
@@ -30,7 +30,7 @@ def main() -> int:
     missing = sorted(path for path in REQUIRED if not (ROOT / path).exists())
     errors.extend(f"missing public repository file: {path}" for path in missing)
 
-    runtime = TEMPLATE_STATE.parent / "runtime"
+    runtime = TEMPLATE_HARNESS / "runtime"
     if runtime.exists() and any(runtime.rglob("*")):
         errors.append("template runtime contains local execution artifacts")
 
@@ -71,21 +71,11 @@ def main() -> int:
             except json.JSONDecodeError as exc:
                 errors.append(f"invalid JSON {relative}: {exc}")
 
-    state_path = TEMPLATE_STATE / "current-run.json"
-    tasks_path = TEMPLATE_STATE / "tasks.json"
-    usage_path = TEMPLATE_STATE / "usage.json"
-    try:
-        state = json.loads(state_path.read_text(encoding="utf-8"))
-        tasks = json.loads(tasks_path.read_text(encoding="utf-8"))
-        usage = json.loads(usage_path.read_text(encoding="utf-8"))
-        if state.get("status") != "idle" or state.get("run_id") is not None:
-            errors.append("current-run.json is not a clean template")
-        if tasks.get("tasks"):
-            errors.append("tasks.json contains project tasks")
-        if usage.get("input_tokens") or usage.get("output_tokens") or usage.get("estimated_cost_usd"):
-            errors.append("usage.json contains execution usage")
-    except (OSError, json.JSONDecodeError) as exc:
-        errors.append(f"cannot validate template state: {exc}")
+    if (TEMPLATE_HARNESS / "state").exists():
+        errors.append("templates must not ship execution state; it is created under runtime/state")
+    ignore = TEMPLATE_HARNESS / ".gitignore"
+    if not ignore.exists() or "runtime/" not in ignore.read_text(encoding="utf-8").splitlines():
+        errors.append("template .jotta/.gitignore must ignore runtime/")
 
     if errors:
         print("REPOSITORY CHECK FAILED")

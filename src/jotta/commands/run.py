@@ -13,7 +13,16 @@ from jotta.core.git import in_git, run_git
 from jotta.core.paths import ProjectPaths
 from jotta.core.prd import feature_folder, feature_for, prd_excerpt
 from jotta.core.risk import risk_for
-from jotta.core.state import JSONDict, load_json, now, print_json, write_json_atomic
+from jotta.core.state import (
+    JSONDict,
+    default_run,
+    default_tasks,
+    default_usage,
+    load_json,
+    now,
+    print_json,
+    write_json_atomic,
+)
 from jotta.isolation.orca import OrcaError, cleanup, create_worktree
 from jotta.routing import router
 
@@ -35,7 +44,7 @@ def _invalid(error: str) -> int:
 
 
 def record_usage(paths: ProjectPaths, stage: str, input_tokens: int, output_tokens: int, measurement: str) -> None:
-    data = load_json(paths.usage, {"schema_version": 2, "by_stage": {}})
+    data = load_json(paths.usage, default_usage())
     by_stage = data.setdefault("by_stage", {})
     entry = by_stage.setdefault(stage, {"input_tokens": 0, "output_tokens": 0, "measurement": measurement})
     entry["input_tokens"] += input_tokens
@@ -62,7 +71,7 @@ def prepare(paths: ProjectPaths, args: argparse.Namespace) -> int:
     except RECOVERABLE_ERRORS as exc:
         return _invalid(f"budget guard unavailable: {exc}")
     if budget_code != 0:
-        blocked_run = load_json(paths.run, {})
+        blocked_run = load_json(paths.run, default_run())
         blocked_run.update({"status": "blocked", "blocker": budget, "updated_at": now()})
         write_json_atomic(paths.run, blocked_run)
         print_json({"status": "blocked", "budget": budget})
@@ -92,7 +101,7 @@ def prepare(paths: ProjectPaths, args: argparse.Namespace) -> int:
         model_route = {**model_route, "status": "resolved", "model": args.model, "source": "command-line"}
     requires_worktree = args.destination == "github" and args.interaction == "autonomous"
 
-    all_tasks = load_json(paths.tasks, {"tasks": []}).get("tasks", [])
+    all_tasks = load_json(paths.tasks, default_tasks()).get("tasks", [])
     task_state = next((item for item in all_tasks if feature and item.get("id") == feature["id"]), None)
     if task_state:
         completed = {item.get("id") for item in all_tasks if item.get("status") in DONE_STATUSES}
@@ -124,7 +133,7 @@ def prepare(paths: ProjectPaths, args: argparse.Namespace) -> int:
     packet_path = paths.runtime / "context" / f"{safe}-{args.role}.json"
     write_json_atomic(packet_path, packet)
 
-    run = load_json(paths.run, {})
+    run = load_json(paths.run, default_run())
     existing_worktree = run.get("worktree")
     existing_workers = run.get("workers", [])
     run.update(
@@ -214,7 +223,7 @@ def prepare(paths: ProjectPaths, args: argparse.Namespace) -> int:
 
 
 def finish(paths: ProjectPaths, args: argparse.Namespace) -> int:
-    run = load_json(paths.run, {})
+    run = load_json(paths.run, default_run())
     if not run.get("run_id"):
         print(json.dumps({"status": "invalid", "error": "no active run"}))
         return EXIT_INVALID
@@ -258,7 +267,7 @@ def finish(paths: ProjectPaths, args: argparse.Namespace) -> int:
         run["worktree"] = None
         run["workers"] = []
     write_json_atomic(paths.run, run)
-    tasks = load_json(paths.tasks, {"tasks": []})
+    tasks = load_json(paths.tasks, default_tasks())
     for task in tasks.get("tasks", []):
         if task.get("id") == run.get("current_task"):
             task["status"] = args.status
@@ -273,12 +282,12 @@ def finish(paths: ProjectPaths, args: argparse.Namespace) -> int:
 
 
 def checkpoint(paths: ProjectPaths, args: argparse.Namespace) -> int:
-    run = load_json(paths.run, {})
+    run = load_json(paths.run, default_run())
     if not run.get("run_id"):
         print(json.dumps({"status": "invalid", "error": "no active run"}))
         return EXIT_INVALID
     task_id = args.task or run.get("current_task")
-    tasks = load_json(paths.tasks, {"tasks": []})
+    tasks = load_json(paths.tasks, default_tasks())
     target = next((item for item in tasks.get("tasks", []) if item.get("id") == task_id), None)
     if target is None:
         return _invalid(f"unknown task {task_id}")
@@ -308,8 +317,8 @@ def checkpoint(paths: ProjectPaths, args: argparse.Namespace) -> int:
 
 
 def status(paths: ProjectPaths) -> int:
-    run = load_json(paths.run, {})
-    usage = load_json(paths.usage, {})
+    run = load_json(paths.run, default_run())
+    usage = load_json(paths.usage, default_usage())
     print_json(
         {
             "run": run,

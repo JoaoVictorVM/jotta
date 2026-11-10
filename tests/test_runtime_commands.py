@@ -66,10 +66,10 @@ def test_lifecycle_from_sync_to_finish(project: Path, capsys: pytest.CaptureFixt
 
     code, finished = run_json(capsys, "--root", root, "finish", "--status", "completed-local", "--evidence", "done")
     assert code == 0
-    tasks = json.loads((project / ".jotta" / "state" / "tasks.json").read_text(encoding="utf-8"))
+    tasks = json.loads((project / ".jotta" / "runtime" / "state" / "tasks.json").read_text(encoding="utf-8"))
     statuses = {task["id"]: task["status"] for task in tasks["tasks"]}
     assert statuses["F01"] == "completed-local"
-    usage = json.loads((project / ".jotta" / "state" / "usage.json").read_text(encoding="utf-8"))
+    usage = json.loads((project / ".jotta" / "runtime" / "state" / "usage.json").read_text(encoding="utf-8"))
     assert usage["by_stage"]["implementation"]["input_tokens"] == 10
 
 
@@ -103,3 +103,21 @@ def test_commit_gate_does_not_need_a_project(
 ) -> None:
     monkeypatch.chdir(tmp_path)
     assert main(["gate", "commit", "--message", message]) == expected
+
+
+def test_a_fresh_project_starts_without_state_files(project: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    state = project / ".jotta" / "runtime" / "state"
+    assert not state.exists()
+    code, status = run_json(capsys, "--root", str(project), "status")
+    assert code == 0
+    assert status["run"]["status"] == "idle"
+    code, budget = run_json(capsys, "--root", str(project), "budget", "status")
+    assert code == 0
+    assert budget["status"] == "continue"
+    assert main(["--root", str(project), "progress"]) == 0
+    assert (state / "progress.md").is_file()
+
+
+def test_runtime_is_ignored_inside_the_installed_harness() -> None:
+    ignore = templates_root() / ".jotta" / ".gitignore"
+    assert "runtime/" in ignore.read_text(encoding="utf-8").splitlines()

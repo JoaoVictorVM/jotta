@@ -3,7 +3,7 @@
 The harness stores capability routes, while OpenCode owns provider credentials and exact model availability.
 
 1. List the exact model identifiers exposed by the installed OpenCode version.
-2. Put those identifiers in `.jotta/models/routing.json` under `providers.openai` or `providers.anthropic`.
+2. Put those identifiers in `.jotta/policy/routing.json` under `providers.openai` or `providers.anthropic`.
 3. Resolve a route with `jotta models resolve --task <task> --provider <provider>`.
 4. Start the run with `jotta prepare ... --agent <installed-orca-agent-id> --provider <provider>`.
 
