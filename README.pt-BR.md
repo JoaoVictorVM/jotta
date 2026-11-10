@@ -74,7 +74,7 @@ Trabalhos de alto risco em `lean` são elevados para `strict` na preparação. C
 
 | Ferramenta | Quando é necessária |
 |---|---|
-| Python 3.10+ | O pacote `jotta`, o instalador e os scripts do harness. |
+| Python 3.10+ | O pacote e o comando `jotta`. |
 | Agente de programação compatível | Um agente que leia `AGENTS.md` ou `CLAUDE.md`. |
 | Git | Fluxos com GitHub. |
 | Orca CLI | Worktrees gerenciadas e sessões visíveis de agentes. |
@@ -85,40 +85,25 @@ O uso local funciona sem Git ou Orca. A execução autônoma no GitHub bloqueia 
 
 ## Instalação
 
-Clone este repositório e aponte o instalador para o projeto em que deseja usar o harness:
+Instale o pacote e depois instale o harness no projeto em que deseja usá-lo:
 
 ```bash
-git clone https://github.com/JoaoVictorVM/jotta.git
-python -m pip install ./jotta
-python jotta/scripts/install.py --target /caminho/do/projeto
-```
-
-No Windows:
-
-```powershell
-python -m pip install .\jotta
-python jotta\scripts\install.py --target C:\caminho\do\projeto
+python -m pip install git+https://github.com/JoaoVictorVM/jotta.git
+cd /caminho/do/projeto
+jotta install
+jotta doctor
 ```
 
 Os workflows e as skills copiados para o projeto chamam o comando `jotta`, então instale o pacote no ambiente Python que você usa nesse projeto.
 
-O instalador verifica conflitos antes de escrever, recusa sobrescrever arquivos existentes e executa o bootstrap local por padrão. Use `--no-bootstrap` para fazer essa etapa manualmente.
+O `jotta install` copia `.jotta/`, `.planning/`, `AGENTS.md` e `CLAUDE.md`, cria as pastas locais de planejamento e de runtime e adiciona os arquivos do harness ao `.git/info/exclude` do projeto, para que fiquem fora dos commits. Ele nunca sobrescreve um arquivo sem avisar.
 
-<details>
-<summary>Instalação manual</summary>
-
-Copie o conteúdo de `src/jotta/templates/` (`.jotta/`, `.planning/`, `AGENTS.md` e `CLAUDE.md`) para o projeto consumidor. Depois execute na raiz desse projeto:
-
-```bash
-python -m pip install /caminho/do/jotta
-python .jotta/scripts/bootstrap.py
-jotta doctor
-```
-
-</details>
-
-> [!IMPORTANT]
-> Execute o bootstrap no projeto consumidor. Ele adiciona os arquivos locais do harness ao `.git/info/exclude` desse projeto e não deve ser executado no repositório fonte do Jotta.
+| Opção | Efeito |
+|---|---|
+| `--target <pasta>` | Instala em outra pasta em vez da atual. |
+| `--dry-run` | Mostra os arquivos, as pastas e as exclusões do Git sem escrever nada. |
+| `--force-overwrite` | Substitui arquivos existentes do harness após confirmação. Use `--yes` para pular a pergunta. |
+| `--no-git-exclude` | Não altera o `.git/info/exclude`, para projetos que versionam o harness. |
 
 <a id="getting-started"></a>
 
@@ -151,7 +136,6 @@ Mostre o status do harness.
 src/jotta/                   Pacote Python e o comando jotta
 src/jotta/templates/         Arquivos instalados no projeto: .jotta/, .planning/, AGENTS.md e CLAUDE.md
 tests/                       Testes do pacote
-scripts/install.py           Instalador para projetos consumidores
 scripts/repository_check.py  Verificações do repositório público e do pacote
 scripts/self_test.py         Verificações de regressão dos templates
 docs/                        Guia de publicação e recursos visuais

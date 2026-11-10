@@ -74,7 +74,7 @@ High-risk work in `lean` is elevated to `strict` during preparation. See the [ru
 
 | Tool | When it is needed |
 |---|---|
-| Python 3.10+ | The `jotta` package, the installer and the harness scripts. |
+| Python 3.10+ | The `jotta` package and command. |
 | Compatible coding agent | An agent that reads `AGENTS.md` or `CLAUDE.md`. |
 | Git | GitHub workflows. |
 | Orca CLI | Managed worktrees and visible agent sessions. |
@@ -85,40 +85,25 @@ Local use works without Git or Orca. Autonomous GitHub execution blocks when Orc
 
 ## Install
 
-Clone this repository and point the installer at the project where you want to use the harness:
+Install the package, then install the harness into the project where you want to use it:
 
 ```bash
-git clone https://github.com/JoaoVictorVM/jotta.git
-python -m pip install ./jotta
-python jotta/scripts/install.py --target /path/to/project
-```
-
-On Windows:
-
-```powershell
-python -m pip install .\jotta
-python jotta\scripts\install.py --target C:\path\to\project
+python -m pip install git+https://github.com/JoaoVictorVM/jotta.git
+cd /path/to/project
+jotta install
+jotta doctor
 ```
 
 The workflows and skills copied into the project call the `jotta` command, so install the package in the Python environment you use in that project.
 
-The installer checks for conflicts before writing, refuses to overwrite existing files and runs the local bootstrap by default. Use `--no-bootstrap` to perform that step manually.
+`jotta install` copies `.jotta/`, `.planning/`, `AGENTS.md` and `CLAUDE.md`, creates the local planning and runtime folders and adds the harness files to the project's `.git/info/exclude`, so they stay out of commits. It never overwrites a file silently.
 
-<details>
-<summary>Manual installation</summary>
-
-Copy the contents of `src/jotta/templates/` (`.jotta/`, `.planning/`, `AGENTS.md` and `CLAUDE.md`) into the consumer project. Then run from that project's root:
-
-```bash
-python -m pip install /path/to/jotta
-python .jotta/scripts/bootstrap.py
-jotta doctor
-```
-
-</details>
-
-> [!IMPORTANT]
-> Run bootstrap in the consumer project. It adds local harness files to that project's `.git/info/exclude` and should not run inside the Jotta source repository.
+| Option | Effect |
+|---|---|
+| `--target <dir>` | Install into another directory instead of the current one. |
+| `--dry-run` | Show the files, folders and Git exclusions without writing anything. |
+| `--force-overwrite` | Replace existing harness files after confirmation. Add `--yes` to skip the question. |
+| `--no-git-exclude` | Keep `.git/info/exclude` untouched, for projects that version the harness. |
 
 <a id="getting-started"></a>
 
@@ -151,7 +136,6 @@ Show harness status.
 src/jotta/                   Python package and the jotta command
 src/jotta/templates/         Files installed into a project: .jotta/, .planning/, AGENTS.md and CLAUDE.md
 tests/                       Package tests
-scripts/install.py           Installer for consumer projects
 scripts/repository_check.py  Public repository and package checks
 scripts/self_test.py         Template regression checks
 docs/                        Publishing guide and project assets
