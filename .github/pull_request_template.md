@@ -15,8 +15,9 @@ Descreva o comportamento anterior e o novo.
 ## Validacao
 
 - [ ] `python scripts/repository_check.py`
-- [ ] `python .harness/scripts/self_test.py`
-- [ ] `python .harness/scripts/harness.py doctor`
+- [ ] `python scripts/self_test.py`
+- [ ] `jotta --root src/jotta/templates doctor`
+- [ ] `python -m pytest`
 - [ ] Caso de avaliacao adicionado ou atualizado quando necessario
 
 ## Contexto e seguranca

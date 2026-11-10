@@ -68,7 +68,7 @@ Documentos de planejamento e estado de execução ficam locais no projeto consum
 | `lean` | Contexto progressivo, smoke checks por feature e revisão final. Padrão para execução autônoma. |
 | `strict` | Validação e revisão mais completas para cada feature. |
 
-Trabalhos de alto risco em `lean` são elevados para `strict` na preparação. Consulte o [guia do runtime](./.harness/README.md) para o ciclo de execução e os comandos internos.
+Trabalhos de alto risco em `lean` são elevados para `strict` na preparação. Consulte o [guia do runtime](./src/jotta/templates/.jotta/README.md) para o ciclo de execução e os comandos internos.
 
 ## Requisitos
 
@@ -100,18 +100,18 @@ python -m pip install .\jotta
 python jotta\scripts\install.py --target C:\caminho\do\projeto
 ```
 
-Os scripts do harness copiados para o projeto encaminham para o comando `jotta`, então instale o pacote no ambiente Python que você usa nesse projeto.
+Os workflows e as skills copiados para o projeto chamam o comando `jotta`, então instale o pacote no ambiente Python que você usa nesse projeto.
 
 O instalador verifica conflitos antes de escrever, recusa sobrescrever arquivos existentes e executa o bootstrap local por padrão. Use `--no-bootstrap` para fazer essa etapa manualmente.
 
 <details>
 <summary>Instalação manual</summary>
 
-Copie `.harness/`, `.planning/`, `AGENTS.md` e `CLAUDE.md` para o projeto consumidor. Depois execute na raiz desse projeto:
+Copie o conteúdo de `src/jotta/templates/` (`.jotta/`, `.planning/`, `AGENTS.md` e `CLAUDE.md`) para o projeto consumidor. Depois execute na raiz desse projeto:
 
 ```bash
 python -m pip install /caminho/do/jotta
-python .harness/scripts/bootstrap.py
+python .jotta/scripts/bootstrap.py
 jotta doctor
 ```
 
@@ -125,9 +125,9 @@ jotta doctor
 ## Primeiro uso
 
 1. Escreva os requisitos do produto em `.planning/PRD.md` usando `prd-writer`.
-2. Configure os comandos reais de validação do projeto em `.harness/sensors/computational/gates.json`.
+2. Configure os comandos reais de validação do projeto em `.jotta/sensors/computational/gates.json`.
 3. Execute `jotta doctor` no projeto consumidor.
-4. Escolha um prompt de `.harness/prompts/` ou fale com o agente em linguagem natural.
+4. Escolha um prompt de `.jotta/prompts/` ou fale com o agente em linguagem natural.
 
 Por exemplo:
 
@@ -148,14 +148,14 @@ Mostre o status do harness.
 ## Estrutura do projeto
 
 ```text
-.harness/                    Runtime, skills, workflows e configuração
-.planning/                   Templates locais para PRDs, specs e planos
 src/jotta/                   Pacote Python e o comando jotta
+src/jotta/templates/         Arquivos instalados no projeto: .jotta/, .planning/, AGENTS.md e CLAUDE.md
 tests/                       Testes do pacote
 scripts/install.py           Instalador para projetos consumidores
 scripts/repository_check.py  Verificações do repositório público e do pacote
+scripts/self_test.py         Verificações de regressão dos templates
 docs/                        Guia de publicação e recursos visuais
-AGENTS.md                    Ponto de entrada para agentes de programação
+AGENTS.md                    Instruções para agentes que desenvolvem o Jotta
 CLAUDE.md                    Ponte para AGENTS.md
 ```
 
@@ -169,15 +169,13 @@ jotta --help
 python -m pytest
 ```
 
-Os scripts em `.harness/scripts/` são wrappers de compatibilidade que encaminham para o comando `jotta`. Por exemplo, `python .harness/scripts/harness.py doctor` executa `jotta doctor`.
-
 Execute as verificações na cópia do repositório fonte do Jotta:
 
 ```bash
 python scripts/repository_check.py
-python .harness/scripts/self_test.py
-python .harness/scripts/harness.py doctor
-python .harness/scripts/model_router.py validate
+python scripts/self_test.py
+jotta --root src/jotta/templates doctor
+jotta --root src/jotta/templates models validate
 ```
 
 O CI executa essas verificações em pushes e pull requests. Consulte o [guia de publicação](./docs/PUBLISHING.md) para a preparação do repositório e a configuração do GitHub.
@@ -192,7 +190,7 @@ Leia [SECURITY.md](./SECURITY.md) para relatar uma vulnerabilidade.
 
 ## Contribuição
 
-Leia [CONTRIBUTING.md](./CONTRIBUTING.md) para conhecer o fluxo de desenvolvimento. Você pode ajudar com relatos de bugs, documentação e melhorias no harness. Mudanças de comportamento devem incluir ou atualizar um caso em `.harness/evals/cases/`.
+Leia [CONTRIBUTING.md](./CONTRIBUTING.md) para conhecer o fluxo de desenvolvimento. Você pode ajudar com relatos de bugs, documentação e melhorias no harness. Mudanças de comportamento devem incluir ou atualizar um caso em `src/jotta/templates/.jotta/evals/cases/`.
 
 ## Licença
 

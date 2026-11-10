@@ -16,12 +16,12 @@ Execute:
 
 ```bash
 python scripts/repository_check.py
-python .harness/scripts/self_test.py
-python .harness/scripts/harness.py doctor
-python .harness/scripts/model_router.py validate
+python scripts/self_test.py
+jotta --root src/jotta/templates doctor
+jotta --root src/jotta/templates models validate
 ```
 
-Skills novas ou alteradas precisam de frontmatter valido, descricao objetiva e referencias existentes. Mudancas de decisao precisam de um caso em `.harness/evals/cases/`.
+Skills novas ou alteradas precisam de frontmatter valido, descricao objetiva e referencias existentes. Mudancas de decisao precisam de um caso em `src/jotta/templates/.jotta/evals/cases/`.
 
 ## Pull requests
 
