@@ -23,7 +23,7 @@ jobs:
         run: python scripts/repository_check.py
 
       - name: Compile scripts
-        run: python -m compileall -q .harness/scripts scripts src
+        run: python -m compileall -q scripts src
 
       - name: Install package
         run: python -m pip install ".[dev]"
@@ -35,10 +35,13 @@ jobs:
         run: python -m pytest
 
       - name: Run harness regressions
-        run: python .harness/scripts/self_test.py
+        run: python scripts/self_test.py
 
-      - name: Run harness doctor
-        run: python .harness/scripts/harness.py doctor
+      - name: Run harness doctor on the templates
+        run: jotta --root src/jotta/templates doctor
 
       - name: Validate model routing
-        run: python .harness/scripts/model_router.py validate
+        run: jotta --root src/jotta/templates models validate
+
+      - name: Check the packaged templates
+        run: jotta --root "$(python -c 'from jotta.core.paths import templates_root; print(templates_root())')" doctor
