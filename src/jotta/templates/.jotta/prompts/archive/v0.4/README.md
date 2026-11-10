@@ -9,7 +9,7 @@ Estes arquivos sao pontos de entrada para o harness. Eles declaram objetivo, esc
 3. Copie o bloco `Prompt` inteiro para a IA na raiz do projeto.
 4. Quando um caminho ou ID nao se aplicar, remova a linha correspondente.
 
-As fontes de verdade continuam sendo `AGENTS.md`, `.harness/AGENT-MANUAL.md`, workflows, skills, permissoes, human gates e estado. Em caso de divergencia, o prompt nunca prevalece sobre essas fontes.
+As fontes de verdade continuam sendo `AGENTS.md`, `.jotta/AGENT-MANUAL.md`, workflows, skills, permissoes, human gates e estado. Em caso de divergencia, o prompt nunca prevalece sobre essas fontes.
 
 ## Indice
 

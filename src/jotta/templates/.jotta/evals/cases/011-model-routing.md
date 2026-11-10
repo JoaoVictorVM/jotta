@@ -6,7 +6,7 @@ Validar selecao por tarefa sem reduzir contratos das skills.
 
 ## Cenarios
 
-1. Execute `model_router.py validate`.
+1. Execute `jotta models validate`.
 2. Resolva `spec-writer` e confirme tier `efficient`.
 3. Resolva `implement-feature` e confirme tier `strong`.
 4. Resolva `pr-reviewer` e confirme tier `review`.

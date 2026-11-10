@@ -3,7 +3,7 @@
 ## Prompt
 
 ```text
-Analise todo o trabalho ainda nao publicado deste projeto e gere um mapa de commits usando `.harness/workflows/commit-roadmap.md` no modo `plan`.
+Analise todo o trabalho ainda nao publicado deste projeto e gere um mapa de commits usando `.jotta/workflows/commit-roadmap.md` no modo `plan`.
 
 Inclua alteracoes da working tree, arquivos ainda nao rastreados relevantes e commits locais ainda nao enviados, sem misturar essas categorias. Exclua segredos, caches, builds, dependencias e arquivos locais do harness.
 

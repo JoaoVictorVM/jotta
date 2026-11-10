@@ -5,11 +5,11 @@ A local-first, spec-driven harness with progressive context, lean autonomous exe
 ## Start
 
 1. Copy this package into the project root.
-2. Run `python .harness/scripts/bootstrap.py` to create local folders and Git exclusions.
+2. Run `python .jotta/scripts/bootstrap.py` to create local folders and Git exclusions.
 3. Write or revise `.planning/PRD.md` with `prd-writer`.
-4. Configure project commands in `.harness/sensors/computational/gates.json`.
-5. Run `python .harness/scripts/harness.py doctor`.
-6. Copy a prompt from `.harness/prompts/` or ask in natural language.
+4. Configure project commands in `.jotta/sensors/computational/gates.json`.
+5. Run `jotta doctor`.
+6. Copy a prompt from `.jotta/prompts/` or ask in natural language.
 
 ## Profiles
 
@@ -35,12 +35,12 @@ Show harness status.
 The agent normally calls these:
 
 ```text
-python .harness/scripts/harness.py doctor
-python .harness/scripts/harness.py sync-tasks
-python .harness/scripts/harness.py prepare F03 --profile lean --interaction autonomous --destination github --scope product
-python .harness/scripts/run_quality.py smoke
-python .harness/scripts/harness.py checkpoint --task F03 --status completed --evidence <receipt>
-python .harness/scripts/harness.py finish --status merged --merge-sha <sha> --cleanup --worktree-clean
+jotta doctor
+jotta sync-tasks
+jotta prepare F03 --profile lean --interaction autonomous --destination github --scope product
+jotta quality smoke
+jotta checkpoint --task F03 --status completed --evidence <receipt>
+jotta finish --status merged --merge-sha <sha> --cleanup --worktree-clean
 ```
 
 Autonomous GitHub `prepare` launches the required Orca worktree and visible terminal automatically. Use `--defer-worktree` only for inspection or an external launcher. If Orca is unavailable, the run blocks instead of writing in the main checkout.
@@ -59,7 +59,7 @@ prepare first feature and create one delivery worktree
 -> verified cleanup
 ```
 
-Full logs live under `.harness/runtime/logs/` and are not inserted into model context by default. Screenshots are created only for UI acceptance or explicit request.
+Full logs live under `.jotta/runtime/logs/` and are not inserted into model context by default. Screenshots are created only for UI acceptance or explicit request.
 
 ## Configure quality
 
@@ -79,7 +79,7 @@ Use commands appropriate to the project. An empty profile returns `skipped`, nev
 
 ## Budget gate
 
-The runtime checks `.harness/budgets/policy.json` before and after each feature. Provider usage can be recorded when the platform exposes it. At the human-gate threshold, execution stops until an explicit scoped authorization is recorded. The hard stop cannot be overridden by the harness.
+The runtime checks `.jotta/budgets/policy.json` before and after each feature. Provider usage can be recorded when the platform exposes it. At the human-gate threshold, execution stops until an explicit scoped authorization is recorded. The hard stop cannot be overridden by the harness.
 
 ## Recovery
 

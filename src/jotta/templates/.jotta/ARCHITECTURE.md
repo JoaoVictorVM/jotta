@@ -1,6 +1,6 @@
 # Harness architecture v0.5
 
-- `.harness` contains mechanism, configuration, local state and operational knowledge.
+- `.jotta` contains mechanism, configuration, local state and operational knowledge.
 - `.planning` contains local PRD, specs, plans and change packages.
 - `AGENTS.md` is an index only.
 - Three workflows cover product, change and quality.

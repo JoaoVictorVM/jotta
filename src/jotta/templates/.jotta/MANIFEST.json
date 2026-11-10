@@ -4,19 +4,19 @@
   "schema_version": 1,
   "preserved_contracts": {
     "spec-writer": {
-      "path": ".harness/skills/spec-writer/references/manual-classic.md",
-      "sha256": "c62a4651eea39bcf8dd81df9bf6089407443b76c0f1185f78248d959423c5f79",
-      "bytes": 33263
+      "path": ".jotta/skills/spec-writer/references/manual-classic.md",
+      "sha256": "cb4aaa16f0ca1e052f7bf58fed271498f7fb4e1743e1e10af0b22db24d4e11eb",
+      "bytes": 33261
     },
     "prd-writer": {
-      "path": ".harness/skills/prd-writer/references/full-contract.md",
-      "sha256": "c3acac915d34230f6308d3adbd96ac034803c8a6c2d8f40ff54c8f9a326ef740",
-      "bytes": 30110
+      "path": ".jotta/skills/prd-writer/references/full-contract.md",
+      "sha256": "c9542ec0361b2b4ae63e37a567ac439c7d3f122bd19dd730ea09147ccd533efe",
+      "bytes": 30079
     },
     "implement-feature": {
-      "path": ".harness/skills/implement-feature/references/manual-classic-and-strict.md",
-      "sha256": "15f50dc019a9b38b01daf40deed03ce6816ac5c8ca97d833d635be72b85ea874",
-      "bytes": 44292
+      "path": ".jotta/skills/implement-feature/references/manual-classic-and-strict.md",
+      "sha256": "fab26bb74c08758b2e3a0007cc99578a026b806b9e72315caf7259f1a69b16fa",
+      "bytes": 44286
     }
   },
   "profiles": [
@@ -30,13 +30,6 @@
     "quality"
   ],
   "runtime_scripts": [
-    "_jotta_shim.py",
-    "bootstrap.py",
-    "budget_guard.py",
-    "harness.py",
-    "model_router.py",
-    "orca_adapter.py",
-    "run_quality.py",
-    "self_test.py"
+    "bootstrap.py"
   ]
 }

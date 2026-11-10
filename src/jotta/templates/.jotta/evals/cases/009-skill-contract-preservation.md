@@ -6,7 +6,7 @@ Impedir que simplificacoes futuras removam funcionalidades de `prd-writer`, `spe
 
 ## Preparacao
 
-Use um repositorio descartavel com `.harness`, `.planning`, um PRD de teste e um projeto pequeno que permita lint, typecheck e testes.
+Use um repositorio descartavel com `.jotta`, `.planning`, um PRD de teste e um projeto pequeno que permita lint, typecheck e testes.
 
 ## Cenarios obrigatorios
 
@@ -27,6 +27,6 @@ Use um repositorio descartavel com `.harness`, `.planning`, um PRD de teste e um
 - Nenhuma skill central foi substituida por um resumo.
 - A chamada direta continua compativel com o fluxo anterior.
 - O modo orquestrado so ativa com envelope completo.
-- `.planning` e `.harness` nunca aparecem em stage ou conteudo publicado.
+- `.planning` e `.jotta` nunca aparecem em stage ou conteudo publicado.
 - A verificacao final e o relatorio de criterios nunca sao pulados.
 - GitHub usa merge commit e nunca squash ou rebase merge.

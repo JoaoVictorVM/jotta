@@ -39,4 +39,4 @@ Este arquivo restringe o que o harness pode executar automaticamente. Ele nao am
 
 A limpeza de uma worktree so e permitida depois de merge confirmado, SHA registrado e verificacao de que a worktree esta limpa. O fluxo nunca usa remocao forcada.
 
-Edite o frontmatter e execute `python .harness/scripts/harness.py doctor`.
+Edite o frontmatter e execute `jotta doctor`.

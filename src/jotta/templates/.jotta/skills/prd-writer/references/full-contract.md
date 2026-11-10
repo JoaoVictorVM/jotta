@@ -13,14 +13,14 @@ description: |
 
 This section adapts paths and lifecycle without replacing any PRD behavior below. The interview, nine-section document contract, dependency model, validation loop, edge cases and output rules remain mandatory.
 
-When `.harness` and `.planning` exist:
+When `.jotta` and `.planning` exist:
 
 - Default `OUTPUT_FOLDER` to `.planning` and `PRD_PATH` to `.planning/PRD.md` unless the user provides another local planning path.
 - Treat the PRD as local-only. Never stage, commit, push or cite the planning path in published Git or GitHub content.
 - Manual creation remains the default and keeps the complete clarification interview.
 - For a revision, read the current PRD first, save a snapshot under `.planning/archive/`, preserve every existing feature ID and assign new features the next unused IDs.
 - Never silently change or remove an implemented feature. If a revision changes its product contract, stop at the configured human gate before saving.
-- After a successful save, run `python .harness/scripts/harness.py sync-tasks` when available. Report added, changed and potentially invalidated features. Do not mark any feature implemented merely because the PRD was written.
+- After a successful save, run `jotta sync-tasks` when available. Report added, changed and potentially invalidated features. Do not mark any feature implemented merely because the PRD was written.
 - Existing direct invocations outside the harness keep using the caller-provided paths and the original workflow unchanged.
 
 Precedence: this integration section overrides only path placement, local-only handling, revision behavior and state synchronization. All detailed rules below remain in force.

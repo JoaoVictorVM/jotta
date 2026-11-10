@@ -1,6 +1,6 @@
 # Sensores computacionais
 
-Execute pelos comandos em `.harness/scripts/harness.py` e `run_quality.py`.
+Execute pelo comando `jotta`.
 
 - `doctor`: integridade do harness.
 - `validate-prd`: tabela de features, dependencias e ciclos.
@@ -9,5 +9,5 @@ Execute pelos comandos em `.harness/scripts/harness.py` e `run_quality.py`.
 - `gate staged`: caminhos locais, segredos e `.gitkeep` no stage.
 - `gate branch`: formato da branch.
 - `gate commit`: formato e texto da mensagem.
-- `run_quality.py`: comandos configurados por perfil.
+- `quality`: comandos configurados por perfil.
 

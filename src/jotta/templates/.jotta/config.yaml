@@ -7,7 +7,7 @@ defaults:
   destination: local
   scope: feature
 
-profiles_path: .harness/profiles
+profiles_path: .jotta/profiles
 
 github:
   merge_strategy: merge
@@ -55,15 +55,15 @@ context:
   max_estimated_tokens: 15000
 
 budget:
-  policy: .harness/budgets/policy.json
-  state: .harness/state/usage.json
+  policy: .jotta/budgets/policy.json
+  state: .jotta/state/usage.json
 
 models:
-  routing: .harness/models/routing.json
+  routing: .jotta/models/routing.json
   record_effective_model: true
 
 artifacts:
-  harness_path: .harness
+  harness_path: .jotta
   planning_path: .planning
-  runtime_path: .harness/runtime
+  runtime_path: .jotta/runtime
   local_only: true

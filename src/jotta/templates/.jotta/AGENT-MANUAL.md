@@ -17,14 +17,14 @@ Read only the selected workflow, skill entrypoint, profile references and curren
 
 ## Runtime cycle
 
-1. Run `python .harness/scripts/harness.py doctor` once at the start.
+1. Run `jotta doctor` once at the start.
 2. Select a dependency-ready task.
-3. Run `harness.py prepare` to apply the budget and risk gates, create a compact packet and ensure required isolation.
+3. Run `jotta prepare` to apply the budget and risk gates, create a compact packet and ensure required isolation.
 4. Execute the selected skill and profile.
 5. Run compact computational quality before semantic review.
-6. Run `harness.py checkpoint` after a feature. Keep the active delivery worktree in lean.
+6. Run `jotta checkpoint` after a feature. Keep the active delivery worktree in lean.
 7. Prepare the next ready feature or run final QA when the selected scope ends.
-8. Run `harness.py finish` once when the scope is merged, completed locally or terminated.
+8. Run `jotta finish` once when the scope is merged, completed locally or terminated.
 
 ## Roles
 
@@ -32,9 +32,9 @@ The orchestrator coordinates and never writes product code. A single implementer
 
 ## State and evidence
 
-JSON is authoritative. `progress.md` is generated on demand. Store hashes, paths, statuses and compact receipts, not full prompts, diffs or command logs. Full logs live under `.harness/runtime/logs/` and are opened only for a specific need.
+JSON is authoritative. `progress.md` is generated on demand. Store hashes, paths, statuses and compact receipts, not full prompts, diffs or command logs. Full logs live under `.jotta/runtime/logs/` and are opened only for a specific need.
 
-A compact packet includes the control root because `.harness` and `.planning` are local-only and are not copied into a Git worktree. The worker writes product code in the returned worktree path while the orchestrator owns local planning and state in the control root.
+A compact packet includes the control root because `.jotta` and `.planning` are local-only and are not copied into a Git worktree. The worker writes product code in the returned worktree path while the orchestrator owns local planning and state in the control root.
 
 ## Completion
 

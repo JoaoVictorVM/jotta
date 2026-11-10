@@ -3,12 +3,12 @@ repos:
     hooks:
       - id: harness-staged
         name: harness staged files
-        entry: python .harness/scripts/harness.py gate staged
+        entry: jotta gate staged
         language: system
         pass_filenames: false
       - id: harness-text
         name: harness text rules
-        entry: python .harness/scripts/harness.py gate text
+        entry: jotta gate text
         language: system
         pass_filenames: false
 

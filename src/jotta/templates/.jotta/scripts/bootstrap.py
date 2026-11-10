@@ -14,9 +14,9 @@ LOCAL_DIRS = [
     ROOT / ".planning" / "decisions",
     ROOT / ".planning" / "commit-plans",
     ROOT / ".planning" / "archive",
-    ROOT / ".harness" / "state",
+    ROOT / ".jotta" / "state",
 ]
-EXCLUDES = ["/.harness/", "/.planning/", "/AGENTS.md", "/CLAUDE.md", "/.claude/"]
+EXCLUDES = ["/.jotta/", "/.planning/", "/AGENTS.md", "/CLAUDE.md", "/.claude/"]
 
 
 def git_exclude_path() -> Path | None:

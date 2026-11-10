@@ -27,8 +27,8 @@ A harness profile activates only when `product-orchestrator` supplies all of the
 
 - This section overrides Git mutations, approval prompts and commit scheduling only when a complete `HARNESS_RUN` envelope is present.
 - Requirements, dependency checks, lazy codebase reading, progress tracking, phase validation, runtime exercise, retry classification, Final Verification, Component Overview walk-through, AC re-check, deviations, soft-fails, pre-existing failures, manual test checklist and edge cases always remain in force.
-- Human gates in `.harness/permissions/human-gates.md` override autonomous authorization. Stop before the gated action and resume only after a human decision.
-- `.planning/` and `.harness/` are local-only. Never stage, commit, push or mention their contents in versioned or GitHub content. Keep them out through `.git/info/exclude`.
+- Human gates in `.jotta/permissions/human-gates.md` override autonomous authorization. Stop before the gated action and resume only after a human decision.
+- `.planning/` and `.jotta/` are local-only. Never stage, commit, push or mention their contents in versioned or GitHub content. Keep them out through `.git/info/exclude`.
 - GitHub profiles always use merge commits. Never use squash merge or rebase merge.
 - Local profiles may run inside a Git repository, but they must not mutate Git state or contact GitHub.
 
@@ -220,7 +220,7 @@ Run all applicable checks before writing code or mutating Git state. Any failure
 
 If any level enables attribution, or neither key is set anywhere → abort and tell the user which file and key to fix. Do not edit settings files yourself. The Text check still runs on every commit and PR regardless of this result.
 
-**4.3 Local-only files.** In GitHub profiles, verify the repository is a git repo with a GitHub remote and that `gh auth status` succeeds. In local profiles, skip remote and authentication checks. When a Git repository exists, make sure `.git/info/exclude` contains entries covering `.harness/`, `.planning/`, `CLAUDE.md` and `.claude/`. Append any missing entry; this file is local and unversioned. Then run `git ls-files` on those paths: if any is already tracked, abort and tell the user.
+**4.3 Local-only files.** In GitHub profiles, verify the repository is a git repo with a GitHub remote and that `gh auth status` succeeds. In local profiles, skip remote and authentication checks. When a Git repository exists, make sure `.git/info/exclude` contains entries covering `.jotta/`, `.planning/`, `CLAUDE.md` and `.claude/`. Append any missing entry; this file is local and unversioned. Then run `git ls-files` on those paths: if any is already tracked, abort and tell the user.
 
 **4.4 Base branch.** Resolve the base branch: the override if given, else `gh repo view --json defaultBranchRef`, else `main`.
 

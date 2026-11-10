@@ -3,7 +3,7 @@
 ## Comando
 
 ```powershell
-python .harness/scripts/budget_guard.py check --checkpoint <checkpoint> --scope <feature|wave|run>
+jotta budget check --checkpoint <checkpoint> --scope <feature|wave|run>
 ```
 
 ## Evidencia

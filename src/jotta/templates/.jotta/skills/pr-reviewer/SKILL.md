@@ -5,7 +5,7 @@ description: Review a local diff or GitHub pull request in an isolated reviewer 
 
 # PR Reviewer
 
-Read `.harness/agents/reviewer.md` and the applicable inferential rubrics.
+Read `.jotta/agents/reviewer.md` and the applicable inferential rubrics.
 
 1. Collect task intent, diff, changed files, test output and CI status.
 2. Run mandatory computational gates first. A failing gate blocks approval.

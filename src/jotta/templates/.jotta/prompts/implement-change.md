@@ -1,1 +1,1 @@
-Classify this request through `.harness/workflows/change.md`, create the minimum local planning artifact and implement it using the destination and profile I specify. If I do not specify them, use local and manual-classic.
+Classify this request through `.jotta/workflows/change.md`, create the minimum local planning artifact and implement it using the destination and profile I specify. If I do not specify them, use local and manual-classic.

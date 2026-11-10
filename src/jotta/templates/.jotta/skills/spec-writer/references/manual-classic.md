@@ -10,7 +10,7 @@ This section adds harness modes and local paths without removing the original si
 
 ### Paths
 
-When `.harness` and `.planning` exist:
+When `.jotta` and `.planning` exist:
 
 - Resolve the PRD from an explicit path, then `.planning/PRD.md`, then the original fallback locations.
 - Save feature documents under `.planning/features/<feature-id>-<kebab-name>/spec.md` and `plan.md`.

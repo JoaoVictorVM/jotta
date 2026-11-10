@@ -1,6 +1,6 @@
 # State machine
 
-The runtime keeps only restartable evidence in `.harness/state/current-run.json`.
+The runtime keeps only restartable evidence in `.jotta/state/current-run.json`.
 
 ```text
 idle -> prepared -> implementing -> validating -> completed-local
@@ -8,7 +8,7 @@ idle -> prepared -> worktree-ready -> implementing -> validating -> pr-open -> m
 any active state -> blocked | failed | cancelled
 ```
 
-Feature status in `.harness/state/tasks.json` is independent:
+Feature status in `.jotta/state/tasks.json` is independent:
 
 ```text
 pending -> ready -> specifying -> implementing -> validating -> completed

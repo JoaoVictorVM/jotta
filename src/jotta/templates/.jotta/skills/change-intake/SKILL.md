@@ -5,7 +5,7 @@ description: Classify an unspecced request as bug, small change, refactor, featu
 
 # Change Intake
 
-Read the current PRD, relevant code and `.harness/workflows/change-intake.md`.
+Read the current PRD, relevant code and `.jotta/workflows/change-intake.md`.
 
 1. Determine current and expected behavior.
 2. Classify the request.

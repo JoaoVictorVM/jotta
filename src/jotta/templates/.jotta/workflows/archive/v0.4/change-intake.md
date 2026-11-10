@@ -16,7 +16,7 @@
 - Reclassifique um suposto bug quando o comportamento atual estiver de acordo com o PRD.
 - Atualize o PRD quando o pedido criar capacidade, mudar criterio de aceite, contrato ou dependencias.
 - Nunca renumere IDs existentes.
-- Registre IDs locais somente em `.planning` e `.harness/state`.
+- Registre IDs locais somente em `.planning` e `.jotta/state`.
 
 ## Saida
 

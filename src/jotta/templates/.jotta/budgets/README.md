@@ -12,15 +12,15 @@ O maior percentual conhecido determina a decisao. Medicao ausente nunca deve ser
 ## Comandos
 
 ```powershell
-python .harness/scripts/budget_guard.py status
-python .harness/scripts/budget_guard.py check --checkpoint before-feature --scope feature
-python .harness/scripts/budget_guard.py record --input-tokens 1200 --output-tokens 300 --estimated-cost-usd 0.08
-python .harness/scripts/budget_guard.py record --provider-usage-percent 82 --source provider-api
-python .harness/scripts/budget_guard.py record --provider-usage-unavailable
-python .harness/scripts/budget_guard.py reserve --id spec-f03 --input-tokens 20000 --output-tokens 5000 --estimated-cost-usd 1.00
-python .harness/scripts/budget_guard.py release --id spec-f03
-python .harness/scripts/budget_guard.py authorize --scope feature --until-percent 90 --reason "concluir feature atual"
-python .harness/scripts/budget_guard.py clear-authorization
+jotta budget status
+jotta budget check --checkpoint before-feature --scope feature
+jotta budget record --input-tokens 1200 --output-tokens 300 --estimated-cost-usd 0.08
+jotta budget record --provider-usage-percent 82 --source provider-api
+jotta budget record --provider-usage-unavailable
+jotta budget reserve --id spec-f03 --input-tokens 20000 --output-tokens 5000 --estimated-cost-usd 1.00
+jotta budget release --id spec-f03
+jotta budget authorize --scope feature --until-percent 90 --reason "concluir feature atual"
+jotta budget clear-authorization
 ```
 
 ## Codigos de saida

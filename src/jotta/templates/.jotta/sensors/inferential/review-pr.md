@@ -8,5 +8,5 @@
 6. Titulo, corpo e commits representam a mudanca.
 7. CI obrigatorio esta verde.
 
-Saida conforme `.harness/guides/templates/review-report.md`.
+Saida conforme `.jotta/guides/templates/review-report.md`.
 

@@ -5,7 +5,7 @@ description: Validate a feature, wave, product or pull request from compact comp
 
 # Final QA
 
-Read `.harness/workflows/quality.md`, the reviewer role and only the applicable review rubrics.
+Read `.jotta/workflows/quality.md`, the reviewer role and only the applicable review rubrics.
 
 1. Require the compact quality receipt and paths to full logs. Do not load full logs unless the receipt is insufficient.
 2. Read the scoped acceptance criteria, changed files and bounded diff.

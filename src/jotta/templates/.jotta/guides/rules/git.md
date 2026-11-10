@@ -6,6 +6,6 @@
 - Merge automatico usa merge commit.
 - Nunca use force push, hard reset ou bypass de branch protection.
 - Nunca descarte alteracoes existentes do usuario.
-- `.harness`, `.planning`, `AGENTS.md`, `CLAUDE.md` e `.claude` sao locais.
+- `.jotta`, `.planning`, `AGENTS.md`, `CLAUDE.md` e `.claude` sao locais.
 - Nao cite IDs ou nomes de documentos de planejamento em conteudo publicado.
 

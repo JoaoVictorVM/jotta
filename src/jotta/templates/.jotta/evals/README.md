@@ -5,8 +5,8 @@ Run these behavior cases after a structural change to the harness. Cases 001 to 
 Automated structural checks:
 
 ```bash
-python .harness/scripts/self_test.py
-python .harness/scripts/harness.py doctor
+jotta doctor
+jotta models validate
 ```
 
 Behavior cases remain human-readable because they test agent decisions across providers.
