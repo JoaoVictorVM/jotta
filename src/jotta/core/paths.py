@@ -60,16 +60,20 @@ class ProjectPaths:
         return self.harness / "skills"
 
     @property
+    def policy(self) -> Path:
+        return self.harness / "policy"
+
+    @property
     def routing(self) -> Path:
-        return self.harness / "models" / "routing.json"
+        return self.policy / "routing.json"
 
     @property
     def budget_policy(self) -> Path:
-        return self.harness / "budgets" / "policy.json"
+        return self.policy / "budget.json"
 
     @property
     def budget_providers(self) -> Path:
-        return self.harness / "budgets" / "providers.json"
+        return self.policy / "providers.json"
 
     @property
     def gates(self) -> Path:
@@ -90,8 +94,8 @@ class ProjectPaths:
             harness / "adapters" / "orca.md",
             harness / "adapters" / "opencode" / "README.md",
             harness / "guides" / "operations" / "worktrees-and-agents.md",
-            harness / "permissions" / "permissions.md",
-            harness / "permissions" / "human-gates.md",
+            self.policy / "permissions.md",
+            self.policy / "human-gates.md",
             self.profiles / "manual-classic.yaml",
             self.profiles / "lean.yaml",
             self.profiles / "strict.yaml",

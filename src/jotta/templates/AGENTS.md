@@ -16,8 +16,7 @@ This file is only the harness index. Read the smallest applicable set of documen
 | Bug, adjustment, refactor or new capability | `.jotta/workflows/change.md` |
 | Test, review or final validation | `.jotta/workflows/quality.md` |
 | Worktree, multi-agent or visible Orca session | `.jotta/guides/operations/worktrees-and-agents.md` and `.jotta/adapters/orca.md` |
-| Permissions or human gates | `.jotta/permissions/` |
-| Model and budget | `.jotta/models/` and `.jotta/budgets/` |
+| Permissions, human gates, model routing or budget | `.jotta/policy/` |
 | Current run | `.jotta/state/current-run.json` and `.jotta/state/tasks.json` |
 | PRD, specs and local plans | `.planning/` |
 

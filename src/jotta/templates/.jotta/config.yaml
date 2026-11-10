@@ -55,11 +55,11 @@ context:
   max_estimated_tokens: 15000
 
 budget:
-  policy: .jotta/budgets/policy.json
+  policy: .jotta/policy/budget.json
   state: .jotta/state/usage.json
 
 models:
-  routing: .jotta/models/routing.json
+  routing: .jotta/policy/routing.json
   record_effective_model: true
 
 artifacts:
