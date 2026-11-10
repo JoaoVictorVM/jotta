@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from jotta.cli import main
-from jotta.core.paths import ProjectNotFoundError, find_root
+from jotta.core.paths import ProjectNotFoundError, find_root, templates_root
 
 
 def run_json(capsys: pytest.CaptureFixture[str], *argv: str) -> tuple[int, dict[str, object]]:
@@ -23,6 +23,11 @@ def test_find_root_walks_up_from_a_nested_directory(project: Path) -> None:
 def test_find_root_fails_outside_a_project(tmp_path: Path) -> None:
     with pytest.raises(ProjectNotFoundError):
         find_root(tmp_path)
+
+
+def test_packaged_templates_are_a_valid_project(capsys: pytest.CaptureFixture[str]) -> None:
+    assert main(["--root", str(templates_root()), "doctor"]) == 0
+    assert "DOCTOR OK" in capsys.readouterr().out
 
 
 def test_doctor_accepts_the_template(project: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -61,10 +66,10 @@ def test_lifecycle_from_sync_to_finish(project: Path, capsys: pytest.CaptureFixt
 
     code, finished = run_json(capsys, "--root", root, "finish", "--status", "completed-local", "--evidence", "done")
     assert code == 0
-    tasks = json.loads((project / ".harness" / "state" / "tasks.json").read_text(encoding="utf-8"))
+    tasks = json.loads((project / ".jotta" / "state" / "tasks.json").read_text(encoding="utf-8"))
     statuses = {task["id"]: task["status"] for task in tasks["tasks"]}
     assert statuses["F01"] == "completed-local"
-    usage = json.loads((project / ".harness" / "state" / "usage.json").read_text(encoding="utf-8"))
+    usage = json.loads((project / ".jotta" / "state" / "usage.json").read_text(encoding="utf-8"))
     assert usage["by_stage"]["implementation"]["input_tokens"] == 10
 
 

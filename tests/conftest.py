@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[1]
+from jotta.core.paths import templates_root
 
 PRD = """# PRD
 
@@ -24,9 +24,6 @@ PRD = """# PRD
 def project(tmp_path: Path) -> Path:
     """A consumer project with the harness template and a small PRD."""
     root = tmp_path / "project"
-    root.mkdir()
-    shutil.copytree(REPO / ".harness", root / ".harness", ignore=shutil.ignore_patterns("runtime", "__pycache__"))
-    shutil.copytree(REPO / ".planning", root / ".planning")
-    shutil.copy(REPO / "AGENTS.md", root / "AGENTS.md")
+    shutil.copytree(templates_root(), root, ignore=shutil.ignore_patterns("runtime", "__pycache__"))
     (root / ".planning" / "PRD.md").write_text(PRD, encoding="utf-8")
     return root
