@@ -15,7 +15,7 @@ jotta --root src/jotta/templates doctor
 jotta --root src/jotta/templates models validate
 ```
 
-Do not run the template `bootstrap.py` in the source repository. It is an installer step for consumer projects.
+Do not run `jotta install` in the source repository. It refuses to install into the Jotta source or its templates.
 
 ## First push
 

@@ -9,7 +9,7 @@ Instructions for agents working on the Jotta source repository. The harness that
 | `src/jotta/` | Python package and the `jotta` command |
 | `src/jotta/templates/` | Files copied into a project: `AGENTS.md`, `CLAUDE.md`, `.jotta/` and `.planning/` |
 | `tests/` | pytest suite |
-| `scripts/` | Repository tooling: installer, public repository check and template regressions |
+| `scripts/` | Repository tooling: public repository check and template regressions |
 | `docs/` | Human documentation |
 
 ## Development

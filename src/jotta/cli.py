@@ -10,14 +10,13 @@ from typing import TYPE_CHECKING
 
 from jotta import __version__
 from jotta.budget import guard
-from jotta.commands import doctor, gates, run, tasks
+from jotta.commands import doctor, gates, install, run, tasks
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
 from jotta.isolation import orca
 from jotta.quality import runner
 from jotta.routing import router
 
 EXIT_OK = 0
-EXIT_NOT_IMPLEMENTED = 1
 EXIT_USAGE = 2
 
 STAGES = ["planning", "spec", "implementation", "quality", "review"]
@@ -41,7 +40,17 @@ def _add_usage_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def _add_lifecycle_commands(subparsers: SubParsers) -> None:
-    subparsers.add_parser("install", help="Install the harness into a project.").set_defaults(handler=None)
+    install_parser = subparsers.add_parser("install", help="Install the harness into a project.")
+    install_parser.add_argument("--target", help="project directory; defaults to the current directory")
+    install_parser.add_argument("--dry-run", action="store_true", help="show what would change without writing")
+    install_parser.add_argument(
+        "--force-overwrite", action="store_true", help="overwrite existing harness files after confirmation"
+    )
+    install_parser.add_argument("--yes", action="store_true", help="confirm overwriting without asking")
+    install_parser.add_argument(
+        "--no-git-exclude", action="store_true", help="do not add the harness files to .git/info/exclude"
+    )
+    install_parser.set_defaults(handler=lambda args, _paths: install.run(args), needs_project=False)
     subparsers.add_parser("doctor", help="Check the harness installation and configuration.").set_defaults(
         handler=lambda _args, paths: doctor.run(paths)
     )
@@ -203,10 +212,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command is None:
         parser.print_help()
         return EXIT_OK
-    handler: Handler | None = getattr(args, "handler", None)
-    if handler is None:
-        print(f"jotta {args.command}: not implemented yet", file=sys.stderr)
-        return EXIT_NOT_IMPLEMENTED
+    handler: Handler = args.handler
     if not getattr(args, "needs_project", True):
         return handler(args, ProjectPaths(Path.cwd()))
     try:

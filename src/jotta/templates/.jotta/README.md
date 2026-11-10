@@ -4,8 +4,8 @@ A local-first, spec-driven harness with progressive context, lean autonomous exe
 
 ## Start
 
-1. Copy this package into the project root.
-2. Run `python .jotta/scripts/bootstrap.py` to create local folders and Git exclusions.
+1. Install the `jotta` package.
+2. Run `jotta install` in the project root to copy the harness, create local folders and add Git exclusions.
 3. Write or revise `.planning/PRD.md` with `prd-writer`.
 4. Configure project commands in `.jotta/sensors/computational/gates.json`.
 5. Run `jotta doctor`.

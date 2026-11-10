@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from jotta import __version__
-from jotta.cli import EXIT_NOT_IMPLEMENTED, EXIT_OK, EXIT_USAGE, main
+from jotta.cli import EXIT_OK, EXIT_USAGE, main
 
 SRC = Path(__file__).resolve().parents[1] / "src"
 COMMANDS = [
@@ -48,11 +48,6 @@ def test_version_flag_prints_package_version(capsys: pytest.CaptureFixture[str])
 def test_without_command_prints_help(capsys: pytest.CaptureFixture[str]) -> None:
     assert main([]) == EXIT_OK
     assert "usage: jotta" in capsys.readouterr().out
-
-
-def test_install_is_not_implemented_yet(capsys: pytest.CaptureFixture[str]) -> None:
-    assert main(["install"]) == EXIT_NOT_IMPLEMENTED
-    assert "not implemented yet" in capsys.readouterr().err
 
 
 def test_unknown_command_is_a_usage_error() -> None:
