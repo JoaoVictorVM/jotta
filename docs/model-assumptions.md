@@ -1,12 +1,13 @@
-# Suposicoes sobre o agente
+# Model assumptions
 
-| Mecanismo | Suposicao | Revisar quando |
+Each harness mechanism exists because of an assumption about how coding agents fail. When models or the process change, revisit the assumption before keeping the mechanism.
+
+| Mechanism | Assumption | Revisit when |
 |---|---|---|
-| Revisor separado | O autor tende a ser generoso com o proprio trabalho | Modelos ou processo mudarem |
-| Limite de tentativas | O agente pode repetir a mesma estrategia | Falhas deixarem de se repetir |
-| Estado estruturado | A conversa pode ser interrompida ou compactada | Persistencia nativa for suficiente |
-| Spec para features | Mudancas amplas perdem consistencia sem contrato | Evals mostrarem resultado equivalente sem spec |
-| Sensores | Regras somente em Markdown podem ser ignoradas | Regra deixar de ser relevante |
+| Separate reviewer | Authors tend to be generous with their own work | Models or the process change |
+| Retry limit | An agent may repeat the same strategy | Failures stop repeating |
+| Structured state | The conversation may be interrupted or compacted | Native persistence becomes sufficient |
+| Feature specs | Broad changes lose consistency without a contract | Evals show equivalent results without specs |
+| Sensors | Rules written only in Markdown can be ignored | The rule stops being relevant |
 
-Remova um mecanismo por vez e compare os evals antes de aposenta-lo.
-
+Remove one mechanism at a time and compare the evals before retiring it.
