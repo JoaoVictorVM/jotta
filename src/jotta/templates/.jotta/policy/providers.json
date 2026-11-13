@@ -5,17 +5,17 @@
     "platform": {
       "adapter": "agent-tool",
       "usage_tool": null,
-      "notes": "configure a ferramenta de uso exposta pela plataforma, quando existir"
+      "notes": "configure the usage tool the platform exposes, when there is one"
     },
     "openai": {
       "adapter": "external",
       "usage_tool": null,
-      "notes": "configure somente uma fonte oficial que retorne a cota aplicavel"
+      "notes": "configure only an official source that returns the applicable quota"
     },
     "anthropic": {
       "adapter": "external",
       "usage_tool": null,
-      "notes": "configure somente uma fonte oficial que retorne a cota aplicavel"
+      "notes": "configure only an official source that returns the applicable quota"
     }
   }
 }

@@ -1,27 +1,27 @@
-# Politicas
+# Policy
 
-Esta pasta concentra as regras que limitam a execucao.
+This folder holds the rules that limit execution.
 
-| Arquivo | Conteudo |
+| File | Contents |
 |---|---|
-| `permissions.md` | Acoes permitidas, negadas e liberadas por perfil |
-| `human-gates.md` | Situacoes que exigem decisao humana |
-| `budget.json` | Limites de orcamento, faixas de decisao e checkpoints |
-| `providers.json` | Origem do uso informado por cada provedor |
-| `routing.json` | Classe de modelo por tarefa e modelos por provedor |
+| `permissions.md` | Actions that are allowed, denied or enabled per profile |
+| `human-gates.md` | Situations that require a human decision |
+| `budget.json` | Budget limits, decision thresholds and checkpoints |
+| `providers.json` | Where each provider's usage comes from |
+| `routing.json` | Model tier per task and models per provider |
 
-## Controle de orçamento
+## Budget control
 
-O budget guard combina duas medidas independentes:
+The budget guard combines two independent measures:
 
-- uso global informado pelo provedor, quando disponivel;
-- consumo local da execucao, calculado por tokens e custo estimado.
+- global usage reported by the provider, when available;
+- local execution usage, computed from tokens and estimated cost.
 
-O maior percentual conhecido determina a decisao. Medicao ausente nunca deve ser apresentada como zero real. A origem fica registrada em `.jotta/runtime/state/usage.json`.
+The highest known percentage drives the decision. A missing measurement is never presented as a real zero. The source is recorded in `.jotta/runtime/state/usage.json`.
 
-`providers.json` declara a origem ativa. O harness nao inventa uma API de cota: quando a plataforma oferece uma ferramenta de uso, o agente consulta essa ferramenta e grava o percentual com `record`. Quando nao oferece, registra `unavailable` e usa somente os limites locais da execucao conforme a politica.
+`providers.json` declares the active source. The harness never invents a quota API: when the platform offers a usage tool, the agent queries it and records the percentage with `record`. When it does not, the agent records `unavailable` and only the local execution limits apply, as the policy defines.
 
-### Comandos
+### Commands
 
 ```powershell
 jotta budget status
@@ -31,50 +31,51 @@ jotta budget record --provider-usage-percent 82 --source provider-api
 jotta budget record --provider-usage-unavailable
 jotta budget reserve --id spec-f03 --input-tokens 20000 --output-tokens 5000 --estimated-cost-usd 1.00
 jotta budget release --id spec-f03
-jotta budget authorize --scope feature --until-percent 90 --reason "concluir feature atual"
+jotta budget authorize --scope feature --until-percent 90 --reason "finish the current feature"
 jotta budget clear-authorization
 ```
 
-### Codigos de saida
+### Exit codes
 
-| Codigo | Significado |
+| Code | Meaning |
 |---|---|
-| 0 | Pode continuar, inclusive aviso ou autorizacao valida |
-| 2 | Human gate obrigatorio |
-| 3 | Hard stop, nao pode ser sobrescrito |
-| 4 | Medicao obrigatoria indisponivel |
+| 0 | Can continue, including a warning or a valid authorization |
+| 2 | Human gate required |
+| 3 | Hard stop, cannot be overridden |
+| 4 | Required measurement unavailable |
 
-Uma autorizacao vale somente para o escopo registrado e nunca ultrapassa o hard stop. O orquestrador deve verificar o budget entre etapas. Nenhum sensor consegue interromper uma resposta de modelo que ja esta em andamento.
+An authorization applies only to the recorded scope and never goes past the hard stop. The orchestrator checks the budget between steps. No sensor can interrupt a model response that is already in progress.
 
-## Roteamento de modelos
+## Model routing
 
-Skills descrevem como trabalhar. O orquestrador escolhe o modelo antes de criar o agente que executara a skill.
+Skills describe how to work. The orchestrator chooses the model before creating the agent that runs the skill.
 
-`routing.json` usa classes de capacidade para evitar dependencia de nomes comerciais instaveis. Por padrao, `spec-writer` usa `efficient`, enquanto implementacao e revisao usam classes mais fortes.
+`routing.json` uses capability tiers to avoid depending on unstable commercial names. By default `spec-writer` uses `efficient`, while implementation and review use stronger tiers.
 
-### Configurar um modelo exato
+### Configure an exact model
 
-Use o identificador aceito pela plataforma, nao apenas o nome de marketing. Exemplo ilustrativo:
+Use the identifier the platform accepts, not just the marketing name. Illustrative example:
 
 ```json
 "anthropic": {
-  "efficient": "ID_EXATO_DO_MODELO_SONNET_CONFIGURADO",
+  "efficient": "EXACT_ID_OF_THE_CONFIGURED_MODEL",
   "balanced": null,
   "strong": null,
   "review": null
 }
 ```
 
-Depois valide e resolva a rota:
+Then validate and resolve the route:
 
 ```powershell
 jotta models validate
 jotta models resolve --task spec-writer --provider anthropic
 ```
 
-Um valor `null` significa que o harness deve herdar o modelo da plataforma. Se a plataforma nao permite selecao por agente, a rota e apenas uma preferencia declarada. O orquestrador deve registrar o modelo efetivamente usado e nunca afirmar que aplicou uma rota sem evidencia.
+A `null` value means the harness inherits the platform's model. If the platform does not allow choosing a model per agent, the route is only a declared preference. The orchestrator records the model it actually used and never claims to have applied a route without evidence.
 
-Modelo mais barato nao reduz requisitos da skill, validacoes ou human gates. Se a qualidade observada cair, altere a rota, nao simplifique o contrato da skill.
+A cheaper model does not lower the skill's requirements, validations or human gates. If the observed quality drops, change the route, not the skill's contract.
+
 ### OpenCode and Orca
 
 OpenCode can route to multiple providers, so configure exact provider model IDs in `routing.json` and pass the provider key to `jotta prepare`. The Orca agent id is separate and must match the installed Orca guide. See `.jotta/adapters/opencode/README.md`.

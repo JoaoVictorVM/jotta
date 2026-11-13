@@ -1,20 +1,20 @@
 # Sensor: provider budget
 
-## Comando
+## Command
 
 ```powershell
 jotta budget check --checkpoint <checkpoint> --scope <feature|wave|run>
 ```
 
-## Evidencia
+## Evidence
 
-Registre status, percentual efetivo, origem, percentual local, percentual do provedor, reservas e autorizacao aplicavel.
+Record the status, the effective percentage and its source, the local percentage, the provider percentage, reservations and the applicable authorization.
 
-## Decisao
+## Decision
 
-- Codigo 0: continuar e registrar aviso quando houver.
-- Codigo 2: ativar `provider-budget-threshold` e aguardar decisao humana.
-- Codigo 3: interromper no hard stop.
-- Codigo 4: aplicar a politica de medicao indisponivel.
+- Code 0: continue, and record a warning when there is one.
+- Code 2: trigger `provider-budget-threshold` and wait for a human decision.
+- Code 3: stop at the hard stop.
+- Code 4: apply the policy for unavailable measurement.
 
-O sensor roda entre etapas e nao interrompe uma chamada de modelo em andamento.
+The sensor runs between steps and does not interrupt a model call in progress.

@@ -1,6 +1,5 @@
-# Rubrica: review de codigo
+# Rubric: code review
 
-Avalie comportamento, simplicidade, coesao, tratamento de erros, seguranca, convencoes e testes. Diferencie bloqueante, importante e sugestao. Um achado bloqueante precisa de evidencia observavel e localizacao precisa.
+Evaluate behavior, simplicity, cohesion, error handling, security, conventions and tests. Distinguish blocking findings, important findings and suggestions. A blocking finding needs observable evidence and a precise location.
 
-Comentarios devem explicar motivos nao obvios. Testes devem verificar comportamento, nao apenas chamadas internas.
-
+Comments should explain non-obvious reasons. Tests should verify behavior, not just internal calls.

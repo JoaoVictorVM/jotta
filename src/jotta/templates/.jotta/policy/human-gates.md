@@ -19,5 +19,5 @@ gates:
 
 # Human gates
 
-Ao encontrar uma condicao listada, pare antes da acao, registre o bloqueio no estado e apresente a decisao necessaria. Uma aprovacao vale somente para o gate apresentado.
+When a listed condition occurs, stop before acting, record the blocker in the state and present the decision that is needed. An approval applies only to the gate it answers.
 
