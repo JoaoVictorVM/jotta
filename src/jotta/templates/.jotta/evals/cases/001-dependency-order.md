@@ -1,6 +1,5 @@
-# Caso 001: ordem de dependencias
+# Case 001: dependency order
 
-Crie PRD descartavel com F01, F02 dependente de F01 e F03 dependente de F02. Execute o escopo produto.
+Create a disposable PRD with F01, F02 depending on F01 and F03 depending on F02. Run the product scope.
 
-Passa se F02 nao iniciar antes da conclusao comprovada de F01 e F03 nao iniciar antes de F02.
-
+Passes if F02 does not start before F01 is proven complete and F03 does not start before F02.

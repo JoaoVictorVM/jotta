@@ -1,32 +1,32 @@
-# Caso 009: preservacao dos contratos das skills centrais
+# Case 009: preservation of the core skill contracts
 
-## Objetivo
+## Goal
 
-Impedir que simplificacoes futuras removam funcionalidades de `prd-writer`, `spec-writer` ou `implement-feature`.
+Prevent future simplifications from removing features of `prd-writer`, `spec-writer` or `implement-feature`.
 
-## Preparacao
+## Setup
 
-Use um repositorio descartavel com `.jotta`, `.planning`, um PRD de teste e um projeto pequeno que permita lint, typecheck e testes.
+Use a disposable repository with `.jotta`, `.planning`, a test PRD and a small project that supports lint, typecheck and tests.
 
-## Cenarios obrigatorios
+## Required scenarios
 
-1. Invoque `prd-writer` diretamente. Confirme entrevista obrigatoria, documento de nove secoes, dependencias, waves, criterios de aceitacao, integracao entre features, validacao interna e salvamento em `.planning/PRD.md`.
-2. Invoque `spec-writer` diretamente para uma feature. Confirme entrevista completa, descoberta de padroes, `spec.md`, `plan.md`, template e validacao.
-3. Invoque `spec-writer` para uma wave. Confirme Batch Mode, plano consolidado, tratamento de Foundation, dependencias, autoaceite e isolamento de falhas.
-4. Invoque `implement-feature` diretamente. Confirme G1 a G4, commits atomicos, `progress.md`, retomada, validacao por fase, verificacao final, checklist de criterios, PR, revisao e merge commit.
-5. Invoque `implement-feature` com envelope `supervised + github`. Confirme gates supervisionados e checkpoints semanticos compactos.
-6. Invoque com envelope `autonomous + github`. Confirme autorizacao inicial, review independente, checks obrigatorios, correcao de findings e merge commit, sem squash.
-7. Invoque com envelope `autonomous + local`. Confirme implementacao e verificacao completas sem branch, stage, commit, push, PR, merge ou acesso ao GitHub.
-8. Provoque um human gate em modo autonomo. Confirme que a execucao para antes da acao e so retoma com decisao humana.
-9. Interrompa uma implementacao e retome. Confirme que unidades concluidas nao sao repetidas e que evidencias anteriores sao revalidadas.
-10. Provoque hard fail, soft fail e falha preexistente. Confirme classificacao e politica de retry separadas.
+1. Invoke `prd-writer` directly. Confirm the mandatory interview, the nine-section document, dependencies, waves, acceptance criteria, integration between features, internal validation and saving to `.planning/PRD.md`.
+2. Invoke `spec-writer` directly for one feature. Confirm the full interview, pattern discovery, `spec.md`, `plan.md`, template and validation.
+3. Invoke `spec-writer` for a wave. Confirm Batch Mode, the consolidated plan, Foundation handling, dependencies, auto-accept and failure isolation.
+4. Invoke `implement-feature` directly. Confirm G1 to G4, atomic commits, `progress.md`, resume, per-phase validation, final verification, the criteria checklist, PR, review and merge commit.
+5. Invoke `implement-feature` with a `supervised + github` envelope. Confirm supervised gates and compact semantic checkpoints.
+6. Invoke with an `autonomous + github` envelope. Confirm initial authorization, independent review, required checks, fixing findings and merge commit, without squash.
+7. Invoke with an `autonomous + local` envelope. Confirm complete implementation and verification without branch, stage, commit, push, PR, merge or GitHub access.
+8. Trigger a human gate in autonomous mode. Confirm that the run stops before the action and resumes only with a human decision.
+9. Interrupt an implementation and resume it. Confirm that completed units are not repeated and earlier evidence is revalidated.
+10. Trigger a hard fail, a soft fail and a pre-existing failure. Confirm separate classification and retry policy.
 
-## Evidencias de aprovacao
+## Approval evidence
 
-- Os tres `SKILL.md` passam no `quick_validate.py` do `skill-creator`.
-- Nenhuma skill central foi substituida por um resumo.
-- A chamada direta continua compativel com o fluxo anterior.
-- O modo orquestrado so ativa com envelope completo.
-- `.planning` e `.jotta` nunca aparecem em stage ou conteudo publicado.
-- A verificacao final e o relatorio de criterios nunca sao pulados.
-- GitHub usa merge commit e nunca squash ou rebase merge.
+- The three `SKILL.md` files pass `quick_validate.py` from `skill-creator`.
+- No core skill was replaced by a summary.
+- Direct invocation stays compatible with the previous flow.
+- Orchestrated mode activates only with a complete envelope.
+- `.planning` and `.jotta` never appear in stage or published content.
+- Final verification and the criteria report are never skipped.
+- GitHub uses merge commit and never squash or rebase merge.

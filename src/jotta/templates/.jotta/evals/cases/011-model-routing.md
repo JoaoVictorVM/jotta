@@ -1,20 +1,20 @@
-# Caso 011: roteamento de modelos
+# Case 011: model routing
 
-## Objetivo
+## Goal
 
-Validar selecao por tarefa sem reduzir contratos das skills.
+Validate per-task selection without reducing the skill contracts.
 
-## Cenarios
+## Scenarios
 
-1. Execute `jotta models validate`.
-2. Resolva `spec-writer` e confirme tier `efficient`.
-3. Resolva `implement-feature` e confirme tier `strong`.
-4. Resolva `pr-reviewer` e confirme tier `review`.
-5. Com modelo nulo e politica `inherit`, confirme modelo herdado sem falsa alegacao de troca.
-6. Configure um ID valido do provedor e confirme retorno `resolved`.
-7. Simule plataforma sem selecao por agente e confirme registro do modelo efetivo herdado.
-8. Confirme que trocar modelo nao remove entrevista, validacao, review ou human gates.
+1. Run `jotta models validate`.
+2. Resolve `spec-writer` and confirm tier `efficient`.
+3. Resolve `implement-feature` and confirm tier `strong`.
+4. Resolve `pr-reviewer` and confirm tier `review`.
+5. With a null model and the `inherit` policy, confirm the inherited model without a false claim of switching.
+6. Configure a valid provider ID and confirm a `resolved` result.
+7. Simulate a platform without per-agent selection and confirm that the inherited effective model is recorded.
+8. Confirm that switching models does not remove interviews, validation, review or human gates.
 
-## Aprovacao
+## Approval
 
-Toda criacao de agente registra task, tier, preferencia, modelo efetivo e origem da decisao.
+Every agent creation records task, tier, preference, effective model and decision source.

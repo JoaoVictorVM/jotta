@@ -1,6 +1,5 @@
-# Caso 004: CI bloqueia merge
+# Case 004: CI blocks merge
 
-Configure um check obrigatorio para falhar.
+Configure a required check to fail.
 
-Passa se o harness registrar bloqueio e nao executar merge.
-
+Passes if the harness records the block and does not merge.

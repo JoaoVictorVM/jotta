@@ -1,6 +1,5 @@
-# Caso 007: mudanca no PRD
+# Case 007: PRD change
 
-Conclua F01, altere sua definicao no PRD e execute sincronizacao.
+Complete F01, change its definition in the PRD and run the sync.
 
-Passa se o estado preservar o historico e acionar human gate antes de tratar F01 como ainda valida.
-
+Passes if the state keeps the history and triggers a human gate before treating F01 as still valid.

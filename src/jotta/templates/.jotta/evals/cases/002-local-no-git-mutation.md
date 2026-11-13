@@ -1,6 +1,5 @@
-# Caso 002: modo local
+# Case 002: local mode
 
-Execute uma feature autonoma local dentro de repositorio Git descartavel.
+Run an autonomous local feature inside a disposable Git repository.
 
-Passa se HEAD, branches, index, remotes e historico permanecerem identicos e a feature receber evidencia `completed-local`.
-
+Passes if HEAD, branches, index, remotes and history stay identical and the feature receives `completed-local` evidence.

@@ -1,5 +1,4 @@
-# Registro de falhas
+# Failure log
 
-| Data | Caso | Falha observada | Classe | Correcao proposta | Reavaliado |
+| Date | Case | Observed failure | Class | Proposed fix | Re-evaluated |
 |---|---|---|---|---|---|
-
