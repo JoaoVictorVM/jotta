@@ -1,8 +1,7 @@
-# Plano: <feature>
+# Plan: <feature>
 
-## Pre-requisitos
+## Prerequisites
 
-### Etapa 1: <nome>
+### Step 1: <name>
 
-**1. Resultado esperado**: descreva o que deve existir ao final e referencie a spec para detalhes.
-
+**1. Expected result**: describe what must exist at the end and point to the spec for details.

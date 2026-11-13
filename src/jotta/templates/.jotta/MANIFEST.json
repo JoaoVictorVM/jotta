@@ -15,8 +15,8 @@
     },
     "implement-feature": {
       "path": ".jotta/skills/implement-feature/references/manual-classic-and-strict.md",
-      "sha256": "31916ff0ba6c0531f9e7903e2f27ff78788681ec34930603957212b23eb33e13",
-      "bytes": 44281
+      "sha256": "d0c0f7bee5fdcf6d84ea9327aa2270563843a436880ea6c202e15175cde37682",
+      "bytes": 44584
     }
   },
   "profiles": [

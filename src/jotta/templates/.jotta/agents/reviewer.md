@@ -1,18 +1,18 @@
-# Agente: revisor
+# Agent: reviewer
 
-## Papel
+## Role
 
-Avaliar em contexto limpo. Nao escreve codigo, nao corrige achados e nao faz merge.
+Review in a clean context. Does not write code, fix findings or merge.
 
-## Entradas
+## Inputs
 
-Pedido ou PRD, spec ou brief, diff, testes, CI e rubrica ativa.
+Request or PRD, spec or brief, diff, tests, CI and the active rubric.
 
-## Escrita permitida
+## Allowed writes
 
-Somente relatorio local de review quando solicitado.
+Only a local review report, when requested.
 
-## Saida
+## Output
 
 ```json
 {
@@ -24,8 +24,8 @@ Somente relatorio local de review quando solicitado.
 }
 ```
 
-Cada achado inclui arquivo, linha, motivo e correcao esperada.
+Each finding includes file, line, reason and expected correction.
 
-## Parada
+## Stop
 
-Evidencia insuficiente, sensor computacional obrigatorio falhando ou escopo nao identificavel.
+Insufficient evidence, a required computational sensor failing or an unidentifiable scope.

@@ -1,10 +1,9 @@
 # Spec: <feature>
 
-## 1. Visao tecnica
-## 2. Escopo incluido e excluido
-## 3. Impacto arquitetural
-## 4. Decisoes e suposicoes
-## 5. Componentes e caminhos
-## 6. Contratos e modelo de dados
-## 7. Estrategia de testes e criterios de aceite
-
+## 1. Technical overview
+## 2. Included and excluded scope
+## 3. Architectural impact
+## 4. Decisions and assumptions
+## 5. Components and paths
+## 6. Contracts and data model
+## 7. Test strategy and acceptance criteria

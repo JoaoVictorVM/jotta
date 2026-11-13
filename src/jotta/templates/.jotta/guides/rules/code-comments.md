@@ -1,4 +1,3 @@
-# Regra de comentarios
+# Comment rule
 
-Escreva comentarios apenas para explicar o motivo de uma decisao nao obvia, regra de negocio, limitacao externa ou workaround. Nao descreva o que o codigo ja comunica.
-
+Write comments only to explain the reason for a non-obvious decision, a business rule, an external limitation or a workaround. Do not describe what the code already says.

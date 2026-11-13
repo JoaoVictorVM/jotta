@@ -1,11 +1,11 @@
-# Rubrica: mapa de commits
+# Rubric: commit map
 
-Verifique:
+Check that:
 
-- Cada commit representa uma mudanca logica.
-- A ordem respeita dependencias.
-- Arquivos relacionados e testes ficam juntos quando necessario.
-- Nao ha segredo, build, cache ou artefato local.
-- Nenhum arquivo aparece em dois commits no MVP.
-- Commits locais sem push nao sao recriados.
-- Mensagens descrevem comportamento, sem IDs de planejamento.
+- Each commit represents one logical change.
+- The order respects dependencies.
+- Related files and tests stay together when needed.
+- There are no secrets, builds, caches or local artifacts.
+- No file appears in two commits in the MVP.
+- Local commits that were not pushed are not recreated.
+- Messages describe behavior, without planning IDs.

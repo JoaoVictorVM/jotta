@@ -1,21 +1,21 @@
-# Mapa de commits
+# Commit map
 
-## Estado de origem
+## Source state
 
-- Tipo: working-tree, unpublished-history ou initial-project
+- Type: working-tree, unpublished-history or initial-project
 - Fingerprint: <sha256>
 
 ## Commit 1
 
-- Mensagem: `tipo(escopo): descricao`
-- Motivo: mudanca logica representada
-- Arquivos:
-  - caminho
+- Message: `type(scope): description`
+- Reason: the logical change it represents
+- Files:
+  - path
 
-## Excluidos
+## Excluded
 
-- caminho: motivo
+- path: reason
 
-## Commits locais sem push
+## Local commits not pushed
 
-- sha e mensagem, sem recriar o commit
+- sha and message, without recreating the commit

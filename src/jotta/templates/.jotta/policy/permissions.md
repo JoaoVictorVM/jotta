@@ -33,10 +33,10 @@ profiles:
       - create-worktree
 ---
 
-# Permissoes
+# Permissions
 
-Este arquivo restringe o que o harness pode executar automaticamente. Ele nao amplia permissoes da plataforma. A precedencia interna e `deny`, human gate, `allow`, `default`.
+This file restricts what the harness may run automatically. It never extends the platform's permissions. The internal precedence is `deny`, human gate, `allow`, then `default`.
 
-A limpeza de uma worktree so e permitida depois de merge confirmado, SHA registrado e verificacao de que a worktree esta limpa. O fluxo nunca usa remocao forcada.
+Cleaning up a worktree is allowed only after a confirmed merge, a recorded SHA and a check that the worktree is clean. The flow never uses forced removal.
 
-Edite o frontmatter e execute `jotta doctor`.
+Edit the frontmatter and run `jotta doctor`.

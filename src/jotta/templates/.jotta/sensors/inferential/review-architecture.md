@@ -1,4 +1,3 @@
-# Rubrica: arquitetura
+# Rubric: architecture
 
-Verifique direcao de dependencias, responsabilidade dos modulos, contratos entre camadas, acoplamento, duplicacao e abstracoes prematuras. Use a arquitetura observada no projeto como referencia. Nao invente uma arquitetura nova durante o review.
-
+Check dependency direction, module responsibilities, contracts between layers, coupling, duplication and premature abstractions. Use the architecture observed in the project as the reference. Do not invent a new architecture during the review.

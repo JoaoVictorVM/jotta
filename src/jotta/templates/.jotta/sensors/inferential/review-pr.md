@@ -1,12 +1,11 @@
-# Rubrica: review de PR
+# Rubric: pull request review
 
-1. O diff corresponde ao escopo.
-2. Criterios de aceite possuem evidencia.
-3. Nao ha regressao ou falha obrigatoria.
-4. Mudancas de seguranca, dados e dependencias foram avaliadas.
-5. O PR nao publica arquivos ou referencias locais.
-6. Titulo, corpo e commits representam a mudanca.
-7. CI obrigatorio esta verde.
+1. The diff matches the scope.
+2. Acceptance criteria have evidence.
+3. There is no regression or required failure.
+4. Security, data and dependency changes were evaluated.
+5. The pull request does not publish local files or references.
+6. Title, body and commits represent the change.
+7. Required CI is green.
 
-Saida conforme `.jotta/guides/templates/review-report.md`.
-
+Output follows `.jotta/guides/templates/review-report.md`.

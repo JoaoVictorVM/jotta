@@ -1,4 +1,3 @@
-# Adaptador Codex
+# Codex adapter
 
-O arquivo `AGENTS.md` da raiz e o ponto de entrada. As skills canonicas ficam em `.jotta/skills`. Quando a instalacao exigir descoberta automatica fora desse caminho, copie ou registre as skills no local suportado pelo runtime, preservando `.jotta/skills` como fonte local do projeto.
-
+The root `AGENTS.md` is the entry point. The canonical skills live in `.jotta/skills`. When the installation requires automatic discovery outside that path, copy or register the skills where the runtime supports them, keeping `.jotta/skills` as the project's local source.

@@ -1,13 +1,12 @@
-# Sensores computacionais
+# Computational sensors
 
-Execute pelo comando `jotta`.
+Run them through the `jotta` command.
 
-- `doctor`: integridade do harness.
-- `validate-prd`: tabela de features, dependencias e ciclos.
-- `validate-state`: JSON e estados conhecidos.
-- `gate text`: travessoes em conteudo versionado.
-- `gate staged`: caminhos locais, segredos e `.gitkeep` no stage.
-- `gate branch`: formato da branch.
-- `gate commit`: formato e texto da mensagem.
-- `quality`: comandos configurados por perfil.
-
+- `doctor`: harness integrity.
+- `validate-prd`: feature table, duplicate IDs, priorities and missing dependencies.
+- `gate text`: forbidden dash characters in tracked text files.
+- `gate staged`: local-only harness files and `.gitkeep` in the staging area.
+- `gate branch`: branch name format.
+- `gate commit`: message format and forbidden text.
+- `quality`: the commands configured for each profile.
+- `budget check`: budget thresholds, see `provider-budget.md`.

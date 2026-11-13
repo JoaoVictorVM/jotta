@@ -1,13 +1,12 @@
-# Rubrica: review de spec
+# Rubric: spec review
 
-Avalie de 0 a 2:
+Score each item from 0 to 2:
 
-1. Escopo e fora de escopo estao claros.
-2. Decisoes seguem o codigo atual ou registram divergencias.
-3. Componentes e caminhos sao plausiveis.
-4. Contratos e dados sao suficientes para implementar.
-5. Testes cobrem criterios de aceite e integracoes.
-6. Suposicoes e riscos estao explicitos.
+1. Scope and out of scope are clear.
+2. Decisions follow the current code or record divergences.
+3. Components and paths are plausible.
+4. Contracts and data are enough to implement.
+5. Tests cover acceptance criteria and integrations.
+6. Assumptions and risks are explicit.
 
-Reprove se qualquer item receber 0 ou houver dependencia nao resolvida.
-
+Reject if any item scores 0 or a dependency is unresolved.

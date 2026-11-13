@@ -1,9 +1,8 @@
-# Regra de seguranca
+# Security rule
 
-- Nunca leia, grave ou publique segredos sem necessidade e autorizacao.
-- Nunca inclua `.env`, chaves, tokens ou credenciais em commits.
-- Nao desabilite TLS para contornar falhas.
-- Use queries parametrizadas.
-- Dependencias novas devem seguir o padrao do projeto e passar pelos scanners disponiveis.
-- Servicos pagos, producao, autenticacao, pagamentos e dados pessoais acionam human gates quando aplicavel.
-
+- Never read, write or publish secrets without need and authorization.
+- Never include `.env`, keys, tokens or credentials in commits.
+- Do not disable TLS to work around failures.
+- Use parameterized queries.
+- New dependencies follow the project's standards and pass the available scanners.
+- Paid services, production, authentication, payments and personal data trigger human gates when applicable.

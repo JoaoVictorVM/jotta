@@ -1,11 +1,11 @@
 # Product Requirements Document
 
-Substitua este arquivo pelo PRD real. O harness espera uma secao `Dependency Graph` com uma tabela no formato:
+Replace this file with the real PRD. The harness expects a `Dependency Graph` section with a table in this format:
 
 | # | Feature | Priority | Dependencies |
 |---|---|---|---|
-| F01 | Exemplo inicial | 1 | None |
+| F01 | Initial example | 1 | None |
 
-E uma secao `Execution Waves` no formato:
+And an `Execution Waves` section in this format:
 
 - **Wave 1**: F01
