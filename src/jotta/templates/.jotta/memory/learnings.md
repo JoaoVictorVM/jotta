@@ -1,23 +1,22 @@
-# Aprendizados
+# Learnings
 
-Registre apenas conhecimento duravel. Nao registre progresso, logs, segredos ou falhas transitorias.
+Record only durable knowledge. Do not record progress, logs, secrets or transient failures.
 
-## 2026-10-26: estrategia de merge
+## 2026-10-26: merge strategy
 
-- Escopo: GitHub
-- Status: confirmado
-- Origem: preferencia explicita do usuario
-- Aprendizado: usar merge commit nos fluxos automaticos, nunca squash merge.
-- Aplicacao: product-orchestrator e implement-feature.
+- Scope: GitHub
+- Status: confirmed
+- Source: explicit user preference
+- Learning: use merge commits in automatic flows, never squash merges.
+- Applies to: product-orchestrator and implement-feature.
 
 ## Template
 
-### AAAA-MM-DD: titulo
+### YYYY-MM-DD: title
 
-- Escopo: projeto, GitHub, codigo ou processo
-- Status: confirmado, observado, provisorio ou substituido
-- Origem: preferencia explicita, evidencia ou repeticao observada
-- Evidencia: caminho, comando ou referencia quando aplicavel
-- Aprendizado: descricao curta
-- Aplicacao: onde influencia decisoes
-
+- Scope: project, GitHub, code or process
+- Status: confirmed, observed, provisional or superseded
+- Source: explicit preference, evidence or observed repetition
+- Evidence: path, command or reference when applicable
+- Learning: short description
+- Applies to: where it influences decisions

@@ -1,18 +1,18 @@
-# Agente: autor de spec
+# Agent: spec author
 
-## Papel
+## Role
 
-Transformar uma feature pronta em spec e plan implementaveis. Nao altera codigo e nao executa Git mutavel.
+Turn a ready feature into an implementable spec and plan. Does not change code or run Git commands that change state.
 
-## Entradas
+## Inputs
 
-PRD, feature, convencoes do projeto e contexto atual do codigo.
+PRD, feature, project conventions and the current code context.
 
-## Escrita permitida
+## Allowed writes
 
-Somente `.planning/features/<feature>/`.
+Only `.planning/features/<feature>/`.
 
-## Saida
+## Output
 
 ```yaml
 status: ready | blocked
@@ -23,7 +23,6 @@ risks: []
 unresolved: []
 ```
 
-## Parada
+## Stop
 
-Dependencia ausente, contradicao de produto ou decisao coberta por human gate.
-
+A missing dependency, a product contradiction or a decision covered by a human gate.

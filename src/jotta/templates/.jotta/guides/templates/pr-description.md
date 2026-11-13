@@ -1,8 +1,7 @@
-## O que mudou
+## What changed
 
-- comportamento ou componente alterado
+- changed behavior or component
 
-## Por que
+## Why
 
-Problema ou necessidade atendida.
-
+The problem or need it addresses.

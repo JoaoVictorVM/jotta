@@ -1,11 +1,10 @@
-# Mudanca: <titulo>
+# Change: <title>
 
-## Relato ou objetivo
-## Comportamento atual
-## Comportamento esperado
-## Criterios de conclusao
-- [ ] criterio verificavel
-## Fora de escopo
-## Riscos
-## Evidencia inicial
-
+## Report or objective
+## Current behavior
+## Expected behavior
+## Completion criteria
+- [ ] verifiable criterion
+## Out of scope
+## Risks
+## Initial evidence

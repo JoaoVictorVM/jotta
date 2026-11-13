@@ -1,11 +1,10 @@
-# Planning local
+# Local planning
 
-Esta pasta nunca deve ser versionada.
+This folder is never versioned.
 
-- `PRD.md`: fonte de verdade do produto.
-- `features/`: uma pasta por feature, contendo `spec.md` e `plan.md`.
-- `changes/`: bugs, ajustes e refatoracoes sem spec completa.
-- `decisions/`: decisoes de planejamento.
-- `commit-plans/`: mapas de commits em Markdown e JSON.
-- `archive/`: snapshots substituidos.
-
+- `PRD.md`: the product's source of truth.
+- `features/`: one folder per feature, with `spec.md` and `plan.md`.
+- `changes/`: bugs, adjustments and refactors without a full spec.
+- `decisions/`: planning decisions.
+- `commit-plans/`: commit maps in Markdown and JSON.
+- `archive/`: superseded snapshots.
