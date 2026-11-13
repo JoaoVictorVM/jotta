@@ -1,14 +1,13 @@
-# Regra de commits
+# Commit rule
 
-Formato: `tipo(escopo): descricao`.
+Format: `type(scope): description`.
 
-Tipos: `feat`, `fix`, `refactor`, `test`, `docs`, `style`, `perf`, `build`, `ci`, `chore`.
+Types: `feat`, `fix`, `refactor`, `test`, `docs`, `style`, `perf`, `build`, `ci`, `chore`.
 
-- Descricao em pt-BR, minuscula, verbo no presente e sem ponto final.
-- Use de 1 a 3 commits semanticos por feature quando possivel.
-- O limite normal e 5. Exceder exige justificativa no estado.
-- Um commit representa uma mudanca logica e revisavel, nao um arquivo ou funcao.
-- Stage arquivos explicitamente. Nao use `git add .`, `git add -A` ou `git commit -a`.
-- Nao pule hooks.
-- Nao adicione trailers ou atribuicao de IA.
-
+- Write the description in the language set by `commits.language` in `.jotta/config.yaml`, in lowercase, with a present-tense verb and no trailing period.
+- Use 1 to 3 semantic commits per feature when possible.
+- The normal limit is 5. Exceeding it requires a justification in the state.
+- A commit is one logical, reviewable change, not one file or one function.
+- Stage files explicitly. Do not use `git add .`, `git add -A` or `git commit -a`.
+- Do not skip hooks.
+- Do not add trailers or AI attribution.

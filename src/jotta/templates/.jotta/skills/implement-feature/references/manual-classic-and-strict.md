@@ -1,6 +1,6 @@
 ---
 name: implement-feature
-description: Implements a feature from its spec and plan with exhaustive validation, progress tracking, Conventional Commits in pt-BR and acceptance-criteria reporting. Preserves the original supervised GitHub workflow and supports explicit harness profiles for autonomous GitHub and local-only execution.
+description: Implements a feature from its spec and plan with exhaustive validation, progress tracking, Conventional Commits in the configured language and acceptance-criteria reporting. Preserves the original supervised GitHub workflow and supports explicit harness profiles for autonomous GitHub and local-only execution.
 ---
 
 # Implement Feature
@@ -91,12 +91,12 @@ The skill only needs to locate two files and one reference source:
 1. **No dashes.** Never use an em dash (-) or en dash (-) anywhere in versioned content or in chat messages. Use a comma, a colon or parentheses instead. Plain hyphens inside identifiers (`feat/busca-video`, `kebab-case`) are fine.
 2. **No planning references.** PRD, spec and plan exist only locally. Never mention them or their IDs in versioned content: no `F01`, `F09`, `P2`, `RF02`, `US03`, no "resolve F01", "conforme a spec", "ver PRD", "phase 2 of the plan". Describe a change by what it does, never by the document it came from. IDs are allowed only in chat and in `progress.md`.
 3. **No AI attribution.** Never add `Co-Authored-By: Claude <noreply@anthropic.com>`, any other `Co-Authored-By` line naming Claude or Anthropic, "Generated with Claude Code", or any mention of Claude, Anthropic or AI in commits, PRs, comments or descriptions. Nothing in the repository or on GitHub may show that Claude took part.
-4. **Conventional Commits in pt-BR.** Format `tipo(escopo): descrição`. Description in lowercase, verb in the present tense, no trailing period. Types: `feat`, `fix`, `refactor`, `test`, `docs`, `style`, `perf`, `build`, `ci`, `chore`. The scope is the module or area touched (`backend`, `api`, `frontend`, `db`, `auth`, ...), never a feature or phase ID. Examples:
+4. **Conventional Commits in the configured language.** Format `type(scope): description`, written in the language set by `commits.language` in `.jotta/config.yaml` (pt-BR by default). Description in lowercase, verb in the present tense, no trailing period. Types: `feat`, `fix`, `refactor`, `test`, `docs`, `style`, `perf`, `build`, `ci`, `chore`. The scope is the module or area touched (`backend`, `api`, `frontend`, `db`, `auth`, ...), never a feature or phase ID. Examples in pt-BR:
    - `feat(backend): implementa autenticacao`
    - `fix(frontend): corrige validacao do formulario de login`
    - `refactor(api): extrai logica de paginacao`
    Match the project's recent history if it already follows this format with its own conventions (scopes, accents); otherwise use exactly the format above.
-5. **Branch names**: `tipo/descricao-curta` in pt-BR kebab-case, derived from what the feature does, never from its ID. Example: feature folder `F09-in-video-transcription-search` → `feat/busca-transcricao-video`.
+5. **Branch names**: `type/short-description` in kebab-case, written in `commits.language`, derived from what the feature does, never from its ID. Example: feature folder `F09-in-video-transcription-search` → `feat/busca-transcricao-video`.
 6. **Explicit staging.** Stage files one by one (`git add <file>`). Never `git add -A`, `git add .` or `git commit -a`.
 7. **AI and planning files stay local.** `CLAUDE.md`, `.claude/`, the PRD and the feature folders (spec, plan, `progress.md`) never get committed. Keep them out of git through `.git/info/exclude`, never through `.gitignore`, and never mention them in README, docs, code or any versioned file.
 
@@ -117,7 +117,7 @@ Any match → rewrite the text and check again. Never write versioned content th
 
 Ask for approval with the AskUserQuestion tool, in the user's language, so the user can answer with a button. Proceed only on an explicit yes. Each approval covers only its own gate and does not carry over to the next one or to a future run.
 
-| Gate | When | Example question | Covers |
+| Gate | When | Example question (pt-BR) | Covers |
 |------|------|------------------|--------|
 | G1 | Before creating the branch | "Posso criar a branch `feat/busca-transcricao-video` a partir de `main`?" | Fetching and creating/checking out the branch |
 | G2 | Before writing any code | "Posso implementar as 3 fases e commitar atomicamente na branch `feat/busca-transcricao-video`?" | All implementation and all atomic commits of this run, including fix commits from validation retries |
@@ -307,7 +307,7 @@ For every commit-enabled profile:
 
 1. Stage only the files for that checkpoint, one by one (`git add <file>`).
 2. Run `git status` and confirm no local-only file is staged. If something is staged, unstage it and fix `.git/info/exclude`.
-3. Write a Conventional Commit in pt-BR that describes the semantic result, then run the Text check.
+3. Write a Conventional Commit in `commits.language` that describes the semantic result, then run the Text check.
 4. Commit on the feature branch without skipping hooks.
 5. Read the commit back with `git log -1 --format=%B` and confirm it still passes the Text check.
 6. Associate all included implementation units with the short sha in `progress.md`.
@@ -424,8 +424,8 @@ If aborted, the report still lists whatever committed phases achieved and clearl
 
 **9.2 Prepare the PR.** Skip this and stop if the status is `aborted at phase <N>` or audit 8.5 failed. Otherwise draft:
 
-- **Title**: same format as commits, `tipo(escopo): descrição`, pt-BR, summarizing the whole change.
-- **Body** in pt-BR, with exactly these sections:
+- **Title**: same format and language as commits, summarizing the whole change.
+- **Body** in `commits.language`, with exactly these sections (headings shown in pt-BR; in English use `What changed`, `Why` and `Pending`):
   ```
   ## O que mudou
   <what the change does, as a short list of behaviors and components>
@@ -445,7 +445,7 @@ Run the Text check on the title and the body.
 
 This step applies only to GitHub profiles. Direct and `supervised + github` runs keep the original G4 loop. An `autonomous + github` run uses the Autonomous GitHub review contract; initial authorization satisfies G4 only after review, checks and audits pass and no human gate is pending.
 
-Right after the PR opens, direct and supervised GitHub profiles ask G4 with AskUserQuestion, e.g. "Revisou o PR #12 no GitHub? Posso fazer o merge?", offering "Aprovado, pode fazer o merge" and "Ainda não". The user can also answer in free text with requested changes. Autonomous GitHub instead runs the independent review loop defined above and uses its recorded authorization only after that loop passes.
+Right after the PR opens, direct and supervised GitHub profiles ask G4 with AskUserQuestion, in the user's language, e.g. in pt-BR "Revisou o PR #12 no GitHub? Posso fazer o merge?", offering "Aprovado, pode fazer o merge" and "Ainda não". The user can also answer in free text with requested changes. Autonomous GitHub instead runs the independent review loop defined above and uses its recorded authorization only after that loop passes.
 
 GitHub does not let the author approve their own PR, so do not rely on `reviewDecision`. The user's explicit "yes" in chat is the approval.
 
@@ -548,7 +548,7 @@ Unrecognized or contradictory overrides: default wins; logged under `Overrides i
 
 **Already on a non-base branch at start**: ignore it; the new branch is always created from `origin/<base>`, unless `progress.md` says this is a resumed run on that branch.
 
-**Phase or unit name contains special characters**: describe the unit in plain pt-BR words in the commit message (e.g. `feat(api): adiciona rota de upload`).
+**Phase or unit name contains special characters**: describe the unit in plain words in `commits.language` in the commit message (e.g. `feat(api): adiciona rota de upload`).
 
 **Re-invocation after a partial run**: Step 5 detects the branch from `progress.md`, Step 7.1 skips fully covered phases and resumes a partially covered phase from its next unchecked unit. Uncommitted working-tree changes from a prior interrupted run stay as-is; the skill does not clean them up.
 

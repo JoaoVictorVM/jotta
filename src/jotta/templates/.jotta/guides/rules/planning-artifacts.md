@@ -1,8 +1,7 @@
-# Artefatos de planejamento
+# Planning artifacts
 
-- PRD, specs, plans, briefs e mapas de commits ficam em `.planning`.
-- Eles nunca entram no Git nem no GitHub.
-- Use `.git/info/exclude`, nunca `.gitignore`, para mantê-los locais.
-- IDs de planejamento podem aparecer em `.planning`, `.jotta/runtime/state` e conversa local.
-- Conteudo publicado descreve comportamento, nunca o documento de origem.
-
+- PRD, specs, plans, briefs and commit maps live in `.planning`.
+- They never go to Git or GitHub.
+- Use `.git/info/exclude`, never `.gitignore`, to keep them local.
+- Planning IDs may appear in `.planning`, `.jotta/runtime/state` and local conversation.
+- Published content describes behavior, never the source document.

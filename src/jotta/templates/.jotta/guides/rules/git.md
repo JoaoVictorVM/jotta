@@ -1,11 +1,10 @@
-# Regra de Git e GitHub
+# Git and GitHub rule
 
-- Branch: `tipo/descricao-curta` em kebab-case.
-- Titulo do PR segue Conventional Commits.
-- Corpo do PR explica `O que mudou` e `Por que`.
-- Merge automatico usa merge commit.
-- Nunca use force push, hard reset ou bypass de branch protection.
-- Nunca descarte alteracoes existentes do usuario.
-- `.jotta`, `.planning`, `AGENTS.md`, `CLAUDE.md` e `.claude` sao locais.
-- Nao cite IDs ou nomes de documentos de planejamento em conteudo publicado.
-
+- Branch: `type/short-description` in kebab-case.
+- Pull request titles follow Conventional Commits.
+- The pull request body explains what changed and why, in `commits.language`.
+- Automatic merges use a merge commit.
+- Never use force push, hard reset or a branch protection bypass.
+- Never discard the user's existing changes.
+- `.jotta`, `.planning`, `AGENTS.md`, `CLAUDE.md` and `.claude` are local.
+- Do not cite planning IDs or planning document names in published content.
