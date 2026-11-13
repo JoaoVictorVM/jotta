@@ -2,6 +2,15 @@
 
 Todas as mudancas relevantes deste projeto serao registradas aqui.
 
+## Nao lancado
+
+- Distribui o Jotta como pacote Python com o comando `jotta`, que substitui os scripts de `.harness/scripts/`.
+- Move o conteudo instalado para os templates do pacote e renomeia a pasta do harness de `.harness/` para `.jotta/`.
+- Consolida permissoes, orcamento e roteamento em `.jotta/policy/` e cria o estado de execucao sob demanda em `.jotta/runtime/state/`.
+- Substitui `scripts/install.py` e `bootstrap.py` por `jotta install`, com `--dry-run`, `--force-overwrite` e `--no-git-exclude`.
+- O `doctor` deixa de exigir exclusoes locais no Git e arquivos de estado.
+- Remove os prompts e workflows arquivados da v0.4. Eles continuam disponiveis na tag `v0.5.0`, em `.harness/prompts/archive/v0.4/` e `.harness/workflows/archive/v0.4/`.
+
 ## 0.5.0
 
 - Adiciona os perfis `manual-classic`, `lean` e `strict`.
