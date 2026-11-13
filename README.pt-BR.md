@@ -68,7 +68,7 @@ Documentos de planejamento e estado de execução ficam locais no projeto consum
 | `lean` | Contexto progressivo, smoke checks por feature e revisão final. Padrão para execução autônoma. |
 | `strict` | Validação e revisão mais completas para cada feature. |
 
-Trabalhos de alto risco em `lean` são elevados para `strict` na preparação. Consulte o [guia do runtime](./src/jotta/templates/.jotta/README.md) para o ciclo de execução e os comandos internos.
+Trabalhos de alto risco em `lean` são elevados para `strict` na preparação. Consulte os [perfis](./docs/concepts/profiles.md) e os [guias de conceitos](./docs/README.md), em inglês, para workflows, estado, orçamento e roteamento de modelos.
 
 ## Requisitos
 
@@ -138,7 +138,7 @@ src/jotta/templates/         Arquivos instalados no projeto: .jotta/, .planning/
 tests/                       Testes do pacote
 scripts/repository_check.py  Verificações do repositório público e do pacote
 scripts/self_test.py         Verificações de regressão dos templates
-docs/                        Guia de publicação e recursos visuais
+docs/                        Guias de conceitos, suposições do agente e guia de publicação
 AGENTS.md                    Instruções para agentes que desenvolvem o Jotta
 CLAUDE.md                    Ponte para AGENTS.md
 ```

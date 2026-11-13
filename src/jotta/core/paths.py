@@ -86,7 +86,6 @@ class ProjectPaths:
             self.root / "AGENTS.md",
             harness / "README.md",
             harness / "AGENT-MANUAL.md",
-            harness / "ARCHITECTURE.md",
             harness / "config.yaml",
             harness / "workflows" / "product.md",
             harness / "workflows" / "change.md",

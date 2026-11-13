@@ -68,7 +68,7 @@ Planning documents and execution state stay local to the consumer project. Agent
 | `lean` | Progressive context, smoke checks per feature and final review. The autonomous default. |
 | `strict` | Deeper validation and review for each feature. |
 
-High-risk work in `lean` is elevated to `strict` during preparation. See the [runtime guide](./src/jotta/templates/.jotta/README.md) for the lifecycle and internal commands.
+High-risk work in `lean` is elevated to `strict` during preparation. See the [profiles](./docs/concepts/profiles.md) and the [concept guides](./docs/README.md) for workflows, state, budget and model routing.
 
 ## Requirements
 
@@ -138,7 +138,7 @@ src/jotta/templates/         Files installed into a project: .jotta/, .planning/
 tests/                       Package tests
 scripts/repository_check.py  Public repository and package checks
 scripts/self_test.py         Template regression checks
-docs/                        Publishing guide and project assets
+docs/                        Concept guides, model assumptions and publishing guide
 AGENTS.md                    Instructions for agents developing Jotta
 CLAUDE.md                    Bridge to AGENTS.md
 ```
