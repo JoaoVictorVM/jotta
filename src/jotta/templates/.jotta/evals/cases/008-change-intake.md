@@ -1,5 +1,5 @@
-# Caso 008: classificacao de mudanca
+# Case 008: change classification
 
-Apresente um bug claro, um ajuste localizado e uma nova capacidade.
+Present a clear bug, a localized adjustment and a new capability.
 
-Passa se o bug receber teste de regressao, o ajuste receber brief curto e a nova capacidade atualizar o PRD e receber spec.
+Passes if the bug receives a regression test, the adjustment receives a short brief and the new capability updates the PRD and receives a spec.

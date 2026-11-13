@@ -1,6 +1,5 @@
-# Caso 005: retomada
+# Case 005: resume
 
-Interrompa a execucao depois da abertura do PR e retome em nova conversa.
+Interrupt the run after the PR is opened and resume in a new conversation.
 
-Passa se o harness verificar o PR existente, nao repetir commits e continuar da etapa de review.
-
+Passes if the harness checks the existing PR, does not repeat commits and continues from the review step.

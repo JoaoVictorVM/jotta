@@ -1,37 +1,38 @@
 # Changelog
 
-Todas as mudancas relevantes deste projeto serao registradas aqui.
+All notable changes to this project are recorded here.
 
-## Nao lancado
+## Unreleased
 
-- Distribui o Jotta como pacote Python com o comando `jotta`, que substitui os scripts de `.harness/scripts/`.
-- Move o conteudo instalado para os templates do pacote e renomeia a pasta do harness de `.harness/` para `.jotta/`.
-- Consolida permissoes, orcamento e roteamento em `.jotta/policy/` e cria o estado de execucao sob demanda em `.jotta/runtime/state/`.
-- Substitui `scripts/install.py` e `bootstrap.py` por `jotta install`, com `--dry-run`, `--force-overwrite` e `--no-git-exclude`.
-- O `doctor` deixa de exigir exclusoes locais no Git e arquivos de estado.
-- Move a arquitetura e as suposicoes do agente para `docs/`, adiciona os guias de conceitos e une as release notes a este changelog.
-- Remove os prompts e workflows arquivados da v0.4. Eles continuam disponiveis na tag `v0.5.0`, em `.harness/prompts/archive/v0.4/` e `.harness/workflows/archive/v0.4/`.
+- Ships Jotta as a Python package with the `jotta` command, which replaces the scripts in `.harness/scripts/`.
+- Moves the installed content into the package templates and renames the harness folder from `.harness/` to `.jotta/`.
+- Consolidates permissions, budget and routing in `.jotta/policy/` and creates the run state on demand in `.jotta/runtime/state/`.
+- Replaces `scripts/install.py` and `bootstrap.py` with `jotta install`, with `--dry-run`, `--force-overwrite` and `--no-git-exclude`.
+- `doctor` no longer requires local Git excludes or state files.
+- Moves the architecture and the agent assumptions to `docs/`, adds the concept guides and merges the release notes into this changelog.
+- Removes the archived v0.4 prompts and workflows. They remain available in the `v0.5.0` tag, under `.harness/prompts/archive/v0.4/` and `.harness/workflows/archive/v0.4/`.
+- Writes the installed content, the CLI messages and the eval cases in English. The language of commits and documentation is configurable in `.jotta/config.yaml`.
 
 ## 0.5.0
 
-- Adiciona os perfis `manual-classic`, `lean` e `strict`.
-- Preserva integralmente os contratos das skills de PRD, spec e implementacao.
-- Consolida a execucao em workflows de produto, mudanca e qualidade.
-- Adiciona contexto progressivo, checkpoints e quality receipts compactos.
-- Adiciona budget gate e roteamento de modelos por tarefa.
-- Adiciona worktrees e sessoes visiveis gerenciadas pelo Orca.
-- Adiciona adaptadores para Codex, Claude e OpenCode.
-- Adiciona prompts, avaliacoes e verificacoes automatizadas.
-- Prepara o projeto para distribuicao open source sob a licenca MIT.
-- Usa smoke checks por feature no perfil lean e concentra a revisao semantica no final.
-- Remove worktree e branch local somente depois de merge confirmado e verificacoes de seguranca.
-- Registra estimativas de consumo por fase e trata os limites do provedor como human gate quando a plataforma os disponibiliza.
-- Mantem prompts e workflows antigos em `archive/v0.4` para consulta, fora do contexto normal.
+- Adds the `manual-classic`, `lean` and `strict` profiles.
+- Fully preserves the contracts of the PRD, spec and implementation skills.
+- Consolidates execution into product, change and quality workflows.
+- Adds progressive context, checkpoints and compact quality receipts.
+- Adds a budget gate and per-task model routing.
+- Adds worktrees and visible sessions managed by Orca.
+- Adds adapters for Codex, Claude and OpenCode.
+- Adds prompts, evaluations and automated checks.
+- Prepares the project for open source distribution under the MIT license.
+- Uses smoke checks per feature in the lean profile and concentrates the semantic review at the end.
+- Removes the worktree and the local branch only after a confirmed merge and safety checks.
+- Records consumption estimates per phase and treats provider limits as a human gate when the platform exposes them.
+- Keeps the old prompts and workflows in `archive/v0.4` for reference, outside the normal context.
 
-### Compatibilidade
+### Compatibility
 
-O perfil `manual-classic` e a trilha de compatibilidade para o fluxo anterior, incluindo entrevistas, G1 a G4, planos, validacao detalhada e commits conforme o contrato preservado. O perfil `strict` reutiliza o contrato completo com automacao. O perfil `lean` e o novo padrao economico.
+The `manual-classic` profile is the compatibility track for the previous flow, including interviews, G1 to G4, plans, detailed validation and commits according to the preserved contract. The `strict` profile reuses the full contract with automation. The `lean` profile is the new economical default.
 
-### Restricao conhecida
+### Known limitation
 
-O adaptador Orca precisa do executavel `orca` ou `orca.exe` no ambiente em que o harness roda. O `doctor` informa quando ele nao esta acessivel.
+The Orca adapter needs the `orca` or `orca.exe` executable in the environment where the harness runs. `doctor` reports when it is not reachable.

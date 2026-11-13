@@ -86,6 +86,13 @@ def test_models_resolve_inherits_when_no_model_is_configured(project: Path, caps
     code, route = run_json(capsys, "--root", str(project), "models", "resolve", "--task", "final-qa")
     assert code == 0
     assert route["status"] == "inherit"
+    assert route["message"] == "no exact model configured for the route"
+
+
+def test_models_resolve_rejects_an_unknown_task(project: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    code, route = run_json(capsys, "--root", str(project), "models", "resolve", "--task", "missing")
+    assert code != 0
+    assert route["message"] == "unknown task: missing"
 
 
 def test_quality_skips_an_empty_profile(project: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -114,6 +121,7 @@ def test_a_fresh_project_starts_without_state_files(project: Path, capsys: pytes
     code, budget = run_json(capsys, "--root", str(project), "budget", "status")
     assert code == 0
     assert budget["status"] == "continue"
+    assert budget["message"] == "budget within limits"
     assert main(["--root", str(project), "progress"]) == 0
     assert (state / "progress.md").is_file()
 

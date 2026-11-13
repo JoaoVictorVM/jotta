@@ -69,28 +69,28 @@ def evaluate(policy: JSONDict, usage: JSONDict, scope: str, checkpoint: str | No
 
     status = "continue"
     code = EXIT_CONTINUE
-    message = "orcamento dentro dos limites"
+    message = "budget within limits"
     if not policy.get("enabled", True):
         status = "disabled"
-        message = "budget guard desativado"
+        message = "budget guard disabled"
     elif provider_unavailable and unavailable_behavior == "gate":
         status = "measurement-unavailable"
-        message = "percentual do provedor indisponivel"
+        message = "provider usage percent unavailable"
         code = EXIT_MEASUREMENT_UNAVAILABLE
     elif effective >= hard_stop:
         status = "hard-stop"
-        message = "hard stop de orcamento atingido"
+        message = "budget hard stop reached"
         code = EXIT_HARD_STOP
     elif effective >= gate and not authorization_applies(usage, scope, effective):
         status = "human-gate"
-        message = "decisao humana obrigatoria para continuar"
+        message = "human decision required to continue"
         code = EXIT_HUMAN_GATE
     elif effective >= gate:
         status = "authorized"
-        message = "continuidade autorizada para este escopo"
+        message = "continuation authorized for this scope"
     elif effective >= warning:
         status = "warning"
-        message = "limite de aviso atingido; reduza paralelismo e reavalie o proximo checkpoint"
+        message = "warning threshold reached; reduce parallelism and reassess at the next checkpoint"
 
     payload = {
         "status": status,
@@ -116,7 +116,7 @@ def check(paths: ProjectPaths, scope: str, checkpoint: str | None) -> tuple[JSON
 
 def command_record(paths: ProjectPaths, args: argparse.Namespace, usage: JSONDict) -> int:
     if args.input_tokens < 0 or args.output_tokens < 0 or args.estimated_cost_usd < 0:
-        raise ValueError("deltas de uso nao podem ser negativos")
+        raise ValueError("usage deltas cannot be negative")
     usage["input_tokens"] = int(usage.get("input_tokens", 0)) + args.input_tokens
     usage["output_tokens"] = int(usage.get("output_tokens", 0)) + args.output_tokens
     usage["estimated_cost_usd"] = round(float(usage.get("estimated_cost_usd", 0.0)) + args.estimated_cost_usd, 8)
@@ -126,7 +126,7 @@ def command_record(paths: ProjectPaths, args: argparse.Namespace, usage: JSONDic
         usage["provider_usage_checked_at"] = now()
     elif args.provider_usage_percent is not None:
         if not 0 <= args.provider_usage_percent <= 100:
-            raise ValueError("provider usage percent deve estar entre 0 e 100")
+            raise ValueError("provider usage percent must be between 0 and 100")
         usage["provider_usage_percent"] = args.provider_usage_percent
         usage["provider_usage_source"] = args.source
         usage["provider_usage_checked_at"] = now()
@@ -138,7 +138,7 @@ def command_record(paths: ProjectPaths, args: argparse.Namespace, usage: JSONDic
 
 def command_reserve(paths: ProjectPaths, args: argparse.Namespace, usage: JSONDict) -> int:
     if args.input_tokens < 0 or args.output_tokens < 0 or args.estimated_cost_usd < 0:
-        raise ValueError("reservas nao podem ser negativas")
+        raise ValueError("reservations cannot be negative")
     reservations = usage.setdefault("reservations", [])
     if any(item.get("id") == args.id for item in reservations):
         print(f"RESERVATION EXISTS: {args.id}")
@@ -175,10 +175,10 @@ def command_authorize(paths: ProjectPaths, args: argparse.Namespace, policy: JSO
     hard_stop = float(policy["provider_thresholds"]["hard_stop_percent"])
     gate = float(policy["provider_thresholds"]["human_gate_percent"])
     if args.until_percent < gate:
-        print(f"AUTHORIZATION REJECTED: until-percent deve ser pelo menos {gate}")
+        print(f"AUTHORIZATION REJECTED: until-percent must be at least {gate}")
         return 1
     if args.until_percent >= hard_stop:
-        print(f"AUTHORIZATION REJECTED: until-percent deve ser menor que {hard_stop}")
+        print(f"AUTHORIZATION REJECTED: until-percent must be lower than {hard_stop}")
         return 1
     usage["authorization"] = {
         "scope": args.scope,

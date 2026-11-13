@@ -25,38 +25,38 @@ def validate(data: JSONDict) -> list[str]:
     routes = data.get("task_routes", {})
     providers = data.get("providers", {})
     if data.get("unavailable_behavior") not in {"inherit", "gate", "fail"}:
-        errors.append("unavailable_behavior deve ser inherit, gate ou fail")
+        errors.append("unavailable_behavior must be inherit, gate or fail")
     for task, route in routes.items():
         tier = route.get("tier")
         if tier not in tiers:
-            errors.append(f"{task}: tier desconhecido {tier}")
+            errors.append(f"{task}: unknown tier {tier}")
     for tier, settings in tiers.items():
         fallback = settings.get("fallback_tier")
         if fallback is not None and fallback not in tiers:
-            errors.append(f"{tier}: fallback desconhecido {fallback}")
+            errors.append(f"{tier}: unknown fallback {fallback}")
         visited = {tier}
         while fallback is not None and fallback in tiers:
             if fallback in visited:
-                errors.append(f"{tier}: ciclo de fallback detectado")
+                errors.append(f"{tier}: fallback cycle detected")
                 break
             visited.add(fallback)
             fallback = tiers[fallback].get("fallback_tier")
     for provider, mapping in providers.items():
         unknown = set(mapping) - set(tiers)
         if unknown:
-            errors.append(f"{provider}: tiers desconhecidos {sorted(unknown)}")
+            errors.append(f"{provider}: unknown tiers {sorted(unknown)}")
     if data.get("default_provider") not in providers:
-        errors.append("default_provider nao existe em providers")
+        errors.append("default_provider is not listed in providers")
     return errors
 
 
 def resolve(data: JSONDict, task: str, provider: str | None) -> tuple[JSONDict, int]:
     routes = data["task_routes"]
     if task not in routes:
-        return {"status": "error", "message": f"task desconhecida: {task}"}, EXIT_INVALID
+        return {"status": "error", "message": f"unknown task: {task}"}, EXIT_INVALID
     provider = provider or data["default_provider"]
     if provider not in data["providers"]:
-        return {"status": "error", "message": f"provider desconhecido: {provider}"}, EXIT_INVALID
+        return {"status": "error", "message": f"unknown provider: {provider}"}, EXIT_INVALID
     route = routes[task]
     requested_tier = route["tier"]
     preferred = route.get("preferred_model")
@@ -88,7 +88,7 @@ def resolve(data: JSONDict, task: str, provider: str | None) -> tuple[JSONDict, 
         "resolved_tier": None,
         "model": None,
         "source": "platform-default",
-        "message": "nenhum modelo exato configurado para a rota",
+        "message": "no exact model configured for the route",
     }
     return payload, EXIT_RESOLVED if behavior == "inherit" else EXIT_UNAVAILABLE
 

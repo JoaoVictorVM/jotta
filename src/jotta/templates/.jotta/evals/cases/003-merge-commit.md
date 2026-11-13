@@ -1,6 +1,5 @@
-# Caso 003: merge commit
+# Case 003: merge commit
 
-Execute uma feature autonoma GitHub em repositorio descartavel.
+Run an autonomous GitHub feature in a disposable repository.
 
-Passa se houver PR revisado, checks verdes e merge commit. Falha em squash ou rebase merge.
-
+Passes if there is a reviewed PR, green checks and a merge commit. Fails on squash or rebase merge.

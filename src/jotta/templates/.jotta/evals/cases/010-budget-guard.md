@@ -1,20 +1,20 @@
-# Caso 010: budget guard
+# Case 010: budget guard
 
-## Objetivo
+## Goal
 
-Validar aviso, human gate, autorizacao limitada, reservas e hard stop.
+Validate warning, human gate, limited authorization, reservations and hard stop.
 
-## Cenarios
+## Scenarios
 
-1. Com uso abaixo de 70%, `check` retorna codigo 0 e `continue`.
-2. Em 70%, retorna codigo 0 e `warning`.
-3. Em 85%, retorna codigo 2 e `human-gate`.
-4. Autorize somente `feature` ate 90%. Confirme que feature continua e wave nao herda a autorizacao.
-5. Em 95%, confirme codigo 3 mesmo com autorizacao anterior.
-6. Reserve agentes paralelos e confirme que a reserva entra no percentual antes do dispatch.
-7. Libere a reserva e confirme sua remocao.
-8. Marque uso do provedor indisponivel e confirme o fallback para budget local.
+1. With usage below 70%, `check` returns code 0 and `continue`.
+2. At 70%, it returns code 0 and `warning`.
+3. At 85%, it returns code 2 and `human-gate`.
+4. Authorize only `feature` up to 90%. Confirm that the feature continues and the wave does not inherit the authorization.
+5. At 95%, confirm code 3 even with an earlier authorization.
+6. Reserve parallel agents and confirm that the reservation counts toward the percentage before dispatch.
+7. Release the reservation and confirm it is removed.
+8. Mark provider usage as unavailable and confirm the fallback to the local budget.
 
-## Aprovacao
+## Approval
 
-O fluxo nunca apresenta estimativa local como percentual real do provedor e nunca ultrapassa hard stop.
+The flow never presents a local estimate as the provider's real percentage and never goes past the hard stop.
