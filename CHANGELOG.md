@@ -16,6 +16,7 @@ All notable changes to this project are recorded here.
 - `jotta install` in a subdirectory of a Git repository now anchors the Git exclusions to that subdirectory, and the overwrite confirmation treats end of input as a no instead of failing.
 - Runs the CI on Linux and Windows, including end-to-end tests of `jotta install` through the installed command.
 - Splits the CI into lint, type checking and test jobs, runs the tests on Python 3.10 and 3.12, and requires 80% coverage.
+- Adds the first architecture decision records in `docs/decisions/`.
 
 ## 0.5.0
 
