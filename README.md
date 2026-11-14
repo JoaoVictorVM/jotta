@@ -17,7 +17,7 @@
   </p>
 
   <p align="center">
-    <a href="https://github.com/JoaoVictorVM/jotta/actions/workflows/validate.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/JoaoVictorVM/jotta/validate.yml?branch=main&amp;label=ci&amp;style=flat-square"></a>
+    <a href="https://github.com/JoaoVictorVM/jotta/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/JoaoVictorVM/jotta/ci.yml?branch=main&amp;label=ci&amp;style=flat-square"></a>
     <a href="./LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"></a>
     <img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?style=flat-square">
     <a href="https://github.com/JoaoVictorVM/jotta/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/JoaoVictorVM/jotta?style=flat-square"></a>
@@ -149,7 +149,10 @@ Install the package in editable mode with the development tools:
 ```bash
 python -m pip install -e ".[dev]"
 jotta --help
-python -m pytest
+python -m pytest --cov
+ruff check src tests scripts
+ruff format --check src tests scripts
+mypy
 ```
 
 Run the repository checks from the Jotta source checkout:
@@ -160,7 +163,7 @@ jotta --root src/jotta/templates doctor
 jotta --root src/jotta/templates models validate
 ```
 
-CI runs these checks on pushes and pull requests. See the [publishing guide](./docs/PUBLISHING.md) for repository setup and GitHub configuration.
+CI runs lint, type checking and the tests with coverage on Ubuntu and Windows with Python 3.10 and 3.12, on pushes and pull requests. See the [publishing guide](./docs/PUBLISHING.md) for repository setup and GitHub configuration.
 
 ## Security and Local Data
 

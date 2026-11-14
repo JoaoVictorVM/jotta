@@ -23,7 +23,7 @@ REQUIRED = {
     "AGENTS.md",
     "CLAUDE.md",
     "pyproject.toml",
-    ".github/workflows/validate.yml",
+    ".github/workflows/ci.yml",
     "scripts/repository_check.py",
     "src/jotta/templates/AGENTS.md",
     "src/jotta/templates/CLAUDE.md",
