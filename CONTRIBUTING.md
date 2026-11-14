@@ -16,7 +16,7 @@ Execute:
 
 ```bash
 python scripts/repository_check.py
-python scripts/self_test.py
+python -m pytest
 jotta --root src/jotta/templates doctor
 jotta --root src/jotta/templates models validate
 ```
