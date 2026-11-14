@@ -10,6 +10,10 @@
 - [Budget and routing](./concepts/budget-and-routing.md): budget gates and model selection.
 - [Model assumptions](./model-assumptions.md): why each mechanism exists and when to revisit it.
 
+## Design decisions
+
+- [Decision records](./decisions/README.md): why run state is JSON, why `lean` is the default, why there is no orchestration framework or vector memory, and why pull requests use merge commits.
+
 ## Project
 
 - [Publishing](./PUBLISHING.md)

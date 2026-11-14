@@ -70,6 +70,15 @@ Documentos de planejamento e estado de execução ficam locais no projeto consum
 
 Trabalhos de alto risco em `lean` são elevados para `strict` na preparação. Consulte os [perfis](./docs/concepts/profiles.md) e os [guias de conceitos](./docs/README.md), em inglês, para workflows, estado, orçamento e roteamento de modelos.
 
+## Decisões de design
+
+As principais escolhas de design estão registradas como [ADRs](./docs/decisions/README.md), em inglês:
+
+- [0001](./docs/decisions/0001-json-as-source-of-truth.md): o estado da execução fica em arquivos JSON, e o Markdown é só uma visão para pessoas.
+- [0002](./docs/decisions/0002-lean-as-default-profile.md): `lean` é o padrão autônomo, e trabalho de alto risco sobe para `strict`.
+- [0003](./docs/decisions/0003-no-langgraph-redis-vector-memory.md): sem LangChain, LangGraph, Redis, mem0 ou RAG num harness em volta de agentes existentes.
+- [0004](./docs/decisions/0004-merge-commit-strategy.md): pull requests entram com merge commit, nunca squash ou rebase.
+
 ## Requisitos
 
 | Ferramenta | Quando é necessária |
@@ -137,7 +146,7 @@ src/jotta/                   Pacote Python e o comando jotta
 src/jotta/templates/         Arquivos instalados no projeto: .jotta/, .planning/, AGENTS.md e CLAUDE.md
 tests/                       Testes de unidade, de comandos e de instalação
 scripts/repository_check.py  Verificações do repositório público e do pacote
-docs/                        Guias de conceitos, suposições do agente e guia de publicação
+docs/                        Guias de conceitos, registros de decisão, suposições do agente e guia de publicação
 AGENTS.md                    Instruções para agentes que desenvolvem o Jotta
 CLAUDE.md                    Ponte para AGENTS.md
 ```
