@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import json
 import re
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,10 +12,22 @@ TEMPLATE_HARNESS = ROOT / "src" / "jotta" / "templates" / ".jotta"
 TEXT_SUFFIXES = {".md", ".txt", ".py", ".json", ".yaml", ".yml", ".toml", ".gitignore", ".gitattributes"}
 SKIP_PARTS = {".git", "__pycache__", ".venv", "venv", "dist", "build"}
 REQUIRED = {
-    "README.md", "README.pt-BR.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md",
-    "CHANGELOG.md", ".gitignore", ".gitattributes", "AGENTS.md", "CLAUDE.md", "pyproject.toml",
-    ".github/workflows/validate.yml", "scripts/repository_check.py",
-    "src/jotta/templates/AGENTS.md", "src/jotta/templates/CLAUDE.md", "src/jotta/templates/.jotta/config.yaml",
+    "README.md",
+    "README.pt-BR.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CHANGELOG.md",
+    ".gitignore",
+    ".gitattributes",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "pyproject.toml",
+    ".github/workflows/validate.yml",
+    "scripts/repository_check.py",
+    "src/jotta/templates/AGENTS.md",
+    "src/jotta/templates/CLAUDE.md",
+    "src/jotta/templates/.jotta/config.yaml",
     "src/jotta/templates/.planning/PRD.md",
 }
 
