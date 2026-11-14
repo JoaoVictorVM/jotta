@@ -16,9 +16,9 @@ Instructions for agents working on the Jotta source repository. The harness that
 
 ```bash
 python -m pip install -e ".[dev]"
-python -m pytest
-ruff check src tests
-ruff format --check src tests
+python -m pytest --cov
+ruff check src tests scripts
+ruff format --check src tests scripts
 mypy
 python scripts/repository_check.py
 jotta --root src/jotta/templates doctor

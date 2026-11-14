@@ -16,7 +16,10 @@ Execute:
 
 ```bash
 python scripts/repository_check.py
-python -m pytest
+ruff check src tests scripts
+ruff format --check src tests scripts
+mypy
+python -m pytest --cov
 jotta --root src/jotta/templates doctor
 jotta --root src/jotta/templates models validate
 ```

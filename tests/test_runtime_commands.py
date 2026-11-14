@@ -7,9 +7,10 @@ import pytest
 
 from jotta.cli import main
 from jotta.core.paths import ProjectNotFoundError, find_root, templates_root
+from jotta.core.state import JSONDict
 
 
-def run_json(capsys: pytest.CaptureFixture[str], *argv: str) -> tuple[int, dict[str, object]]:
+def run_json(capsys: pytest.CaptureFixture[str], *argv: str) -> tuple[int, JSONDict]:
     code = main(list(argv))
     return code, json.loads(capsys.readouterr().out)
 

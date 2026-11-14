@@ -16,7 +16,9 @@ Descreva o comportamento anterior e o novo.
 
 - [ ] `python scripts/repository_check.py`
 - [ ] `jotta --root src/jotta/templates doctor`
-- [ ] `python -m pytest`
+- [ ] `ruff check src tests scripts` e `ruff format --check src tests scripts`
+- [ ] `mypy`
+- [ ] `python -m pytest --cov`
 - [ ] Caso de avaliacao adicionado ou atualizado quando necessario
 
 ## Contexto e seguranca
