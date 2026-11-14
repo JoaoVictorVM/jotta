@@ -13,6 +13,8 @@ All notable changes to this project are recorded here.
 - Removes the archived v0.4 prompts and workflows. They remain available in the `v0.5.0` tag, under `.harness/prompts/archive/v0.4/` and `.harness/workflows/archive/v0.4/`.
 - Writes the installed content, the CLI messages and the eval cases in English. The language of commits and documentation is configurable in `.jotta/config.yaml`.
 - Replaces `scripts/self_test.py` with a pytest unit suite in `tests/unit/` for the budget guard, model routing, PRD parsing, task sync, state, risk and the Orca adapter.
+- `jotta install` in a subdirectory of a Git repository now anchors the Git exclusions to that subdirectory, and the overwrite confirmation treats end of input as a no instead of failing.
+- Runs the CI on Linux and Windows, including end-to-end tests of `jotta install` through the installed command.
 
 ## 0.5.0
 

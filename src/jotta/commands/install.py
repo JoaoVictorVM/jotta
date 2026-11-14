@@ -20,7 +20,10 @@ def ask(question: str) -> bool:
     """Ask a yes or no question on the terminal; anything but yes is a no."""
     if not sys.stdin.isatty():
         return False
-    return input(f"{question} [y/N] ").strip().lower() in {"y", "yes", "s", "sim"}
+    # The prompt goes to stderr so that stdout carries only the JSON report; EOF reads as an empty answer.
+    sys.stderr.write(f"{question} [y/N] ")
+    sys.stderr.flush()
+    return sys.stdin.readline().strip().lower() in {"y", "yes", "s", "sim"}
 
 
 def run(args: argparse.Namespace, confirm: Confirm = ask) -> int:
