@@ -145,3 +145,13 @@ def test_install_refuses_the_source_repository_and_the_templates(
 ) -> None:
     assert main(["install", "--target", str(target), "--dry-run"]) == 2
     assert output(capsys)["status"] == "refused"
+
+
+def test_install_in_a_subdirectory_anchors_exclusions_to_it(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    repository = git_init(tmp_path / "repository")
+    project = repository / "services" / "api"
+    assert main(["install", "--target", str(project)]) == 0
+    capsys.readouterr()
+    lines = exclude_lines(repository)
+    assert "/services/api/.jotta/" in lines
+    assert "/.jotta/" not in lines

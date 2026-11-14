@@ -64,21 +64,44 @@ def template_files(templates: Path) -> list[Path]:
     return files
 
 
+def existing_ancestor(path: Path) -> Path:
+    while not path.exists() and path.parent != path:
+        path = path.parent
+    return path
+
+
 def git_exclude_path(target: Path) -> Path | None:
     """Return the ``info/exclude`` file of the repository containing ``target``, if any."""
-    if not target.exists():
-        return None
-    result = run_git(target, "rev-parse", "--git-path", "info/exclude")
+    probe = existing_ancestor(target)
+    result = run_git(probe, "rev-parse", "--git-path", "info/exclude")
     if result.returncode != 0:
         return None
     path = Path(result.stdout.strip())
-    return path if path.is_absolute() else target / path
+    return path if path.is_absolute() else probe / path
 
 
-def missing_excludes(exclude: Path) -> list[str]:
+def repository_prefix(target: Path) -> str:
+    """Path of ``target`` relative to the top of its repository, in Git's slash form."""
+    result = run_git(existing_ancestor(target), "rev-parse", "--show-toplevel")
+    if result.returncode != 0:
+        return ""
+    try:
+        relative = target.relative_to(Path(result.stdout.strip()).resolve())
+    except ValueError:
+        return ""
+    return relative.as_posix() if relative.parts else ""
+
+
+def exclude_entries(prefix: str) -> list[str]:
+    """The Git exclusions for an installation ``prefix`` levels below the repository top."""
+    base = f"/{prefix}/" if prefix else "/"
+    return [base + entry.lstrip("/") for entry in GIT_EXCLUDES]
+
+
+def missing_excludes(exclude: Path, entries: list[str]) -> list[str]:
     current = exclude.read_text(encoding="utf-8") if exclude.exists() else ""
     lines = {line.strip() for line in current.splitlines()}
-    return [entry for entry in GIT_EXCLUDES if entry not in lines]
+    return [entry for entry in entries if entry not in lines]
 
 
 def check_target(target: Path, templates: Path) -> None:
@@ -104,7 +127,7 @@ def plan_install(target: Path, git_exclude: bool = True, templates: Path | None 
     if git_exclude:
         plan.exclude_path = git_exclude_path(target)
         if plan.exclude_path is not None:
-            plan.exclude_entries = missing_excludes(plan.exclude_path)
+            plan.exclude_entries = missing_excludes(plan.exclude_path, exclude_entries(repository_prefix(target)))
     return plan
 
 
