@@ -30,4 +30,4 @@ Jotta has two parts: a Python package with the `jotta` command, and the harness 
 
 ## Non-goals
 
-No database, LangChain, LangGraph, knowledge graph, multi-model council, deployment automation or automatic memory inference. Each mechanism must be justified by a failure it prevents, as described in [model assumptions](../model-assumptions.md).
+No database, LangChain, LangGraph, knowledge graph, multi-model council, deployment automation or automatic memory inference. Each mechanism must be justified by a failure it prevents, as described in [model assumptions](../model-assumptions.md). The reasoning is recorded in [ADR 0003](../decisions/0003-no-langgraph-redis-vector-memory.md).
