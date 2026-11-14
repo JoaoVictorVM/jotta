@@ -135,9 +135,8 @@ Show harness status.
 ```text
 src/jotta/                   Python package and the jotta command
 src/jotta/templates/         Files installed into a project: .jotta/, .planning/, AGENTS.md and CLAUDE.md
-tests/                       Package tests
+tests/                       Unit, command and installation tests
 scripts/repository_check.py  Public repository and package checks
-scripts/self_test.py         Template regression checks
 docs/                        Concept guides, model assumptions and publishing guide
 AGENTS.md                    Instructions for agents developing Jotta
 CLAUDE.md                    Bridge to AGENTS.md
@@ -157,7 +156,6 @@ Run the repository checks from the Jotta source checkout:
 
 ```bash
 python scripts/repository_check.py
-python scripts/self_test.py
 jotta --root src/jotta/templates doctor
 jotta --root src/jotta/templates models validate
 ```

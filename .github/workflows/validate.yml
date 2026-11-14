@@ -34,9 +34,6 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
-      - name: Run harness regressions
-        run: python scripts/self_test.py
-
       - name: Run harness doctor on the templates
         run: jotta --root src/jotta/templates doctor
 

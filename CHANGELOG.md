@@ -12,6 +12,7 @@ All notable changes to this project are recorded here.
 - Moves the architecture and the agent assumptions to `docs/`, adds the concept guides and merges the release notes into this changelog.
 - Removes the archived v0.4 prompts and workflows. They remain available in the `v0.5.0` tag, under `.harness/prompts/archive/v0.4/` and `.harness/workflows/archive/v0.4/`.
 - Writes the installed content, the CLI messages and the eval cases in English. The language of commits and documentation is configurable in `.jotta/config.yaml`.
+- Replaces `scripts/self_test.py` with a pytest unit suite in `tests/unit/` for the budget guard, model routing, PRD parsing, task sync, state, risk and the Orca adapter.
 
 ## 0.5.0
 

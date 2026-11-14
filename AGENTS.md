@@ -8,8 +8,8 @@ Instructions for agents working on the Jotta source repository. The harness that
 |---|---|
 | `src/jotta/` | Python package and the `jotta` command |
 | `src/jotta/templates/` | Files copied into a project: `AGENTS.md`, `CLAUDE.md`, `.jotta/` and `.planning/` |
-| `tests/` | pytest suite |
-| `scripts/` | Repository tooling: public repository check and template regressions |
+| `tests/` | pytest suite: `tests/unit/` for modules, the top level for commands and installation |
+| `scripts/` | Repository tooling: public repository and package check |
 | `docs/` | Human documentation |
 
 ## Development
@@ -21,7 +21,6 @@ ruff check src tests
 ruff format --check src tests
 mypy
 python scripts/repository_check.py
-python scripts/self_test.py
 jotta --root src/jotta/templates doctor
 ```
 
