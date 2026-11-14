@@ -11,6 +11,7 @@ import pytest
 from jotta.cli import main
 from jotta.commands import install
 from jotta.core.paths import templates_root
+from jotta.core.state import JSONDict
 from jotta.install.installer import GIT_EXCLUDES, template_files
 
 REPO = Path(__file__).resolve().parents[1]
@@ -22,8 +23,9 @@ def git_init(path: Path) -> Path:
     return path
 
 
-def output(capsys: pytest.CaptureFixture[str]) -> dict[str, object]:
-    return json.loads(capsys.readouterr().out)
+def output(capsys: pytest.CaptureFixture[str]) -> JSONDict:
+    data: JSONDict = json.loads(capsys.readouterr().out)
+    return data
 
 
 def exclude_lines(project: Path) -> list[str]:
