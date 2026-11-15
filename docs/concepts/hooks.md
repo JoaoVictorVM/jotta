@@ -68,7 +68,7 @@ After an `Edit`, `MultiEdit`, `Write` or `NotebookEdit` call changes a code file
 - **Feedback.** When the profile passes, the hook prints nothing. When it fails, the hook exits with code 2 and prints the compact receipt on stderr: the failing command, its exit code, the relevant lines and the paths of the full log and the receipt. Claude Code shows that message to the agent right after the edit that caused it.
 - **State.** The last run, its status, its receipt and whether a check is pending live in `.jotta/runtime/state/post-edit.json`.
 
-An empty profile does nothing. Configure fast commands, such as a linter or a type checker, so the hook stays within the agent's hook timeout.
+An empty profile does nothing. `jotta install` fills `smoke` with the linter and type checker it detects; keep it fast, so the hook stays within the agent's hook timeout.
 
 ## `jotta hook stop`
 

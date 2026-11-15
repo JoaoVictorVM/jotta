@@ -14,7 +14,7 @@ from jotta.commands import adapter, doctor, gates, install, run, scope, tasks
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
 from jotta.hooks import command as hook_command
 from jotta.isolation import orca
-from jotta.quality import runner
+from jotta.quality import detect, runner
 from jotta.routing import router
 
 EXIT_OK = 0
@@ -176,6 +176,11 @@ def _add_quality_command(subparsers: SubParsers) -> None:
     quality.add_argument("profile", nargs="?", default="smoke")
     quality.add_argument("--max-lines", type=int, default=40)
     quality.set_defaults(handler=lambda args, paths: runner.run_profile(paths, args.profile, args.max_lines))
+    detect_parser = subparsers.add_parser(
+        "detect-stack", help="Detect the project's stack and fill the quality profiles that are still free."
+    )
+    detect_parser.add_argument("--dry-run", action="store_true", help="show the suggestion without writing")
+    detect_parser.set_defaults(handler=lambda args, paths: detect.run(paths, args.dry_run))
 
 
 def _add_orca_commands(subparsers: SubParsers) -> None:
