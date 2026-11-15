@@ -21,6 +21,7 @@ All notable changes to this project are recorded here.
 - Records the files a task may edit in the context packet, from the spec and `jotta prepare --allow`. The hook blocks edits outside them in `strict`, warns in `lean`, and only a person can widen the scope with `jotta scope allow`.
 - Adds `jotta hook post-tool-use`, which runs the `smoke` quality profile after a code edit, at most once per debounce window, and feeds the compact receipt of a failure back to the agent.
 - Adds `jotta hook stop`, which keeps the agent from ending its turn while the active task lacks a passing quality receipt of its profile's gate written after the last code edit.
+- Adds `jotta adapter claude`, also run by `jotta install`, which generates `.claude/settings.json` with the Jotta hooks, a subagent per harness role with read-only tools for the reviewers, and a skill entry per harness skill, merging with existing files without overwriting them. `jotta doctor` warns when the hooks are missing.
 
 ## 0.5.0
 
