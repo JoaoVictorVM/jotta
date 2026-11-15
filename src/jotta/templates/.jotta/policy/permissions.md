@@ -14,6 +14,7 @@ deny:
   - commit-secrets
   - deploy-production
   - bypass-branch-protection
+  - delete-outside-project
 profiles:
   autonomous-github:
     allow:
