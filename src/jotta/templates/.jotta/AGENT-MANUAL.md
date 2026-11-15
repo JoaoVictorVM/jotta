@@ -30,6 +30,10 @@ Read only the selected workflow, skill entrypoint, profile references and curren
 
 The orchestrator coordinates and never writes product code. A single implementer writes inside each checkout. Spec authors write only under `.planning`. QA reviewers are read-only. Human gates override every profile.
 
+## Task scope
+
+`jotta prepare` records the files the task may edit in the context packet: the paths in the spec's file tables plus any `--allow` path. When the `PreToolUse` hook is active, `strict` blocks edits outside that list and `lean` warns about them. When an edit outside the scope is needed, stop and ask the user to run `jotta scope allow <path> --reason <why>`. Never run that command, edit the context packet or work around the check with shell commands.
+
 ## State and evidence
 
 JSON is authoritative. `progress.md` is generated on demand. Store hashes, paths, statuses and compact receipts, not full prompts, diffs or command logs. Full logs live under `.jotta/runtime/logs/` and are opened only for a specific need.
