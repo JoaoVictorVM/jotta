@@ -15,13 +15,13 @@ from typing import TextIO
 
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
 from jotta.core.state import JSONDict, now
-from jotta.hooks import scope
+from jotta.hooks import scope, smoke
 from jotta.hooks.guard import Decision, evaluate
 
 EXIT_ALLOW = 0
 EXIT_ERROR = 1
 EXIT_BLOCK = 2
-EVENTS = ("pre-tool-use",)
+EVENTS = ("pre-tool-use", "post-tool-use")
 LOG_NAME = "hooks.jsonl"
 MAX_LOGGED_CHARS = 500
 
@@ -58,6 +58,21 @@ def log_decision(paths: ProjectPaths, event: str, payload: JSONDict, decision: D
         handle.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
+def post_tool_use(payload: JSONDict, paths: ProjectPaths | None) -> int:
+    """Run the post-edit quality profile; a failure is fed back to the agent through stderr and exit code 2."""
+    if paths is None:
+        return EXIT_ALLOW
+    try:
+        outcome = smoke.after_edit(payload, paths)
+    except (OSError, ValueError) as exc:
+        print(f"jotta hook: the post-edit check could not run: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    if outcome.status == "failed":
+        print(outcome.message, file=sys.stderr)
+        return EXIT_BLOCK
+    return EXIT_ALLOW
+
+
 def handle(event: str, stream: TextIO, explicit_root: str | None = None) -> int:
     try:
         payload = json.loads(stream.read() or "{}")
@@ -68,6 +83,8 @@ def handle(event: str, stream: TextIO, explicit_root: str | None = None) -> int:
         print("jotta hook: the event must be a JSON object", file=sys.stderr)
         return EXIT_ERROR
     root, paths = project_root(payload, explicit_root)
+    if event == "post-tool-use":
+        return post_tool_use(payload, paths)
     decision = evaluate(payload, root)
     if decision.allowed and paths is not None:
         decision = scope.check(payload, paths)
