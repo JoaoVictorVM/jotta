@@ -8,6 +8,7 @@
 - [Guides and sensors](./concepts/guides-and-sensors.md): what steers the agent before it acts and what checks it afterwards.
 - [State machine](./concepts/state-machine.md): runtime files, run and task states, and evidence.
 - [Budget and routing](./concepts/budget-and-routing.md): budget gates and model selection.
+- [Hooks](./concepts/hooks.md): the checks that run before each tool call and block forbidden actions.
 - [Model assumptions](./model-assumptions.md): why each mechanism exists and when to revisit it.
 
 ## Design decisions
