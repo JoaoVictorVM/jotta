@@ -105,7 +105,7 @@ jotta doctor
 
 The workflows and skills copied into the project call the `jotta` command, so install the package in the Python environment you use in that project.
 
-`jotta install` copies `.jotta/`, `.planning/`, `AGENTS.md` and `CLAUDE.md`, creates the local planning and runtime folders and adds the harness files to the project's `.git/info/exclude`, so they stay out of commits. It never overwrites a file silently.
+`jotta install` copies `.jotta/`, `.planning/`, `AGENTS.md` and `CLAUDE.md`, generates the Claude Code hooks, subagents and skills under `.claude/`, creates the local planning and runtime folders and adds the harness files to the project's `.git/info/exclude`, so they stay out of commits. It never overwrites a file silently.
 
 | Option | Effect |
 |---|---|

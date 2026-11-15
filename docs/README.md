@@ -9,6 +9,7 @@
 - [State machine](./concepts/state-machine.md): runtime files, run and task states, and evidence.
 - [Budget and routing](./concepts/budget-and-routing.md): budget gates and model selection.
 - [Hooks](./concepts/hooks.md): the checks that run before each tool call and block forbidden actions.
+- [Claude Code adapter](./concepts/claude-code.md): the settings, subagents and skills generated under `.claude/`.
 - [Model assumptions](./model-assumptions.md): why each mechanism exists and when to revisit it.
 
 ## Design decisions

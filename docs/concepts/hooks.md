@@ -95,7 +95,7 @@ Every block and every warning, including the `Stop` refusals, is appended to `.j
 
 ## Configuring Claude Code
 
-Add the hooks to the project's `.claude/settings.json`:
+`jotta install` adds the hooks to the project's `.claude/settings.json`, and `jotta adapter claude` adds them to an existing installation. Both keep the settings and hooks already in the file. The resulting entries are:
 
 ```json
 {
@@ -117,4 +117,4 @@ Add the hooks to the project's `.claude/settings.json`:
 }
 ```
 
-The `jotta` command must be on the `PATH` of the shell that Claude Code starts.
+The `jotta` command must be on the `PATH` of the shell that Claude Code starts. `jotta doctor` warns when one of the hooks is missing. See [Claude Code adapter](./claude-code.md) for the subagents and skills generated next to them.
