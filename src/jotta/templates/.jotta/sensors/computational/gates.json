@@ -22,6 +22,7 @@
     "feature": "Feature or wave integration commands.",
     "full": "Complete product validation commands. Add project commands as strings.",
     "post_edit": "Profile the PostToolUse hook runs after a code edit, at most once per debounce window.",
-    "completion": "Profile each run profile must pass before the Stop hook lets the agent end an active task. A stronger profile also counts; null disables the check."
+    "completion": "Profile each run profile must pass before the Stop hook lets the agent end an active task. A stronger profile also counts; null disables the check.",
+    "detected": "Written by jotta install and jotta detect-stack: the recognized stacks and the last suggested commands. A profile still equal to its suggestion is refreshed; an edited profile is kept."
   }
 }

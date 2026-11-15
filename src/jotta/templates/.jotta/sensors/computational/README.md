@@ -9,4 +9,5 @@ Run them through the `jotta` command.
 - `gate branch`: branch name format.
 - `gate commit`: message format and forbidden text.
 - `quality`: the commands configured for each profile.
+- `detect-stack`: fills the empty profiles of `gates.json` from the project's stack, keeping edited ones.
 - `budget check`: budget thresholds, see `provider-budget.md`.
