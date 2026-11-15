@@ -10,6 +10,7 @@ from jotta.core.context import profile_token_estimates
 from jotta.core.paths import ProjectPaths
 from jotta.core.state import load_json
 from jotta.isolation import orca
+from jotta.quality import detect
 from jotta.routing import router
 
 SKILL_REFERENCE = re.compile(r"\]\((references/[^)]+)\)")
@@ -47,6 +48,7 @@ def run(paths: ProjectPaths) -> int:
         errors.extend(f"model routing: {error}" for error in router.validate(router.load(paths.routing)))
     except (OSError, ValueError, KeyError) as exc:
         errors.append(f"model routing unavailable: {exc}")
+    warnings.extend(detect.doctor_warnings(paths))
     missing_hooks = claude.missing_hooks(paths)
     if missing_hooks:
         warnings.append(f"Claude Code hooks not configured ({', '.join(missing_hooks)}); run `jotta adapter claude`")

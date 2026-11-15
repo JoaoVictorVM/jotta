@@ -11,6 +11,7 @@ from jotta.adapters import claude
 from jotta.core.paths import ProjectPaths
 from jotta.core.state import JSONDict, print_json
 from jotta.install.installer import InstallRefusedError, apply_install, plan_install
+from jotta.quality import detect
 
 EXIT_OK = 0
 EXIT_BLOCKED = 2
@@ -34,6 +35,14 @@ def configure_claude(target: Path) -> JSONDict:
     if adapter_plan.error is None:
         claude.apply_adapter(adapter_plan)
     return adapter_plan.summary()
+
+
+def configure_quality(target: Path) -> JSONDict:
+    """Fill the quality profiles of the new installation from the detected stack, keeping edited profiles."""
+    paths = ProjectPaths(target)
+    detection = detect.plan_detection(paths)
+    detect.apply_detection(paths, detection)
+    return detection.summary()
 
 
 def run(args: argparse.Namespace, confirm: Confirm = ask) -> int:
@@ -67,6 +76,12 @@ def run(args: argparse.Namespace, confirm: Confirm = ask) -> int:
 
     apply_install(plan)
     print_json(
-        {"status": "installed", "overwritten": summary["conflicts"], **summary, "claude": configure_claude(plan.target)}
+        {
+            "status": "installed",
+            "overwritten": summary["conflicts"],
+            **summary,
+            "quality": configure_quality(plan.target),
+            "claude": configure_claude(plan.target),
+        }
     )
     return EXIT_OK
