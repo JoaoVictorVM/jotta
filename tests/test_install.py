@@ -171,3 +171,17 @@ def test_confirmation_at_end_of_input_is_a_no(
     assert main(["install", "--target", str(project), "--force-overwrite"]) == 2
     assert output(capsys)["status"] == "cancelled"
     assert (project / "AGENTS.md").read_text(encoding="utf-8") == "mine\n"
+
+
+def test_install_configures_claude_code(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    project = git_init(tmp_path / "project")
+    own = project / ".claude" / "agents" / "reviewer.md"
+    own.parent.mkdir(parents=True)
+    own.write_text("My reviewer.\n", encoding="utf-8")
+    assert main(["install", "--target", str(project)]) == 0
+    claude = output(capsys)["claude"]
+    assert claude["error"] is None
+    assert claude["skipped"] == [".claude/agents/reviewer.md"]
+    assert ".claude/settings.json" in claude["written"]
+    assert (project / ".claude" / "skills" / "final-qa" / "SKILL.md").is_file()
+    assert own.read_text(encoding="utf-8") == "My reviewer.\n"
