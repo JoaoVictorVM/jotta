@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from jotta import __version__
 from jotta.budget import guard
-from jotta.commands import doctor, gates, install, run, tasks
+from jotta.commands import doctor, gates, install, run, scope, tasks
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
 from jotta.hooks import command as hook_command
 from jotta.isolation import orca
@@ -193,6 +193,16 @@ def _add_orca_commands(subparsers: SubParsers) -> None:
     remove.add_argument("--worktree", required=True)
 
 
+def _add_scope_commands(subparsers: SubParsers) -> None:
+    scope_parser = subparsers.add_parser("scope", help="Show or widen the files the active task may edit.")
+    scope_parser.set_defaults(handler=lambda args, paths: scope.run(paths, args))
+    sub = scope_parser.add_subparsers(dest="scope_command", required=True, metavar="<scope-command>")
+    sub.add_parser("show", help="Show the allowed paths of the active task.")
+    allow = sub.add_parser("allow", help="Allow the active task to edit more paths. Only a person may run it.")
+    allow.add_argument("paths", nargs="+", metavar="PATH")
+    allow.add_argument("--reason", required=True)
+
+
 def _add_hook_command(subparsers: SubParsers) -> None:
     hook = subparsers.add_parser("hook", help="Answer an agent hook event read from stdin.")
     hook.add_argument("event", choices=hook_command.EVENTS)
@@ -213,6 +223,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_models_commands(subparsers)
     _add_quality_command(subparsers)
     _add_orca_commands(subparsers)
+    _add_scope_commands(subparsers)
     _add_hook_command(subparsers)
     return parser
 
