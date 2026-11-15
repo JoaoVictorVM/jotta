@@ -70,9 +70,28 @@ After an `Edit`, `MultiEdit`, `Write` or `NotebookEdit` call changes a code file
 
 An empty profile does nothing. Configure fast commands, such as a linter or a type checker, so the hook stays within the agent's hook timeout.
 
+## `jotta hook stop`
+
+The `Stop` hook runs when the agent tries to end its turn. While a task is active (a run in `preparing` or `running`, at the `prepared`, `implementing` or `validating` stage), the agent may stop only when the task has a valid quality receipt:
+
+- the receipt comes from the profile the run's profile requires, or a stronger one (`smoke` < `feature` < `full`);
+- its status is `passed`, or `skipped` because the profile has no commands;
+- it was written after the task was prepared and after the last code edit recorded by the `PostToolUse` hook.
+
+Otherwise the hook exits with code 2 and tells the agent which profile to run, or to record the task as blocked with `jotta checkpoint --status blocked --blocker <reason>`. The required profiles live in the `completion` section of `gates.json`:
+
+```json
+"completion": {
+  "profiles": { "lean": "smoke", "strict": "feature", "manual-classic": "feature" },
+  "max_consecutive_blocks": 3
+}
+```
+
+A `null` profile disables the check for that run profile. To avoid an endless loop, after `max_consecutive_blocks` refusals in a row for the same task the agent may stop, but the run is marked `blocked` with the missing receipt as the blocker, so the task is never recorded as done without its gate.
+
 ## Log
 
-Every block and every warning is appended to `.jotta/runtime/logs/hooks.jsonl` with the time, session, tool, a truncated copy of the input, the decision, the rule and the reason. Allowed calls are not logged.
+Every block and every warning, including the `Stop` refusals, is appended to `.jotta/runtime/logs/hooks.jsonl` with the time, session, tool, a truncated copy of the input, the decision, the rule and the reason. Allowed calls are not logged.
 
 ## Configuring Claude Code
 
@@ -92,7 +111,8 @@ Add the hooks to the project's `.claude/settings.json`:
         "matcher": "Edit|MultiEdit|Write|NotebookEdit",
         "hooks": [{ "type": "command", "command": "jotta hook post-tool-use" }]
       }
-    ]
+    ],
+    "Stop": [{ "hooks": [{ "type": "command", "command": "jotta hook stop" }] }]
   }
 }
 ```

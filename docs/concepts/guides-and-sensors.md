@@ -30,6 +30,7 @@ The harness controls an agent in two directions. Guides act before the agent wor
 | `jotta budget check` | Budget thresholds; see [budget and routing](./budget-and-routing.md) |
 | `jotta hook pre-tool-use` | Force pushes, hard resets, branch protection bypasses, secret reads and deletions outside the project, before the tool runs; see [hooks](./hooks.md) |
 | `jotta hook post-tool-use` | The `smoke` profile after a code edit, debounced, with the compact receipt fed back to the agent on failure |
+| `jotta hook stop` | An active task's quality receipt before the agent ends its turn |
 
 `.jotta/sensors/computational/pre-commit-config.example.yaml` shows how to run the staged and text gates as pre-commit hooks.
 
