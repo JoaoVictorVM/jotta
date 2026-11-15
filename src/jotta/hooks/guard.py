@@ -162,6 +162,13 @@ def check_gh(words: list[str]) -> Decision:
     return ALLOW
 
 
+def check_jotta(words: list[str]) -> Decision:
+    arguments = [word for index, word in enumerate(words[1:]) if not word.startswith("-") and words[index] != "--root"]
+    if arguments[:2] == ["scope", "allow"]:
+        return deny("widen-scope", "only the user may widen the task scope with 'jotta scope allow'")
+    return ALLOW
+
+
 def inside(path: Path, root: Path) -> bool:
     return path == root or root in path.parents
 
@@ -191,6 +198,10 @@ def check_shell(command: str, cwd: Path, root: Path) -> Decision:
             decision = check_gh(words)
         elif name == "rm":
             decision = check_rm(words, cwd, root)
+        elif name in {"jotta", "jotta.exe"}:
+            decision = check_jotta(words)
+        elif name.startswith("python") and "-m" in words[:-1] and words[words.index("-m") + 1] == "jotta":
+            decision = check_jotta(words[words.index("-m") + 1 :])
         else:
             decision = ALLOW
         if decision.allowed:
