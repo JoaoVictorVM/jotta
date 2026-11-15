@@ -56,13 +56,27 @@ jotta scope show
 
 The command records each addition and its reason in the packet. The guard refuses it when an agent runs it. Edits made through shell commands, such as `sed -i`, are not covered by this check.
 
+## `jotta hook post-tool-use`
+
+After an `Edit`, `MultiEdit`, `Write` or `NotebookEdit` call changes a code file, the hook runs the quality profile set in the `post_edit` section of `.jotta/sensors/computational/gates.json`, which is `smoke` by default. Markdown and text files, and files under `.planning/`, `.jotta/` and `.git/`, do not trigger it.
+
+```json
+"post_edit": { "profile": "smoke", "debounce_seconds": 20 }
+```
+
+- **Debounce.** A burst of edits runs the profile once. An edit within `debounce_seconds` of the last run only marks the check as pending, and the next edit after the window runs it. After a failure the window is ignored, so each fix is checked at once.
+- **Feedback.** When the profile passes, the hook prints nothing. When it fails, the hook exits with code 2 and prints the compact receipt on stderr: the failing command, its exit code, the relevant lines and the paths of the full log and the receipt. Claude Code shows that message to the agent right after the edit that caused it.
+- **State.** The last run, its status, its receipt and whether a check is pending live in `.jotta/runtime/state/post-edit.json`.
+
+An empty profile does nothing. Configure fast commands, such as a linter or a type checker, so the hook stays within the agent's hook timeout.
+
 ## Log
 
 Every block and every warning is appended to `.jotta/runtime/logs/hooks.jsonl` with the time, session, tool, a truncated copy of the input, the decision, the rule and the reason. Allowed calls are not logged.
 
 ## Configuring Claude Code
 
-Add the hook to the project's `.claude/settings.json`:
+Add the hooks to the project's `.claude/settings.json`:
 
 ```json
 {
@@ -71,6 +85,12 @@ Add the hook to the project's `.claude/settings.json`:
       {
         "matcher": "Bash|Read|Edit|MultiEdit|Write|NotebookEdit|Grep|Glob",
         "hooks": [{ "type": "command", "command": "jotta hook pre-tool-use" }]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write|NotebookEdit",
+        "hooks": [{ "type": "command", "command": "jotta hook post-tool-use" }]
       }
     ]
   }

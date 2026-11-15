@@ -19,6 +19,7 @@ All notable changes to this project are recorded here.
 - Adds the first architecture decision records in `docs/decisions/`.
 - Adds `jotta hook pre-tool-use`, a Claude Code hook that blocks force pushes, hard resets, branch protection bypasses, secret reads and recursive deletions outside the project, and logs each block to `.jotta/runtime/logs/hooks.jsonl`.
 - Records the files a task may edit in the context packet, from the spec and `jotta prepare --allow`. The hook blocks edits outside them in `strict`, warns in `lean`, and only a person can widen the scope with `jotta scope allow`.
+- Adds `jotta hook post-tool-use`, which runs the `smoke` quality profile after a code edit, at most once per debounce window, and feeds the compact receipt of a failure back to the agent.
 
 ## 0.5.0
 
