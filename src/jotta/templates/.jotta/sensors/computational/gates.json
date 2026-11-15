@@ -5,9 +5,14 @@
     "feature": [],
     "full": []
   },
+  "post_edit": {
+    "profile": "smoke",
+    "debounce_seconds": 20
+  },
   "notes": {
     "smoke": "Fast build, typecheck, lint or targeted test commands for each lean feature.",
     "feature": "Feature or wave integration commands.",
-    "full": "Complete product validation commands. Add project commands as strings."
+    "full": "Complete product validation commands. Add project commands as strings.",
+    "post_edit": "Profile the PostToolUse hook runs after a code edit, at most once per debounce window."
   }
 }
