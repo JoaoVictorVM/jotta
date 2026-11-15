@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from jotta import __version__
 from jotta.budget import guard
-from jotta.commands import doctor, gates, install, run, scope, tasks
+from jotta.commands import adapter, doctor, gates, install, run, scope, tasks
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
 from jotta.hooks import command as hook_command
 from jotta.isolation import orca
@@ -203,6 +203,13 @@ def _add_scope_commands(subparsers: SubParsers) -> None:
     allow.add_argument("--reason", required=True)
 
 
+def _add_adapter_command(subparsers: SubParsers) -> None:
+    adapter_parser = subparsers.add_parser("adapter", help="Generate the native configuration of a coding agent.")
+    adapter_parser.add_argument("agent", choices=["claude"])
+    adapter_parser.add_argument("--dry-run", action="store_true", help="show what would change without writing")
+    adapter_parser.set_defaults(handler=lambda args, paths: adapter.run(paths, args))
+
+
 def _add_hook_command(subparsers: SubParsers) -> None:
     hook = subparsers.add_parser("hook", help="Answer an agent hook event read from stdin.")
     hook.add_argument("event", choices=hook_command.EVENTS)
@@ -224,6 +231,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_quality_command(subparsers)
     _add_orca_commands(subparsers)
     _add_scope_commands(subparsers)
+    _add_adapter_command(subparsers)
     _add_hook_command(subparsers)
     return parser
 
