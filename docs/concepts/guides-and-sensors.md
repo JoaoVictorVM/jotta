@@ -28,6 +28,7 @@ The harness controls an agent in two directions. Guides act before the agent wor
 | `jotta gate commit` | Conventional commit format and forbidden text such as AI attribution or planning IDs |
 | `jotta quality <profile>` | The project's own commands from `gates.json`, with a compact receipt |
 | `jotta budget check` | Budget thresholds; see [budget and routing](./budget-and-routing.md) |
+| `jotta hook pre-tool-use` | Force pushes, hard resets, branch protection bypasses, secret reads and deletions outside the project, before the tool runs; see [hooks](./hooks.md) |
 
 `.jotta/sensors/computational/pre-commit-config.example.yaml` shows how to run the staged and text gates as pre-commit hooks.
 

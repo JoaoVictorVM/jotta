@@ -12,6 +12,7 @@ from jotta import __version__
 from jotta.budget import guard
 from jotta.commands import doctor, gates, install, run, tasks
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
+from jotta.hooks import command as hook_command
 from jotta.isolation import orca
 from jotta.quality import runner
 from jotta.routing import router
@@ -189,6 +190,12 @@ def _add_orca_commands(subparsers: SubParsers) -> None:
     remove.add_argument("--worktree", required=True)
 
 
+def _add_hook_command(subparsers: SubParsers) -> None:
+    hook = subparsers.add_parser("hook", help="Answer an agent hook event read from stdin.")
+    hook.add_argument("event", choices=hook_command.EVENTS)
+    hook.set_defaults(handler=lambda args, _paths: hook_command.run(args), needs_project=False)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="jotta",
@@ -203,6 +210,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_models_commands(subparsers)
     _add_quality_command(subparsers)
     _add_orca_commands(subparsers)
+    _add_hook_command(subparsers)
     return parser
 
 
