@@ -36,15 +36,14 @@ def compact(text: str, limit: int = 40) -> list[str]:
     return selected
 
 
-def run_profile(paths: ProjectPaths, profile: str, max_lines: int = 40) -> int:
-    """Run every command of a quality profile and write a compact receipt."""
+def execute_profile(paths: ProjectPaths, profile: str, max_lines: int = 40) -> tuple[JSONDict, int]:
+    """Run every command of a quality profile, stopping at the first failure, and write a compact receipt."""
     data = load_json(paths.gates)
     profiles = data.get("profiles", {})
     if profile not in profiles:
-        print_json({"status": "invalid", "profile": profile}, indent=None)
-        return EXIT_INVALID_PROFILE
+        return {"status": "invalid", "profile": profile}, EXIT_INVALID_PROFILE
 
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     log_dir = paths.runtime / "logs" / stamp
     receipt_dir = paths.runtime / "receipts"
     log_dir.mkdir(parents=True, exist_ok=True)
@@ -82,5 +81,11 @@ def run_profile(paths: ProjectPaths, profile: str, max_lines: int = 40) -> int:
     receipt_path = receipt_dir / f"{stamp}-{profile}.json"
     receipt_path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     result["receipt"] = paths.relative(receipt_path)
-    print_json(result)
-    return final_code
+    return result, final_code
+
+
+def run_profile(paths: ProjectPaths, profile: str, max_lines: int = 40) -> int:
+    """Run a quality profile and print its receipt."""
+    result, code = execute_profile(paths, profile, max_lines)
+    print_json(result, indent=None if result["status"] == "invalid" else 2)
+    return code
