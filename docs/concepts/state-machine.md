@@ -46,4 +46,4 @@ Every transition needs compact evidence: a quality receipt for local completion,
 
 ## Context packets
 
-A packet contains the task, the requested and effective profiles, the risk classification, the budget evaluation, the model route, the relevant PRD excerpt, the paths of an existing spec and plan, and the control root. It includes the control root because `.jotta/` and `.planning/` are local and are not copied into a Git worktree: the worker writes code in the worktree while the orchestrator keeps planning and state in the control root.
+A packet contains the task, the requested and effective profiles, the risk classification, the budget evaluation, the model route, the relevant PRD excerpt, the paths of an existing spec and plan, the files the task may edit with the scope enforcement of its profile (see [hooks](./hooks.md#task-scope)), and the control root. It includes the control root because `.jotta/` and `.planning/` are local and are not copied into a Git worktree: the worker writes code in the worktree while the orchestrator keeps planning and state in the control root.

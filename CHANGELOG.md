@@ -18,6 +18,7 @@ All notable changes to this project are recorded here.
 - Splits the CI into lint, type checking and test jobs, runs the tests on Python 3.10 and 3.12, and requires 80% coverage.
 - Adds the first architecture decision records in `docs/decisions/`.
 - Adds `jotta hook pre-tool-use`, a Claude Code hook that blocks force pushes, hard resets, branch protection bypasses, secret reads and recursive deletions outside the project, and logs each block to `.jotta/runtime/logs/hooks.jsonl`.
+- Records the files a task may edit in the context packet, from the spec and `jotta prepare --allow`. The hook blocks edits outside them in `strict`, warns in `lean`, and only a person can widen the scope with `jotta scope allow`.
 
 ## 0.5.0
 
