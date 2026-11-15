@@ -64,14 +64,16 @@ def after_edit(payload: JSONDict, paths: ProjectPaths, clock: float | None = Non
     target = str(tool_input.get("file_path") or tool_input.get("notebook_path") or "")
     if not target or not is_code(target):
         return SmokeOutcome("ignored")
+    current = time.time() if clock is None else clock
+    state = load_json(state_path(paths), {})
+    state["last_edit_at"] = current
     config = settings(paths)
     profile = str(config["profile"])
     commands = load_json(paths.gates, {}).get("profiles", {}).get(profile)
     if not commands:
+        write_json_atomic(state_path(paths), state)
         return SmokeOutcome("not-configured")
 
-    current = time.time() if clock is None else clock
-    state = load_json(state_path(paths), {})
     last = float(state.get("last_run_at") or 0.0)
     recovering = state.get("status") == "failed"
     if not recovering and current - last < float(config["debounce_seconds"]):
@@ -82,7 +84,13 @@ def after_edit(payload: JSONDict, paths: ProjectPaths, clock: float | None = Non
     result, code = execute_profile(paths, profile)
     write_json_atomic(
         state_path(paths),
-        {"last_run_at": current, "pending": False, "status": result.get("status"), "receipt": result.get("receipt")},
+        {
+            "last_edit_at": current,
+            "last_run_at": current,
+            "pending": False,
+            "status": result.get("status"),
+            "receipt": result.get("receipt"),
+        },
     )
     if code == 0:
         return SmokeOutcome("passed")

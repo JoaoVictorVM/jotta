@@ -15,13 +15,13 @@ from typing import TextIO
 
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
 from jotta.core.state import JSONDict, now
-from jotta.hooks import scope, smoke
+from jotta.hooks import completion, scope, smoke
 from jotta.hooks.guard import Decision, evaluate
 
 EXIT_ALLOW = 0
 EXIT_ERROR = 1
 EXIT_BLOCK = 2
-EVENTS = ("pre-tool-use", "post-tool-use")
+EVENTS = ("pre-tool-use", "post-tool-use", "stop")
 LOG_NAME = "hooks.jsonl"
 MAX_LOGGED_CHARS = 500
 
@@ -58,6 +58,31 @@ def log_decision(paths: ProjectPaths, event: str, payload: JSONDict, decision: D
         handle.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
+def stop(payload: JSONDict, paths: ProjectPaths | None) -> int:
+    """Refuse to end the turn while the active task lacks a passing quality receipt."""
+    if paths is None:
+        return EXIT_ALLOW
+    try:
+        outcome = completion.before_stop(paths)
+    except (OSError, ValueError, KeyError) as exc:
+        print(f"jotta hook: the completion check could not run: {exc}", file=sys.stderr)
+        return EXIT_ERROR
+    if outcome.status in {"blocked", "released-blocked"}:
+        allowed = outcome.status == "released-blocked"
+        reason = outcome.message or "the agent stopped repeatedly without a passing quality receipt; run marked blocked"
+        decision = Decision(allowed=allowed, rule="quality-receipt-required", reason=reason)
+        try:
+            log_decision(paths, "stop", payload, decision)
+        except OSError as exc:
+            print(f"jotta hook: could not write the hook log: {exc}", file=sys.stderr)
+        if allowed:
+            print(json.dumps({"systemMessage": f"Jotta warning (quality-receipt-required): {reason}."}))
+            return EXIT_ALLOW
+        print(outcome.message, file=sys.stderr)
+        return EXIT_BLOCK
+    return EXIT_ALLOW
+
+
 def post_tool_use(payload: JSONDict, paths: ProjectPaths | None) -> int:
     """Run the post-edit quality profile; a failure is fed back to the agent through stderr and exit code 2."""
     if paths is None:
@@ -85,6 +110,8 @@ def handle(event: str, stream: TextIO, explicit_root: str | None = None) -> int:
     root, paths = project_root(payload, explicit_root)
     if event == "post-tool-use":
         return post_tool_use(payload, paths)
+    if event == "stop":
+        return stop(payload, paths)
     decision = evaluate(payload, root)
     if decision.allowed and paths is not None:
         decision = scope.check(payload, paths)

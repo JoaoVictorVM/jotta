@@ -42,4 +42,4 @@ A compact packet includes the control root because `.jotta` and `.planning` are 
 
 ## Completion
 
-Local completion requires the active quality profile. GitHub completion requires a confirmed merge SHA. Product completion in lean requires the final `full` quality profile and `final-qa`. Blocked or unverifiable worktrees are preserved.
+Local completion requires the active quality profile. When the `Stop` hook is active, ending a turn during an active task requires a passing receipt of the profile's gate written after the last code edit; if the task cannot pass, record it with `jotta checkpoint --status blocked` instead of stopping. GitHub completion requires a confirmed merge SHA. Product completion in lean requires the final `full` quality profile and `final-qa`. Blocked or unverifiable worktrees are preserved.
