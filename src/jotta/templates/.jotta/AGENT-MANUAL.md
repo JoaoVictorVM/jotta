@@ -30,6 +30,8 @@ Read only the selected workflow, skill entrypoint, profile references and curren
 
 The orchestrator coordinates and never writes product code. A single implementer writes inside each checkout. Spec authors write only under `.planning`. QA reviewers are read-only. Human gates override every profile.
 
+In Claude Code each role is also a subagent under `.claude/agents/`, generated from `.jotta/agents/`. Dispatch reviews to the `reviewer` or `qa-reviewer` subagent so they run in a clean, read-only context. Never edit the generated files under `.claude/`: change the source under `.jotta/` and ask the user to run `jotta adapter claude`.
+
 ## Task scope
 
 `jotta prepare` records the files the task may edit in the context packet: the paths in the spec's file tables plus any `--allow` path. When the `PreToolUse` hook is active, `strict` blocks edits outside that list and `lean` warns about them. When an edit outside the scope is needed, stop and ask the user to run `jotta scope allow <path> --reason <why>`. Never run that command, edit the context packet or work around the check with shell commands.
