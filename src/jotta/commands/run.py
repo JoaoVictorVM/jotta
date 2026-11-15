@@ -13,6 +13,7 @@ from jotta.core.git import in_git, run_git
 from jotta.core.paths import ProjectPaths
 from jotta.core.prd import feature_folder, feature_for, prd_excerpt
 from jotta.core.risk import risk_for
+from jotta.core.scope import enforcement_for, normalize, paths_from_spec, unique
 from jotta.core.state import (
     JSONDict,
     default_run,
@@ -127,6 +128,9 @@ def prepare(paths: ProjectPaths, args: argparse.Namespace) -> int:
         "spec_path": paths.relative(spec_path) if spec_path and spec_path.exists() else None,
         "plan_path": paths.relative(plan_path) if plan_path and plan_path.exists() else None,
         "requires_worktree": requires_worktree,
+        "allowed_paths": unique([*paths_from_spec(spec_text), *(normalize(path) for path in args.allow or [])]),
+        "scope_enforcement": enforcement_for(effective_profile),
+        "scope_additions": [],
     }
     packet["estimated_tokens"] = estimate_tokens(json.dumps(packet, ensure_ascii=False))
     safe = re.sub(r"[^a-z0-9-]+", "-", task["id"].lower()).strip("-") or "task"

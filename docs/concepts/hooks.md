@@ -8,7 +8,7 @@ The command reads one event in the Claude Code hook format from stdin and answer
 
 | Exit code | Meaning |
 |---|---|
-| `0` | The tool call may run. Nothing is printed. |
+| `0` | The tool call may run. Nothing is printed, unless the call raised a warning: then a `systemMessage` is printed on stdout for the user. |
 | `2` | The tool call is blocked. The reason is printed on stderr and shown to the agent. |
 | `1` | The event was not valid JSON. The hook reports an error without blocking. |
 
@@ -26,13 +26,39 @@ Each rule matches an entry in the `deny` list of `.jotta/policy/permissions.md`.
 | `read-secrets` | Reading or editing `.env` files, keys, certificates, credential files and anything under `.ssh`, `.aws` or `.gnupg`, through file tools, search tools or shell arguments. Example files such as `.env.example` are allowed, and so is creating a new file with `Write`. |
 | `delete-outside-project` | Recursive `rm` of the project root, of anything outside it, or of a target that cannot be verified because it uses variables, globs or `~` |
 
+| `widen-scope` | An agent running `jotta scope allow`, directly or through `python -m jotta` |
+
 Shell commands are split on `;`, `&&`, `||`, `|` and newlines, and environment assignments and wrappers such as `sudo` and `env` are skipped, so a forbidden command cannot hide behind another one.
 
 The guard is conservative. It prefers blocking a command it cannot verify, and the agent then has to ask the user or find a narrower command. A blocked command that the user really wants can always be run by the user.
 
+## Task scope
+
+`jotta prepare` records in the context packet the files the task may edit:
+
+- the paths in the first column of the tables in the feature's `spec.md`, such as the component and test file tables;
+- each path passed with `--allow`, which accepts files, directories (ending in `/`) and globs.
+
+Files under `.planning/` are always allowed. For `Edit`, `MultiEdit`, `Write` and `NotebookEdit` calls during an active run, the hook compares the target with that list, in the project or in a worker's worktree:
+
+| Profile | Edit outside the scope |
+|---|---|
+| `strict` | Blocked, rule `edit-outside-task-scope` |
+| `lean` | Allowed with a warning, logged as `warn` |
+| `manual-classic` | Not checked |
+
+When the packet declares no paths, nothing is checked. Only a person widens the scope:
+
+```bash
+jotta scope allow src/payments.py --reason "shared helper changes signature"
+jotta scope show
+```
+
+The command records each addition and its reason in the packet. The guard refuses it when an agent runs it. Edits made through shell commands, such as `sed -i`, are not covered by this check.
+
 ## Log
 
-Every block is appended to `.jotta/runtime/logs/hooks.jsonl` with the time, session, tool, a truncated copy of the input, the rule and the reason. Allowed calls are not logged.
+Every block and every warning is appended to `.jotta/runtime/logs/hooks.jsonl` with the time, session, tool, a truncated copy of the input, the decision, the rule and the reason. Allowed calls are not logged.
 
 ## Configuring Claude Code
 
