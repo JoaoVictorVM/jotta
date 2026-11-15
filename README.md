@@ -105,7 +105,7 @@ jotta doctor
 
 The workflows and skills copied into the project call the `jotta` command, so install the package in the Python environment you use in that project.
 
-`jotta install` copies `.jotta/`, `.planning/`, `AGENTS.md` and `CLAUDE.md`, generates the Claude Code hooks, subagents and skills under `.claude/`, creates the local planning and runtime folders and adds the harness files to the project's `.git/info/exclude`, so they stay out of commits. It never overwrites a file silently.
+`jotta install` copies `.jotta/`, `.planning/`, `AGENTS.md` and `CLAUDE.md`, fills the quality profiles from the detected stack, generates the Claude Code hooks, subagents and skills under `.claude/`, creates the local planning and runtime folders and adds the harness files to the project's `.git/info/exclude`, so they stay out of commits. It never overwrites a file silently.
 
 | Option | Effect |
 |---|---|
@@ -119,7 +119,7 @@ The workflows and skills copied into the project call the `jotta` command, so in
 ## Getting Started
 
 1. Write your product requirements in `.planning/PRD.md` using `prd-writer`.
-2. Set your project's real validation commands in `.jotta/sensors/computational/gates.json`.
+2. Check the validation commands that `jotta install` detected in `.jotta/sensors/computational/gates.json`, and fill any profile left empty.
 3. Run `jotta doctor` from the consumer project.
 4. Choose a prompt from `.jotta/prompts/` or ask your agent in natural language.
 

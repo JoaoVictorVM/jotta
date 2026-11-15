@@ -27,12 +27,28 @@ The harness controls an agent in two directions. Guides act before the agent wor
 | `jotta gate branch` | Branch name format |
 | `jotta gate commit` | Conventional commit format and forbidden text such as AI attribution or planning IDs |
 | `jotta quality <profile>` | The project's own commands from `gates.json`, with a compact receipt |
+| `jotta detect-stack` | Recognizes the project's stack and fills the quality profiles that are still free |
 | `jotta budget check` | Budget thresholds; see [budget and routing](./budget-and-routing.md) |
 | `jotta hook pre-tool-use` | Force pushes, hard resets, branch protection bypasses, secret reads and deletions outside the project, before the tool runs; see [hooks](./hooks.md) |
 | `jotta hook post-tool-use` | The `smoke` profile after a code edit, debounced, with the compact receipt fed back to the agent on failure |
 | `jotta hook stop` | An active task's quality receipt before the agent ends its turn |
 
 `.jotta/sensors/computational/pre-commit-config.example.yaml` shows how to run the staged and text gates as pre-commit hooks.
+
+### Quality profiles from the stack
+
+`jotta install` and `jotta detect-stack` read the manifests, lock files and tool configuration at the project root and suggest commands for the three profiles:
+
+| Stack | Recognized by | `smoke` | `feature` adds | `full` adds |
+|---|---|---|---|---|
+| Node | `package.json`; npm, pnpm or yarn from `packageManager` or the lock file | the `lint` and `typecheck` scripts, or `tsc --noEmit` for TypeScript | the `test` script | the `build` script |
+| Python | `pyproject.toml`, `setup.py`, `setup.cfg` or `requirements*.txt`; uv, poetry or pip from the lock file | `ruff check` and `mypy` when configured, otherwise `compileall` | `pytest` when configured | `ruff format --check` |
+| Go | `go.mod` | `go vet ./...` | `go test ./...` | `go build ./...` |
+| Rust | `Cargo.toml` | `cargo check --all-targets` | `cargo test` | `cargo fmt --check`, `cargo build` |
+
+Each profile includes the previous one. Commands run through the detected manager, such as `pnpm run lint` or `uv run pytest -q`. A tool is suggested only when the project shows it uses it; detection never runs the project's tools.
+
+A suggestion fills a profile only when the profile is empty or still holds the previous suggestion, which is recorded in the `detected` section of `gates.json`. A profile you edited is kept and reported in `kept`. `jotta doctor` warns when a profile can be filled or has no commands, and `jotta detect-stack --dry-run` shows the suggestion without writing it.
 
 ### Compact receipts
 
