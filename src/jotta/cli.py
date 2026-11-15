@@ -86,6 +86,9 @@ def _add_lifecycle_commands(subparsers: SubParsers) -> None:
     prepare.add_argument("--provider", help="routing provider key, for example platform, openai or anthropic")
     prepare.add_argument("--effort")
     prepare.add_argument("--prompt")
+    prepare.add_argument(
+        "--allow", action="append", metavar="PATH", help="a file, directory or glob the task may edit; repeatable"
+    )
     prepare.set_defaults(handler=lambda args, paths: run.prepare(paths, args))
 
     checkpoint = subparsers.add_parser("checkpoint", help="Record a finished task with its quality evidence.")
