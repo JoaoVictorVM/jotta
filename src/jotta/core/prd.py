@@ -11,6 +11,9 @@ FEATURE_ROW = re.compile(r"^\|\s*F\d+\s*\|", re.I)
 WAVE_LINE = re.compile(r"\*\*Wave\s+(\d+)\*\*\s*:\s*(.*)", re.I)
 FEATURE_ID = re.compile(r"F\d+")
 NO_DEPENDENCY = {"none", "nenhuma", "-"}
+HEADING = re.compile(r"^(#{1,6})\s")
+LIST_ITEM = re.compile(r"^\s*([-*+]|\d+[.)])\s")
+TABLE_SEPARATOR = re.compile(r"^\s*\|[\s:|-]+\|\s*$")
 
 
 def parse_prd(prd: Path) -> tuple[list[JSONDict], list[str]]:
@@ -74,14 +77,84 @@ def feature_folder(planning: Path, feature: JSONDict | None) -> Path | None:
     return matches[0] if len(matches) == 1 else None
 
 
+def is_table(line: str) -> bool:
+    return line.lstrip().startswith("|")
+
+
+def table_row(lines: list[str], index: int) -> set[int]:
+    """The matching row plus the header and separator of its table, never the other rows."""
+    top = index
+    while top > 0 and is_table(lines[top - 1]):
+        top -= 1
+    selected = {top, index}
+    if top + 1 < len(lines) and TABLE_SEPARATOR.match(lines[top + 1]):
+        selected.add(top + 1)
+    return selected
+
+
+def section(lines: list[str], index: int, level: int) -> set[int]:
+    """A heading and everything until the next heading of the same or a higher level."""
+    end = index + 1
+    while end < len(lines):
+        match = HEADING.match(lines[end])
+        if match and len(match.group(1)) <= level:
+            break
+        end += 1
+    return set(range(index, end))
+
+
+def list_item(lines: list[str], index: int) -> set[int]:
+    """A list item and its indented continuation lines, without the sibling items."""
+    indent = len(lines[index]) - len(lines[index].lstrip())
+    end = index + 1
+    while end < len(lines):
+        line = lines[end]
+        if not line.strip() or len(line) - len(line.lstrip()) <= indent:
+            break
+        end += 1
+    return set(range(index, end))
+
+
+def paragraph(lines: list[str], index: int) -> set[int]:
+    """The prose lines around ``index`` up to a blank line, heading, list item or table."""
+
+    def prose(line: str) -> bool:
+        return bool(line.strip()) and not (HEADING.match(line) or LIST_ITEM.match(line) or is_table(line))
+
+    start, end = index, index + 1
+    while start > 0 and prose(lines[start - 1]):
+        start -= 1
+    while end < len(lines) and prose(lines[end]):
+        end += 1
+    return set(range(start, end))
+
+
 def prd_excerpt(prd: Path, feature: JSONDict | None) -> str:
+    """The PRD lines about one feature: its table row, its own section, list items and paragraphs naming it.
+
+    Lines about other features are left out, so their text neither enters the context packet nor the risk check.
+    """
     if not prd.exists() or not feature:
         return ""
     lines = prd.read_text(encoding="utf-8").splitlines()
-    needles = [feature["id"].lower(), feature["name"].lower()]
+    needles = [rf"(?<![A-Za-z0-9]){re.escape(feature['id'])}(?!\d)"]
+    if feature.get("name"):
+        needles.append(rf"(?<!\w){re.escape(str(feature['name']))}(?!\w)")
+    mention = re.compile("|".join(needles), re.I)
     selected: set[int] = set()
     for index, line in enumerate(lines):
-        lowered = line.lower()
-        if any(needle and needle in lowered for needle in needles):
-            selected.update(range(max(0, index - 2), min(len(lines), index + 4)))
+        if not mention.search(line):
+            continue
+        heading = HEADING.match(line)
+        if is_table(line):
+            # A row belongs to the feature named in its first cell; a mention in another cell, such as a
+            # dependency, belongs to another feature's row.
+            if mention.search(line.strip().strip("|").split("|")[0]):
+                selected |= table_row(lines, index)
+        elif heading:
+            selected |= section(lines, index, len(heading.group(1)))
+        elif LIST_ITEM.match(line):
+            selected |= list_item(lines, index)
+        else:
+            selected |= paragraph(lines, index)
     return "\n".join(lines[index] for index in sorted(selected))
