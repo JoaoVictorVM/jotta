@@ -122,3 +122,93 @@ def test_sync_records_the_prd_hash(project: Path) -> None:
     paths = ProjectPaths(project)
     sync_tasks(paths)
     assert json.loads(paths.tasks.read_text(encoding="utf-8"))["prd_hash"].startswith("sha256:")
+
+
+DETAILED_PRD = """# PRD
+
+| ID | Feature | Priority | Dependencies |
+|---|---|---|---|
+| F01 | Login com OAuth | 1 | none |
+| F03 | Tela inicial | 3 | none |
+| F10 | Pagamentos | 4 | F01 |
+
+**Wave 1**: F01, F03
+
+## Features
+
+### F01: Login com OAuth
+
+Users sign in with OAuth.
+
+### F03: Tela inicial
+
+Shows the latest items.
+
+#### Layout
+
+A grid of cards.
+
+### F10: Pagamentos
+
+Card payments.
+
+## Notes
+
+- F01 stores tokens securely.
+- F03 caches the list.
+  It refreshes every minute.
+- F10 charges in BRL.
+
+The home screen of F03 loads fast.
+It uses the local cache.
+
+Unrelated paragraph about security.
+"""
+
+
+def excerpt_for(tmp_path: Path, reference: str) -> str:
+    prd = tmp_path / "PRD.md"
+    prd.write_text(DETAILED_PRD, encoding="utf-8")
+    return prd_excerpt(prd, feature_for(prd, reference))
+
+
+def test_excerpt_keeps_only_the_feature_row_and_the_table_header(tmp_path: Path) -> None:
+    excerpt = excerpt_for(tmp_path, "F03").splitlines()
+    assert excerpt[:3] == [
+        "| ID | Feature | Priority | Dependencies |",
+        "|---|---|---|---|",
+        "| F03 | Tela inicial | 3 | none |",
+    ]
+    assert not any(line.startswith(("| F01", "| F10")) for line in excerpt)
+
+
+def test_excerpt_takes_the_whole_feature_section_and_nothing_after_it(tmp_path: Path) -> None:
+    excerpt = excerpt_for(tmp_path, "F03")
+    assert "Shows the latest items." in excerpt
+    assert "A grid of cards." in excerpt, "subsections belong to the feature"
+    assert "Users sign in with OAuth." not in excerpt
+    assert "Card payments." not in excerpt
+
+
+def test_excerpt_takes_list_items_and_paragraphs_without_their_neighbors(tmp_path: Path) -> None:
+    excerpt = excerpt_for(tmp_path, "F03")
+    assert "- F03 caches the list.\n  It refreshes every minute." in excerpt
+    assert "The home screen of F03 loads fast.\nIt uses the local cache." in excerpt
+    assert "stores tokens securely" not in excerpt
+    assert "charges in BRL" not in excerpt
+    assert "Unrelated paragraph" not in excerpt
+
+
+def test_excerpt_matches_whole_feature_ids(tmp_path: Path) -> None:
+    excerpt = excerpt_for(tmp_path, "F01")
+    assert "Users sign in with OAuth." in excerpt
+    assert "| F10 |" not in excerpt, "a row that only lists the feature as a dependency belongs to another feature"
+    assert "Card payments." not in excerpt
+
+
+def test_excerpt_can_find_a_feature_by_name_in_a_table(tmp_path: Path) -> None:
+    prd = tmp_path / "PRD.md"
+    table = ["| Feature | Owner |", "|---|---|", "| Tela inicial | web |", "| Pagamentos | billing |"]
+    prd.write_text("\n".join(table) + "\n", encoding="utf-8")
+    excerpt = prd_excerpt(prd, {"id": "F03", "name": "Tela inicial"})
+    assert excerpt.splitlines() == ["| Feature | Owner |", "|---|---|", "| Tela inicial | web |"]

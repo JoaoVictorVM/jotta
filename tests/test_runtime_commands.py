@@ -130,3 +130,12 @@ def test_a_fresh_project_starts_without_state_files(project: Path, capsys: pytes
 def test_runtime_is_ignored_inside_the_installed_harness() -> None:
     ignore = templates_root() / ".jotta" / ".gitignore"
     assert "runtime/" in ignore.read_text(encoding="utf-8").splitlines()
+
+
+def test_a_neighbor_feature_does_not_raise_the_risk(project: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    code, prepared = run_json(capsys, "--root", str(project), "prepare", "F03")
+    assert code == 0
+    assert prepared["profile"] == "lean", "F03 sits next to the OAuth feature in the PRD table but is not about it"
+    packet = json.loads((project / str(prepared["context_packet"])).read_text(encoding="utf-8"))
+    assert packet["risk"] == {"level": "normal", "reasons": []}
+    assert "OAuth" not in packet["prd_excerpt"]
