@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import re
 
-from jotta.adapters import claude
+from jotta.adapters import claude, codex
 from jotta.core.context import profile_token_estimates
 from jotta.core.paths import ProjectPaths
 from jotta.core.state import load_json
@@ -52,6 +52,9 @@ def run(paths: ProjectPaths) -> int:
     missing_hooks = claude.missing_hooks(paths)
     if missing_hooks:
         warnings.append(f"Claude Code hooks not configured ({', '.join(missing_hooks)}); run `jotta adapter claude`")
+    missing_codex = codex.missing_hooks(paths)
+    if missing_codex:
+        warnings.append(f"Codex hooks not configured ({', '.join(missing_codex)}); run `jotta adapter codex`")
     if not orca.available():
         warnings.append("Orca CLI unavailable in this shell; autonomous GitHub worktree launch will stop")
     print("DOCTOR FAILED" if errors else "DOCTOR OK")

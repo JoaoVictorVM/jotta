@@ -210,7 +210,7 @@ def _add_scope_commands(subparsers: SubParsers) -> None:
 
 def _add_adapter_command(subparsers: SubParsers) -> None:
     adapter_parser = subparsers.add_parser("adapter", help="Generate the native configuration of a coding agent.")
-    adapter_parser.add_argument("agent", choices=["claude"])
+    adapter_parser.add_argument("agent", choices=sorted(adapter.PLANNERS))
     adapter_parser.add_argument("--dry-run", action="store_true", help="show what would change without writing")
     adapter_parser.set_defaults(handler=lambda args, paths: adapter.run(paths, args))
 

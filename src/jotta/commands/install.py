@@ -7,7 +7,7 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-from jotta.adapters import claude
+from jotta.commands import adapter
 from jotta.core.paths import ProjectPaths
 from jotta.core.state import JSONDict, print_json
 from jotta.install.installer import InstallRefusedError, apply_install, plan_install
@@ -27,14 +27,6 @@ def ask(question: str) -> bool:
     sys.stderr.write(f"{question} [y/N] ")
     sys.stderr.flush()
     return sys.stdin.readline().strip().lower() in {"y", "yes", "s", "sim"}
-
-
-def configure_claude(target: Path) -> JSONDict:
-    """Generate the Claude Code configuration of the new installation, never overwriting user files."""
-    adapter_plan = claude.plan_adapter(ProjectPaths(target))
-    if adapter_plan.error is None:
-        claude.apply_adapter(adapter_plan)
-    return adapter_plan.summary()
 
 
 def configure_quality(target: Path) -> JSONDict:
@@ -81,7 +73,8 @@ def run(args: argparse.Namespace, confirm: Confirm = ask) -> int:
             "overwritten": summary["conflicts"],
             **summary,
             "quality": configure_quality(plan.target),
-            "claude": configure_claude(plan.target),
+            "claude": adapter.configure(ProjectPaths(plan.target), "claude"),
+            "codex": adapter.configure(ProjectPaths(plan.target), "codex"),
         }
     )
     return EXIT_OK
