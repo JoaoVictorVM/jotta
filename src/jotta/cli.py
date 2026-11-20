@@ -218,6 +218,7 @@ def _add_adapter_command(subparsers: SubParsers) -> None:
 def _add_hook_command(subparsers: SubParsers) -> None:
     hook = subparsers.add_parser("hook", help="Answer an agent hook event read from stdin.")
     hook.add_argument("event", choices=hook_command.EVENTS)
+    hook.add_argument("--agent", choices=hook_command.AGENTS, default="claude", help="the hook protocol to answer in")
     hook.set_defaults(handler=lambda args, _paths: hook_command.run(args), needs_project=False)
 
 
