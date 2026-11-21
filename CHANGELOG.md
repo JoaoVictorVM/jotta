@@ -27,6 +27,7 @@ All notable changes to this project are recorded here.
 - Adds `jotta adapter codex`, also run by `jotta install`, which generates `.codex/hooks.json`, `.codex/config.toml`, a custom agent per harness role and skill entries under `.agents/skills/`. `jotta hook` gains `--agent codex`, which answers in the Codex hook protocol and checks every file of an `apply_patch`. The installer adds `.codex/` and `.agents/` to the Git exclusions.
 - Adds `jotta adapter opencode`, also run by `jotta install`, which generates `.opencode/opencode.jsonc` with permission rules from the policy deny list, a subagent per harness role and skill entries under `.opencode/skills/`. The installer adds `.opencode/` to the Git exclusions.
 - Adds `.jotta/policy/profile-permissions.json`, with the shell commands `lean`, `strict` and `manual-classic` allow, ask about or deny. The Claude Code, Codex and OpenCode adapters apply the profile set in `config.yaml`, or the one passed with `--profile`, and `jotta doctor` warns when a generated configuration is out of date.
+- The hooks read the quality gates from `HEAD` when they are committed, or from a snapshot taken at the start of the agent session, so an uncommitted edit to `gates.json` does not change the checks until it is committed or a new session starts. A receipt counts at `Stop` only when it ran the pinned commands. The first hook of a session and `jotta doctor` warn when the file on disk differs.
 
 ## 0.5.0
 

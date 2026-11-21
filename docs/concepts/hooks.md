@@ -89,6 +89,20 @@ Otherwise the hook exits with code 2 and tells the agent which profile to run, o
 
 A `null` profile disables the check for that run profile. To avoid an endless loop, after `max_consecutive_blocks` refusals in a row for the same task the agent may stop, but the run is marked `blocked` with the missing receipt as the blocker, so the task is never recorded as done without its gate.
 
+## Pinned configuration
+
+The hooks enforce `.jotta/sensors/computational/gates.json`: the commands that run after an edit, and the receipt the agent needs before it stops. If an edit to that file took effect at once, the agent could empty a profile and switch its own checks off. So the hooks read it from the first source that applies:
+
+| Source | When | An edit takes effect |
+|---|---|---|
+| `HEAD` | The project is a Git repository and the file is committed | After the commit |
+| Session snapshot | The file is not committed, as in a default install, where `.jotta/` is excluded from Git | In the next agent session |
+| Working tree | Neither a commit nor a session id is available | At once |
+
+The snapshot is taken by the first hook of each session and stored in `.jotta/runtime/state/policy-snapshot.json`; the `PreToolUse` hook blocks file tools from editing it (`edit-policy-snapshot`).
+
+A receipt counts at `Stop` only when it ran exactly the commands its profile has in the pinned gates, so `jotta quality smoke` after an uncommitted edit that emptied `smoke` does not release the task. When the file on disk differs from the pinned version, the first hook of the session warns once (`policy-not-committed`), and `jotta doctor` warns while a committed file differs from `HEAD`.
+
 ## Log
 
 Every block and every warning, including the `Stop` refusals, is appended to `.jotta/runtime/logs/hooks.jsonl` with the time, session, tool, a truncated copy of the input, the decision, the rule and the reason. Allowed calls are not logged.
