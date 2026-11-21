@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 from collections.abc import Callable
 
-from jotta.adapters import claude, codex
+from jotta.adapters import claude, codex, opencode
 from jotta.adapters.common import AdapterPlan, apply_adapter
 from jotta.core.paths import ProjectPaths
 from jotta.core.state import JSONDict, print_json
@@ -15,6 +15,7 @@ EXIT_BLOCKED = 2
 PLANNERS: dict[str, Callable[[ProjectPaths], AdapterPlan]] = {
     "claude": claude.plan_adapter,
     "codex": codex.plan_adapter,
+    "opencode": opencode.plan_adapter,
 }
 
 

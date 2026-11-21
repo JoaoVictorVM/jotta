@@ -75,6 +75,7 @@ def run(args: argparse.Namespace, confirm: Confirm = ask) -> int:
             "quality": configure_quality(plan.target),
             "claude": adapter.configure(ProjectPaths(plan.target), "claude"),
             "codex": adapter.configure(ProjectPaths(plan.target), "codex"),
+            "opencode": adapter.configure(ProjectPaths(plan.target), "opencode"),
         }
     )
     return EXIT_OK
