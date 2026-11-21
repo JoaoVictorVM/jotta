@@ -20,7 +20,16 @@ LOCAL_DIRECTORIES = (
     Path(".planning") / "archive",
     Path(".jotta") / "runtime" / "state",
 )
-GIT_EXCLUDES = ("/.jotta/", "/.planning/", "/AGENTS.md", "/CLAUDE.md", "/.claude/", "/.codex/", "/.agents/")
+GIT_EXCLUDES = (
+    "/.jotta/",
+    "/.planning/",
+    "/AGENTS.md",
+    "/CLAUDE.md",
+    "/.claude/",
+    "/.codex/",
+    "/.agents/",
+    "/.opencode/",
+)
 EXCLUDE_HEADER = "# jotta local"
 
 
