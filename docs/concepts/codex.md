@@ -15,6 +15,7 @@ jotta adapter codex --dry-run  # show what would change
 |---|---|
 | `.codex/hooks.json` | `PreToolUse` on `Bash` and `apply_patch`, `PostToolUse` on `apply_patch` and `Stop`, each calling `jotta hook <event> --agent codex`. |
 | `.codex/config.toml` | `approval_policy = "on-request"`, `sandbox_mode = "workspace-write"` and `network_access = false`. |
+| `.codex/rules/jotta.rules` | The `prompt` and `forbidden` command rules of the active [profile](./profiles.md#permissions-per-profile). |
 | `.codex/agents/<role>.toml` | A custom agent per role in `.jotta/agents/`, with `name`, `description` and the role as `developer_instructions`. |
 | `.agents/skills/<skill>/SKILL.md` | The skill's name and description, and an instruction to read the canonical file. |
 
