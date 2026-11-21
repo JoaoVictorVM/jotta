@@ -1,6 +1,6 @@
 # Evals
 
-Run these behavior cases after a structural change to the harness. Cases 001 to 011 preserve the original contracts. Cases 012 to 022 cover the v0.5 lean runtime, Orca lifecycle, compact quality evidence, profile routing, context discovery, final QA, the task edit scope, the quality receipt required to stop, the Claude Code subagents, the Codex hooks and the OpenCode permissions.
+Run these behavior cases after a structural change to the harness. Cases 001 to 011 preserve the original contracts. Cases 012 to 023 cover the v0.5 lean runtime, Orca lifecycle, compact quality evidence, profile routing, context discovery, final QA, the task edit scope, the quality receipt required to stop, the Claude Code subagents, the Codex hooks, the OpenCode permissions and the permissions per profile.
 
 Automated structural checks:
 

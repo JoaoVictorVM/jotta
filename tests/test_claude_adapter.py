@@ -90,7 +90,7 @@ def test_existing_settings_are_merged_without_losing_anything(
     (project / ".claude" / "settings.json").write_text(json.dumps(existing), encoding="utf-8")
     adapt(project, capsys)
     data = settings(project)
-    assert data["permissions"] == permissions
+    assert data["permissions"]["allow"][:2] == ["Bash(npm test)", "Bash(git status *)"]
     assert data["hooks"]["SessionStart"] == session_start
     assert commands(data, "PreToolUse") == ["./scripts/audit.sh", "jotta hook pre-tool-use"]
 

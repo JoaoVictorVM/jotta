@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "common": {
+    "allow": [
+      "git status *",
+      "git diff *",
+      "git log *",
+      "git show *",
+      "git rev-parse *",
+      "git branch --show-current",
+      "ls *",
+      "pwd",
+      "jotta status *",
+      "jotta doctor *",
+      "jotta quality *",
+      "jotta gate *"
+    ],
+    "ask": [],
+    "deny": []
+  },
+  "profiles": {
+    "lean": {
+      "allow": ["git add *", "git commit *", "git switch *", "git checkout -b *", "jotta *"],
+      "ask": ["git push *", "gh pr create *", "gh pr merge *"],
+      "deny": []
+    },
+    "strict": {
+      "allow": ["git add *", "jotta *"],
+      "ask": [
+        "git commit *",
+        "git push *",
+        "gh pr *",
+        "npm install *",
+        "pip install *",
+        "python -m pip install *"
+      ],
+      "deny": []
+    },
+    "manual-classic": {
+      "allow": [],
+      "ask": ["git add *", "git commit *", "git push *", "gh pr create *", "jotta prepare *", "jotta checkpoint *"],
+      "deny": ["gh pr merge *"]
+    }
+  },
+  "notes": {
+    "patterns": "A shell command, or a command prefix followed by ' *', which also matches the bare command. No other wildcard is allowed.",
+    "common": "Rules every profile receives. The commands of the quality profiles in gates.json are allowed too.",
+    "profiles": "Rules added for the active profile, read from defaults.execution_profile in config.yaml. Run `jotta adapter <agent>` after a change.",
+    "precedence": "deny wins over ask, and ask wins over allow, in every agent. The deny list of permissions.md is enforced by the hooks and never relaxed here."
+  }
+}

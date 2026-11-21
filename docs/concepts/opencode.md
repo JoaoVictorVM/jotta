@@ -13,7 +13,7 @@ jotta adapter opencode --dry-run  # show what would change
 
 | File | Content |
 |---|---|
-| `.opencode/opencode.jsonc` | The `$schema` and a `permissions` list built from the `deny` list of `.jotta/policy/permissions.md`. |
+| `.opencode/opencode.jsonc` | The `$schema` and a `permissions` list with the shell rules of the active [profile](./profiles.md#permissions-per-profile) and rules built from the `deny` list of `.jotta/policy/permissions.md`. |
 | `.opencode/agents/<role>.md` | A subagent per role in `.jotta/agents/`, with `description`, `mode: subagent` and the role as its prompt. |
 | `.opencode/skills/<skill>/SKILL.md` | The skill's name and description, and an instruction to read the canonical file. |
 
@@ -21,7 +21,7 @@ A file without the Jotta marker is never changed and is reported in `skipped`. W
 
 ## The permission rules
 
-OpenCode checks every rule in order, and the last one that matches wins. Its built-in rules allow everything, so the adapter only adds narrow rules on top:
+OpenCode checks every rule in order, and the last one that matches wins. Its built-in rules allow everything. The adapter first asks before any shell command and adds the allow, ask and deny rules of the active profile, then adds these fixed rules, which no profile relaxes:
 
 | Policy rule | OpenCode rules |
 |---|---|
