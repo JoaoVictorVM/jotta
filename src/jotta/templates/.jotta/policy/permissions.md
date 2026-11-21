@@ -40,4 +40,6 @@ This file restricts what the harness may run automatically. It never extends the
 
 Cleaning up a worktree is allowed only after a confirmed merge, a recorded SHA and a check that the worktree is clean. The flow never uses forced removal.
 
+The shell commands each execution profile allows, asks about or denies in the agent's own permission settings are in `profile-permissions.json`.
+
 Edit the frontmatter and run `jotta doctor`.

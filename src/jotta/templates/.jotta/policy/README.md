@@ -5,10 +5,17 @@ This folder holds the rules that limit execution.
 | File | Contents |
 |---|---|
 | `permissions.md` | Actions that are allowed, denied or enabled per profile |
+| `profile-permissions.json` | Shell commands each execution profile allows, asks about or denies |
 | `human-gates.md` | Situations that require a human decision |
 | `budget.json` | Budget limits, decision thresholds and checkpoints |
 | `providers.json` | Where each provider's usage comes from |
 | `routing.json` | Model tier per task and models per provider |
+
+## Permissions per profile
+
+`profile-permissions.json` lists shell commands to allow, ask about or deny: a `common` section for every profile, and one section each for `lean`, `strict` and `manual-classic`. A pattern is a command, or a command prefix followed by ` *`. The commands of the quality profiles in `gates.json` are always allowed.
+
+The adapters apply the profile named by `defaults.execution_profile` in `config.yaml`. To change it, edit that key and run `jotta adapter claude`, `jotta adapter codex` or `jotta adapter opencode`; `jotta doctor` warns while a generated configuration is out of date. A denial in `permissions.md` is enforced by the hooks and no profile relaxes it.
 
 ## Budget control
 
