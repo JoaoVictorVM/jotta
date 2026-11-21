@@ -25,6 +25,7 @@ All notable changes to this project are recorded here.
 - Adds `jotta detect-stack`, also run by `jotta install`, which recognizes Node (npm, pnpm, yarn), Python (uv, poetry, pip), Go and Rust and fills the `smoke`, `feature` and `full` quality profiles without overwriting profiles the user edited. `jotta doctor` warns when a profile can be filled or has no commands.
 - The PRD excerpt in a task's context packet now keeps only the feature's own table row, section, list items and paragraphs, so a neighboring feature no longer raises the task's risk or enters its context.
 - Adds `jotta adapter codex`, also run by `jotta install`, which generates `.codex/hooks.json`, `.codex/config.toml`, a custom agent per harness role and skill entries under `.agents/skills/`. `jotta hook` gains `--agent codex`, which answers in the Codex hook protocol and checks every file of an `apply_patch`. The installer adds `.codex/` and `.agents/` to the Git exclusions.
+- Adds `jotta adapter opencode`, also run by `jotta install`, which generates `.opencode/opencode.jsonc` with permission rules from the policy deny list, a subagent per harness role and skill entries under `.opencode/skills/`. The installer adds `.opencode/` to the Git exclusions.
 
 ## 0.5.0
 
