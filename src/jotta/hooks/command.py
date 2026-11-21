@@ -22,7 +22,7 @@ from typing import TextIO
 
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
 from jotta.core.state import JSONDict, now
-from jotta.hooks import completion, scope, smoke
+from jotta.hooks import completion, policy, scope, smoke
 from jotta.hooks.guard import Decision, evaluate
 from jotta.hooks.payload import expand
 
@@ -33,6 +33,7 @@ EVENTS = ("pre-tool-use", "post-tool-use", "stop")
 AGENTS = ("claude", "codex")
 LOG_NAME = "hooks.jsonl"
 MAX_LOGGED_CHARS = 500
+EDIT_TOOLS = {"Edit", "MultiEdit", "Write", "NotebookEdit"}
 
 
 @dataclass(frozen=True)
@@ -85,11 +86,41 @@ def try_log(paths: ProjectPaths, event: str, payload: JSONDict, decision: Decisi
         print(f"jotta hook: could not write the hook log: {exc}", file=sys.stderr)
 
 
+def session(payload: JSONDict) -> str | None:
+    value = payload.get("session_id")
+    return str(value) if value else None
+
+
+def touches_snapshot(event: JSONDict, paths: ProjectPaths) -> bool:
+    """Whether a file tool call targets the session's policy snapshot."""
+    tool_input = event.get("tool_input")
+    if event.get("tool_name") not in EDIT_TOOLS or not isinstance(tool_input, dict):
+        return False
+    target = str(tool_input.get("file_path") or "")
+    if not target:
+        return False
+    cwd = Path(str(event.get("cwd") or paths.root))
+    return (cwd / target).resolve() == policy.snapshot_path(paths).resolve()
+
+
+def policy_answer(payload: JSONDict, paths: ProjectPaths) -> Answer | None:
+    """Block an edit of the policy snapshot, or report once per session that a pinned file differs on disk."""
+    for event in expand(payload):
+        if touches_snapshot(event, paths):
+            decision = Decision(False, "edit-policy-snapshot", "the hooks' policy snapshot is not editable")
+            try_log(paths, "pre-tool-use", event, decision)
+            return Answer("block", f"Blocked by the Jotta policy ({decision.rule}): {decision.reason}.")
+    messages = policy.unreported_divergence(paths, session(payload))
+    if messages:
+        return Answer("warn", f"Jotta warning (policy-not-committed): {'; '.join(messages)}.")
+    return None
+
+
 def stop(payload: JSONDict, paths: ProjectPaths | None) -> Answer:
     """Refuse to end the turn while the active task lacks a passing quality receipt."""
     if paths is None:
         return ALLOW
-    outcome = completion.before_stop(paths)
+    outcome = completion.before_stop(paths, policy.load_gates(paths, session(payload)))
     if outcome.status not in {"blocked", "released-blocked"}:
         return ALLOW
     allowed = outcome.status == "released-blocked"
@@ -104,8 +135,9 @@ def post_tool_use(payload: JSONDict, paths: ProjectPaths | None) -> Answer:
     """Run the post-edit quality profile once for the edited files; a failure goes back to the agent."""
     if paths is None:
         return ALLOW
+    gates = policy.load_gates(paths, session(payload))
     for event in expand(payload):
-        outcome = smoke.after_edit(event, paths)
+        outcome = smoke.after_edit(event, paths, gates=gates)
         if outcome.status == "failed":
             return Answer("block", outcome.message or "the post-edit quality profile failed")
         if outcome.status != "ignored":
@@ -127,7 +159,10 @@ def pre_tool_use(payload: JSONDict, root: Path, paths: ProjectPaths | None) -> A
         if not decision.allowed:
             return Answer("block", f"Blocked by the Jotta policy ({decision.rule}): {decision.reason}.")
         warning = warning or Answer("warn", f"Jotta warning ({decision.rule}): {decision.reason}.")
-    return warning or ALLOW
+    pinned = policy_answer(payload, paths) if paths is not None else None
+    if pinned is not None and pinned.action == "block":
+        return pinned
+    return warning or pinned or ALLOW
 
 
 def render(answer: Answer, event: str, agent: str) -> int:

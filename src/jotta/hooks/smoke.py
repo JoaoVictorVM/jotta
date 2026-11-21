@@ -28,8 +28,8 @@ class SmokeOutcome:
     message: str | None = None
 
 
-def settings(paths: ProjectPaths) -> JSONDict:
-    configured = load_json(paths.gates, {}).get("post_edit") or {}
+def settings(paths: ProjectPaths, gates: JSONDict | None = None) -> JSONDict:
+    configured = (load_json(paths.gates, {}) if gates is None else gates).get("post_edit") or {}
     return {**DEFAULT_SETTINGS, **configured}
 
 
@@ -56,8 +56,13 @@ def failure_message(result: JSONDict) -> str:
     return "\n".join(lines)
 
 
-def after_edit(payload: JSONDict, paths: ProjectPaths, clock: float | None = None) -> SmokeOutcome:
-    """Run the post-edit profile for an edit event, honoring the debounce window."""
+def after_edit(
+    payload: JSONDict, paths: ProjectPaths, clock: float | None = None, gates: JSONDict | None = None
+) -> SmokeOutcome:
+    """Run the post-edit profile for an edit event, honoring the debounce window.
+
+    ``gates`` is the configuration the hooks pin; without it the file on disk is read.
+    """
     tool_input = payload.get("tool_input")
     if payload.get("tool_name") not in EDIT_TOOLS or not isinstance(tool_input, dict):
         return SmokeOutcome("ignored")
@@ -67,9 +72,10 @@ def after_edit(payload: JSONDict, paths: ProjectPaths, clock: float | None = Non
     current = time.time() if clock is None else clock
     state = load_json(state_path(paths), {})
     state["last_edit_at"] = current
-    config = settings(paths)
+    gates = load_json(paths.gates, {}) if gates is None else gates
+    config = settings(paths, gates)
     profile = str(config["profile"])
-    commands = load_json(paths.gates, {}).get("profiles", {}).get(profile)
+    commands = gates.get("profiles", {}).get(profile)
     if not commands:
         write_json_atomic(state_path(paths), state)
         return SmokeOutcome("not-configured")
@@ -81,7 +87,7 @@ def after_edit(payload: JSONDict, paths: ProjectPaths, clock: float | None = Non
         write_json_atomic(state_path(paths), state)
         return SmokeOutcome("debounced")
 
-    result, code = execute_profile(paths, profile)
+    result, code = execute_profile(paths, profile, gates=gates)
     write_json_atomic(
         state_path(paths),
         {

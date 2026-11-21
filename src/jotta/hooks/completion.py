@@ -33,8 +33,8 @@ class StopOutcome:
     message: str | None = None
 
 
-def settings(paths: ProjectPaths) -> JSONDict:
-    configured = load_json(paths.gates, {}).get("completion") or {}
+def settings(paths: ProjectPaths, gates: JSONDict | None = None) -> JSONDict:
+    configured = (load_json(paths.gates, {}) if gates is None else gates).get("completion") or {}
     profiles = {**DEFAULT_COMPLETION["profiles"], **(configured.get("profiles") or {})}
     return {**DEFAULT_COMPLETION, **configured, "profiles": profiles}
 
@@ -73,6 +73,11 @@ def stop_state_path(paths: ProjectPaths) -> Path:
 def missing_message(task: str, required: str, receipt: JSONDict | None) -> str:
     if receipt is None:
         problem = f"has no `{required}` quality receipt since it was prepared or since its last code edit"
+    elif receipt.get("status") in ACCEPTED_STATUSES:
+        problem = (
+            f"has a `{receipt.get('profile')}` quality receipt whose commands differ from the committed quality "
+            "gates; an uncommitted edit to gates.json does not change the required checks"
+        )
     else:
         problem = f"has a `{receipt.get('profile')}` quality receipt with status `{receipt.get('status')}`"
     return "\n".join(
@@ -84,15 +89,27 @@ def missing_message(task: str, required: str, receipt: JSONDict | None) -> str:
     )
 
 
-def before_stop(paths: ProjectPaths) -> StopOutcome:
-    """Decide whether the agent may stop now."""
+def ran_pinned_commands(receipt: JSONDict, gates: JSONDict) -> bool:
+    """Whether a receipt ran exactly the commands its profile has in the gates the hooks enforce."""
+    expected = (gates.get("profiles") or {}).get(receipt.get("profile")) or []
+    ran = [item.get("command") for item in receipt.get("commands") or [] if isinstance(item, dict)]
+    return ran == expected
+
+
+def before_stop(paths: ProjectPaths, gates: JSONDict | None = None) -> StopOutcome:
+    """Decide whether the agent may stop now.
+
+    ``gates`` is the configuration the hooks pin; without it the file on disk is read. A receipt whose commands
+    differ from the pinned profile, for example after an uncommitted edit that emptied it, does not count.
+    """
     active = active_packet(paths)
     if active is None:
         return StopOutcome("no-task")
     run, _packet = active
     if run.get("status") not in ACTIVE_STATUSES or run.get("stage") not in ACTIVE_STAGES:
         return StopOutcome("no-task")
-    config = settings(paths)
+    gates = load_json(paths.gates, {}) if gates is None else gates
+    config = settings(paths, gates)
     task = str(run.get("current_task"))
     required = config["profiles"].get(str(run.get("profile")))
     if not required:
@@ -105,7 +122,7 @@ def before_stop(paths: ProjectPaths) -> StopOutcome:
     receipt = found[0] if found else None
 
     stop_state = load_json(stop_state_path(paths), {})
-    if receipt is not None and receipt.get("status") in ACCEPTED_STATUSES:
+    if receipt is not None and receipt.get("status") in ACCEPTED_STATUSES and ran_pinned_commands(receipt, gates):
         write_json_atomic(stop_state_path(paths), {"task": task, "blocks": 0})
         return StopOutcome("satisfied")
 

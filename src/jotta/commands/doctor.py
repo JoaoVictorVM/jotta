@@ -10,6 +10,7 @@ from jotta.commands import adapter
 from jotta.core.context import profile_token_estimates
 from jotta.core.paths import ProjectPaths
 from jotta.core.state import load_json
+from jotta.hooks import policy
 from jotta.isolation import orca
 from jotta.quality import detect
 from jotta.routing import router
@@ -66,6 +67,7 @@ def run(paths: ProjectPaths) -> int:
     except (OSError, ValueError, KeyError) as exc:
         errors.append(f"model routing unavailable: {exc}")
     warnings.extend(detect.doctor_warnings(paths))
+    warnings.extend(policy.doctor_warnings(paths))
     errors.extend(profile_permission_errors(paths))
     missing_hooks = claude.missing_hooks(paths)
     if missing_hooks:

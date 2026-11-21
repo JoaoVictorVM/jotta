@@ -36,9 +36,14 @@ def compact(text: str, limit: int = 40) -> list[str]:
     return selected
 
 
-def execute_profile(paths: ProjectPaths, profile: str, max_lines: int = 40) -> tuple[JSONDict, int]:
-    """Run every command of a quality profile, stopping at the first failure, and write a compact receipt."""
-    data = load_json(paths.gates)
+def execute_profile(
+    paths: ProjectPaths, profile: str, max_lines: int = 40, gates: JSONDict | None = None
+) -> tuple[JSONDict, int]:
+    """Run every command of a quality profile, stopping at the first failure, and write a compact receipt.
+
+    ``gates`` replaces the file on disk, so the hooks run the commands they pin rather than an uncommitted edit.
+    """
+    data = load_json(paths.gates) if gates is None else gates
     profiles = data.get("profiles", {})
     if profile not in profiles:
         return {"status": "invalid", "profile": profile}, EXIT_INVALID_PROFILE
