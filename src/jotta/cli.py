@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jotta import __version__
+from jotta.adapters.permissions import PROFILES
 from jotta.budget import guard
 from jotta.commands import adapter, doctor, gates, install, run, scope, tasks
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
@@ -212,6 +213,9 @@ def _add_adapter_command(subparsers: SubParsers) -> None:
     adapter_parser = subparsers.add_parser("adapter", help="Generate the native configuration of a coding agent.")
     adapter_parser.add_argument("agent", choices=sorted(adapter.PLANNERS))
     adapter_parser.add_argument("--dry-run", action="store_true", help="show what would change without writing")
+    adapter_parser.add_argument(
+        "--profile", choices=PROFILES, help="the execution profile whose permissions to generate"
+    )
     adapter_parser.set_defaults(handler=lambda args, paths: adapter.run(paths, args))
 
 

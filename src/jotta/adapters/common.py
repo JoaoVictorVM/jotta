@@ -8,6 +8,7 @@ adapter adds its commands and keeps everything else.
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -98,13 +99,20 @@ def render_json(data: JSONDict) -> str:
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
 
 
-def stage_hooks(plan: AdapterPlan, path: Path, spec: HookSpec, paths: ProjectPaths) -> None:
-    """Plan merging ``spec`` into the JSON hook file at ``path``, or record why it cannot be merged."""
+def stage_hooks(
+    plan: AdapterPlan,
+    path: Path,
+    spec: HookSpec,
+    paths: ProjectPaths,
+    extra: Callable[[JSONDict], JSONDict] | None = None,
+) -> None:
+    """Plan merging ``spec``, and then ``extra``, into the JSON hook file at ``path``, or record why it cannot be."""
     try:
         current = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
         if not isinstance(current, dict):
             raise SettingsError("the file is not a JSON object")
-        stage(plan, path, render_json(merge_hooks(current, spec)), owned=True)
+        merged = merge_hooks(current, spec)
+        stage(plan, path, render_json(extra(merged) if extra else merged), owned=True)
     except (json.JSONDecodeError, SettingsError) as exc:
         plan.error = f"cannot merge {paths.relative(path)}: {exc}"
 

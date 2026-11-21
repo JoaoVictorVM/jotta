@@ -5,7 +5,8 @@ from __future__ import annotations
 import json
 import re
 
-from jotta.adapters import claude, codex, opencode
+from jotta.adapters import claude, codex, opencode, permissions
+from jotta.commands import adapter
 from jotta.core.context import profile_token_estimates
 from jotta.core.paths import ProjectPaths
 from jotta.core.state import load_json
@@ -14,6 +15,22 @@ from jotta.quality import detect
 from jotta.routing import router
 
 SKILL_REFERENCE = re.compile(r"\]\((references/[^)]+)\)")
+
+
+def profile_permission_errors(paths: ProjectPaths) -> list[str]:
+    """Problems in the profile permissions file and the configured execution profile."""
+    errors = []
+    profile = permissions.active_profile(paths)
+    if profile not in permissions.PROFILES:
+        errors.append(f"unknown execution profile in config.yaml: {profile}")
+    source = permissions.source(paths)
+    if source.is_file():
+        try:
+            data = json.loads(source.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return [*errors, f"profile permissions unreadable: {exc}"]
+        errors.extend(f"profile permissions: {error}" for error in permissions.validate(data))
+    return errors
 
 
 def run(paths: ProjectPaths) -> int:
@@ -49,14 +66,22 @@ def run(paths: ProjectPaths) -> int:
     except (OSError, ValueError, KeyError) as exc:
         errors.append(f"model routing unavailable: {exc}")
     warnings.extend(detect.doctor_warnings(paths))
+    errors.extend(profile_permission_errors(paths))
     missing_hooks = claude.missing_hooks(paths)
     if missing_hooks:
         warnings.append(f"Claude Code hooks not configured ({', '.join(missing_hooks)}); run `jotta adapter claude`")
     missing_codex = codex.missing_hooks(paths)
     if missing_codex:
         warnings.append(f"Codex hooks not configured ({', '.join(missing_codex)}); run `jotta adapter codex`")
-    if opencode.missing_config(paths):
+    missing_opencode = opencode.missing_config(paths)
+    if missing_opencode:
         warnings.append("OpenCode permission rules not generated; run `jotta adapter opencode`")
+    reported = {"claude": bool(missing_hooks), "codex": bool(missing_codex), "opencode": missing_opencode}
+    for agent in adapter.outdated(paths):
+        if not reported[agent]:
+            warnings.append(
+                f"{agent} configuration is out of date with the harness or the profile; run `jotta adapter {agent}`"
+            )
     if not orca.available():
         warnings.append("Orca CLI unavailable in this shell; autonomous GitHub worktree launch will stop")
     print("DOCTOR FAILED" if errors else "DOCTOR OK")

@@ -4,6 +4,7 @@ The adapter writes:
 
 - ``.codex/hooks.json`` with the ``jotta hook --agent codex`` commands, merged into any existing hooks;
 - ``.codex/config.toml`` with the approval and sandbox rules, only when the file is absent or was generated;
+- ``.codex/rules/jotta.rules`` with the ``ask`` and ``deny`` shell rules of the active execution profile;
 - ``.codex/agents/<name>.toml`` with one custom agent per role in ``.jotta/agents/``;
 - ``.agents/skills/<name>/SKILL.md`` with one entry per skill in ``.jotta/skills/``, pointing to the canonical file.
 
@@ -27,6 +28,7 @@ from jotta.adapters.common import (
     stage_hooks,
     stage_skills,
 )
+from jotta.adapters.permissions import ShellRules, shell_rules, words
 from jotta.core.paths import ProjectPaths
 
 HOOKS: HookSpec = {
@@ -76,10 +78,42 @@ def config_file(paths: ProjectPaths) -> str:
     return f"# {marker(paths.relative(paths.harness / 'policy' / 'permissions.md'), 'codex')}\n{CONFIG}"
 
 
-def plan_adapter(paths: ProjectPaths) -> AdapterPlan:
+RULE_DECISIONS = {"ask": "prompt", "deny": "forbidden"}
+
+
+def rules_file(paths: ProjectPaths, shell: ShellRules) -> str:
+    """Codex command rules for the active profile.
+
+    Only ``ask`` and ``deny`` become rules: an ``allow`` rule would run the command outside the sandbox, while the
+    ``workspace-write`` sandbox already runs project commands without asking.
+    """
+    lines = [
+        f"# {marker(paths.relative(paths.policy / 'profile-permissions.json'), 'codex')}",
+        f"# profile: {shell.profile}",
+    ]
+    for effect, decision in RULE_DECISIONS.items():
+        for pattern in shell.by_effect()[effect]:
+            lines += [
+                "",
+                "prefix_rule(",
+                f"    pattern = [{', '.join(toml_string(word) for word in words(pattern))}],",
+                f"    decision = {toml_string(decision)},",
+                f"    justification = {toml_string(f'{shell.profile} profile: {pattern}')},",
+                ")",
+            ]
+    return "\n".join([*lines, ""])
+
+
+def plan_adapter(paths: ProjectPaths, profile: str | None = None) -> AdapterPlan:
     """Compute the Codex configuration of a project without touching the disk."""
     plan = AdapterPlan(root=paths.root)
     target = codex_dir(paths)
+    try:
+        shell = shell_rules(paths, profile)
+    except (OSError, ValueError) as exc:
+        plan.error = f"cannot read the profile permissions: {exc}"
+        return plan
+    stage(plan, target / "rules" / "jotta.rules", rules_file(paths, shell))
     stage_hooks(plan, target / "hooks.json", HOOKS, paths)
     stage(plan, target / "config.toml", config_file(paths))
     for source in sorted((paths.harness / "agents").glob("*.md")):
