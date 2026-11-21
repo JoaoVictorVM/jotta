@@ -8,7 +8,7 @@ from pathlib import Path
 from jotta.core.git import in_git, run_git
 from jotta.core.paths import ProjectPaths
 
-LOCAL_PATHS = (".jotta/", ".planning/", ".claude/", ".opencode/", "AGENTS.md", "CLAUDE.md")
+LOCAL_PATHS = (".jotta/", ".planning/", ".claude/", ".codex/", ".agents/", ".opencode/", "AGENTS.md", "CLAUDE.md")
 TEXT_EXTS = {".md", ".txt", ".py", ".js", ".jsx", ".ts", ".tsx", ".json", ".yaml", ".yml"}
 COMMIT_TYPES = "feat|fix|refactor|test|docs|style|perf|build|ci|chore"
 BRANCH_RE = re.compile(rf"^({COMMIT_TYPES})/[a-z0-9]+(?:-[a-z0-9]+)*$")

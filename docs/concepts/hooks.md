@@ -117,4 +117,4 @@ Every block and every warning, including the `Stop` refusals, is appended to `.j
 }
 ```
 
-The `jotta` command must be on the `PATH` of the shell that Claude Code starts. `jotta doctor` warns when one of the hooks is missing. See [Claude Code adapter](./claude-code.md) for the subagents and skills generated next to them.
+The `jotta` command must be on the `PATH` of the shell that Claude Code starts. `jotta doctor` warns when one of the hooks is missing. See [Claude Code adapter](./claude-code.md) for the subagents and skills generated next to them, and [Codex adapter](./codex.md) for the same hooks in Codex, enabled with `--agent codex`.
