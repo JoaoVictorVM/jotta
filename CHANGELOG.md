@@ -29,6 +29,7 @@ All notable changes to this project are recorded here.
 - Adds `.jotta/policy/profile-permissions.json`, with the shell commands `lean`, `strict` and `manual-classic` allow, ask about or deny. The Claude Code, Codex and OpenCode adapters apply the profile set in `config.yaml`, or the one passed with `--profile`, and `jotta doctor` warns when a generated configuration is out of date.
 - The hooks read the quality gates from `HEAD` when they are committed, or from a snapshot taken at the start of the agent session, so an uncommitted edit to `gates.json` does not change the checks until it is committed or a new session starts. A receipt counts at `Stop` only when it ran the pinned commands. The first hook of a session and `jotta doctor` warn when the file on disk differs.
 - Adds `jotta usage`, which reads the local Claude Code and Codex session transcripts and reports input, output, cache read and cache creation tokens per model, agent and task, priced with the new `.jotta/policy/pricing.json`. `jotta prepare`, `checkpoint` and `finish` record the task periods it uses.
+- `jotta prepare` and `jotta checkpoint` measure the run's usage from the agent transcripts and store it in `usage.json` with `measurement: measured`, and the budget guard decides with it. The recorded estimates remain the fallback when nothing can be measured.
 
 ## 0.5.0
 

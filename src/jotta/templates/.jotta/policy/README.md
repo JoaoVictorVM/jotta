@@ -27,6 +27,8 @@ The budget guard combines two independent measures:
 
 The highest known percentage drives the decision. A missing measurement is never presented as a real zero. The source is recorded in `.jotta/runtime/state/usage.json`.
 
+`jotta prepare` and `jotta checkpoint` measure the local execution usage from the agents' session transcripts, priced with `pricing.json`, and store it under `measured`. The recorded estimates are used only when nothing can be measured.
+
 `providers.json` declares the active source. The harness never invents a quota API: when the platform offers a usage tool, the agent queries it and records the percentage with `record`. When it does not, the agent records `unavailable` and only the local execution limits apply, as the policy defines.
 
 ### Commands

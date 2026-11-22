@@ -26,6 +26,7 @@ from jotta.core.state import (
 )
 from jotta.isolation.orca import OrcaError, cleanup, create_worktree
 from jotta.routing import router
+from jotta.telemetry import measure
 from jotta.telemetry.usage import close_period, open_period
 
 PROFILES = {"manual-classic", "lean", "strict"}
@@ -68,6 +69,7 @@ def prepare(paths: ProjectPaths, args: argparse.Namespace) -> int:
     if args.profile not in PROFILES:
         print(json.dumps({"status": "invalid", "error": f"unknown profile {args.profile}"}))
         return EXIT_INVALID
+    measure.refresh(paths, load_json(paths.run, default_run()).get("run_id"))
     try:
         budget, budget_code = guard.check(paths, BUDGET_SCOPES.get(args.scope, "feature"), "before-feature")
     except RECOVERABLE_ERRORS as exc:
@@ -313,6 +315,7 @@ def checkpoint(paths: ProjectPaths, args: argparse.Namespace) -> int:
     write_json_atomic(paths.run, run)
     if args.stage and (args.input_tokens or args.output_tokens):
         record_usage(paths, args.stage, args.input_tokens, args.output_tokens, args.measurement)
+    measure.refresh(paths, run.get("run_id"))
     try:
         budget, code = guard.check(paths, "feature", "after-feature")
     except RECOVERABLE_ERRORS as exc:
