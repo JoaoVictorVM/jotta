@@ -15,6 +15,29 @@ The budget guard combines two independent measures and uses the higher one:
 
 A missing measurement is never reported as zero. The source of the effective percentage is recorded.
 
+### Measured usage
+
+`jotta usage` reads the local session transcripts of the agents and reports the tokens they really used:
+
+```bash
+jotta usage                              # every Claude Code and Codex session of the project
+jotta usage --agent codex                # one agent
+jotta usage --since 2026-11-20T09:00:00Z # usage at or after a time
+jotta usage --session <id>=F03           # assign a whole session to a task
+jotta usage --transcript path/to.jsonl   # read given files instead of searching
+```
+
+| Agent | Transcripts | One record per |
+|---|---|---|
+| Claude Code | `~/.claude/projects/<project>/*.jsonl` and `<session>/subagents/*.jsonl`, or under `CLAUDE_CONFIG_DIR` | API response (`message.id`); the copies of a response with several content blocks count once |
+| Codex | `~/.codex/sessions/<yyyy>/<mm>/<dd>/*.jsonl` whose session ran in the project, or under `CODEX_HOME` | Response (`token_usage_record`), or `token_count` event in older files, skipping repeated totals |
+
+Each record has four separate counts: uncached input, output, cache read and cache creation. Codex counts cached tokens inside its input, so they are subtracted. The report has totals per model, per agent and per task.
+
+The cost comes from `.jotta/policy/pricing.json`, in US dollars per million tokens, keyed by exact model id or by a pattern such as `claude-opus-*`. Jotta ships no prices, since they change: copy them from the provider's price page. A missing cache price uses the input price; a model without prices is listed in `unpriced_models`, and its messages in `unpriced_messages`, never priced at zero.
+
+A message belongs to the task whose period contains it: `jotta prepare` opens a period and `jotta checkpoint` and `jotta finish` close it, in `.jotta/runtime/state/task-periods.json`. `--session` overrides the period for a whole session. Usage outside every period is reported as `unassigned`. The command only reads; the budget guard still uses the recorded usage.
+
 ### Decisions
 
 | Status | Condition | Exit code |
