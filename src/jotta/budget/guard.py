@@ -22,20 +22,44 @@ def reservation_totals(usage: JSONDict) -> JSONDict:
     return totals
 
 
+def recorded_usage(usage: JSONDict) -> tuple[JSONDict, str]:
+    """The run's usage and its measurement: measured from transcripts when available, estimated otherwise.
+
+    Measured input counts uncached input and cache creation; cache reads are left out of the token limit, since a
+    long session rereads its context on every turn, but they are part of the cost. When some measured models have
+    no price, the cost is the higher of the partial measured cost and the recorded estimate.
+    """
+    estimated = {
+        "input_tokens": int(usage.get("input_tokens", 0)),
+        "output_tokens": int(usage.get("output_tokens", 0)),
+        "estimated_cost_usd": float(usage.get("estimated_cost_usd", 0.0)),
+    }
+    measured = usage.get("measured")
+    if usage.get("measurement") != "measured" or not isinstance(measured, dict) or not measured.get("messages"):
+        return estimated, "estimated"
+    cost = float(measured.get("estimated_cost_usd", 0.0))
+    if measured.get("unpriced_messages"):
+        cost = max(cost, estimated["estimated_cost_usd"])
+    values = {
+        "input_tokens": int(measured.get("input_tokens", 0)) + int(measured.get("cache_creation_tokens", 0)),
+        "output_tokens": int(measured.get("output_tokens", 0)),
+        "estimated_cost_usd": cost,
+    }
+    return values, "measured"
+
+
 def execution_percent(policy: JSONDict, usage: JSONDict) -> tuple[float, JSONDict]:
     limits = policy.get("execution_limits", {})
     reserved = reservation_totals(usage)
-    values = {
-        "input_tokens": int(usage.get("input_tokens", 0)) + reserved["input_tokens"],
-        "output_tokens": int(usage.get("output_tokens", 0)) + reserved["output_tokens"],
-        "estimated_cost_usd": float(usage.get("estimated_cost_usd", 0.0)) + reserved["estimated_cost_usd"],
-    }
+    recorded, measurement = recorded_usage(usage)
+    values = {key: recorded[key] + reserved[key] for key in recorded}
     ratios: dict[str, float] = {}
     for key, value in values.items():
         limit = limits.get(key)
         if limit is not None and float(limit) > 0:
             ratios[key] = 100.0 * float(value) / float(limit)
     return max(ratios.values(), default=0.0), {
+        "measurement": measurement,
         "including_reservations": values,
         "limits": limits,
         "percent_by_dimension": ratios,
