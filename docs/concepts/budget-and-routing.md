@@ -11,7 +11,7 @@ The policy lives in `.jotta/policy/budget.json` and the usage in `.jotta/runtime
 The budget guard combines two independent measures and uses the higher one:
 
 - **Provider usage**: the percentage of the provider quota, recorded with `jotta budget record --provider-usage-percent` when the platform exposes it. `.jotta/policy/providers.json` declares where that number comes from. The harness never invents a quota API.
-- **Execution usage**: input tokens, output tokens and estimated cost against the run limits in the policy, including active reservations.
+- **Execution usage**: input tokens, output tokens and estimated cost against the run limits in the policy, including active reservations. It is measured from the agents' transcripts when they are available, and estimated otherwise (see below).
 
 A missing measurement is never reported as zero. The source of the effective percentage is recorded.
 
@@ -36,7 +36,19 @@ Each record has four separate counts: uncached input, output, cache read and cac
 
 The cost comes from `.jotta/policy/pricing.json`, in US dollars per million tokens, keyed by exact model id or by a pattern such as `claude-opus-*`. Jotta ships no prices, since they change: copy them from the provider's price page. A missing cache price uses the input price; a model without prices is listed in `unpriced_models`, and its messages in `unpriced_messages`, never priced at zero.
 
-A message belongs to the task whose period contains it: `jotta prepare` opens a period and `jotta checkpoint` and `jotta finish` close it, in `.jotta/runtime/state/task-periods.json`. `--session` overrides the period for a whole session. Usage outside every period is reported as `unassigned`. The command only reads; the budget guard still uses the recorded usage.
+A message belongs to the task whose period contains it: `jotta prepare` opens a period and `jotta checkpoint` and `jotta finish` close it, in `.jotta/runtime/state/task-periods.json`. `--session` overrides the period for a whole session. Usage outside every period is reported as `unassigned`. The command only reads.
+
+### Measured usage in the budget
+
+`jotta prepare` and `jotta checkpoint` measure the current run before the guard decides: they sum the transcript messages inside the run's task periods and store them in `.jotta/runtime/state/usage.json` under `measured`, with `measurement: measured`. The guard then uses the measured values:
+
+| Limit | Measured value |
+|---|---|
+| `input_tokens` | Uncached input plus cache creation. Cache reads are left out, since a long session rereads its context on every turn. |
+| `output_tokens` | Output tokens. |
+| `estimated_cost_usd` | The priced cost, cache reads included. When a model has no price, the higher of that partial cost and the recorded estimate. |
+
+The estimates recorded with `jotta budget record` or the `--input-tokens` and `--output-tokens` options stay as the fallback: the guard uses them, with `measurement: estimated`, when no message can be measured, for example before the first task of a run, when the agent keeps no transcripts, or when reading them fails. A measurement from an earlier run is discarded. The guard output shows the source in `execution.measurement`.
 
 ### Decisions
 
