@@ -9,6 +9,7 @@ This folder holds the rules that limit execution.
 | `human-gates.md` | Situations that require a human decision |
 | `budget.json` | Budget limits, decision thresholds and checkpoints |
 | `providers.json` | Where each provider's usage comes from |
+| `pricing.json` | Price per million tokens of each model, used by `jotta usage` |
 | `routing.json` | Model tier per task and models per provider |
 
 ## Permissions per profile
