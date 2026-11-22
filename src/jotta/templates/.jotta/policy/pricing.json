@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "currency": "USD",
+  "unit": "per million tokens",
+  "models": {},
+  "notes": {
+    "models": "Map an exact model id, or a pattern such as claude-opus-*, to its prices: input, output, cache_read and cache_write. Copy them from the provider's current price page; Jotta ships no prices because they change.",
+    "example": "Illustrative values only: \"claude-sonnet-*\": {\"input\": 3.0, \"output\": 15.0, \"cache_read\": 0.3, \"cache_write\": 3.75}",
+    "fallback": "A missing cache price uses the input price. A model without prices is reported as unpriced with a null cost."
+  }
+}

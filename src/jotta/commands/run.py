@@ -26,6 +26,7 @@ from jotta.core.state import (
 )
 from jotta.isolation.orca import OrcaError, cleanup, create_worktree
 from jotta.routing import router
+from jotta.telemetry.usage import close_period, open_period
 
 PROFILES = {"manual-classic", "lean", "strict"}
 DONE_STATUSES = {"merged", "completed-local", "completed"}
@@ -211,6 +212,7 @@ def prepare(paths: ProjectPaths, args: argparse.Namespace) -> int:
         write_json_atomic(packet_path, packet)
 
     write_json_atomic(paths.run, run)
+    open_period(paths, str(task["id"]), run.get("run_id"))
     print_json(
         {
             "status": run["status"],
@@ -271,6 +273,7 @@ def finish(paths: ProjectPaths, args: argparse.Namespace) -> int:
         run["worktree"] = None
         run["workers"] = []
     write_json_atomic(paths.run, run)
+    close_period(paths)
     tasks = load_json(paths.tasks, default_tasks())
     for task in tasks.get("tasks", []):
         if task.get("id") == run.get("current_task"):
@@ -300,6 +303,7 @@ def checkpoint(paths: ProjectPaths, args: argparse.Namespace) -> int:
     tasks["updated_at"] = now()
     write_json_atomic(paths.tasks, tasks)
     run.update({"current_task": task_id, "last_checkpoint": now(), "stage": "checkpoint", "updated_at": now()})
+    close_period(paths)
     if args.status in {"blocked", "failed"}:
         run["status"] = args.status
         run["blocker"] = args.blocker
