@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 from jotta import __version__
 from jotta.adapters.permissions import PROFILES
 from jotta.budget import guard
-from jotta.commands import adapter, doctor, gates, install, run, scope, tasks
+from jotta.commands import adapter, doctor, gates, install, run, scope, tasks, usage
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
 from jotta.hooks import command as hook_command
 from jotta.isolation import orca
@@ -209,6 +209,21 @@ def _add_scope_commands(subparsers: SubParsers) -> None:
     allow.add_argument("--reason", required=True)
 
 
+def _add_usage_command(subparsers: SubParsers) -> None:
+    usage_parser = subparsers.add_parser(
+        "usage", help="Measure tokens and cost from the local Claude Code and Codex session transcripts."
+    )
+    usage_parser.add_argument("--agent", choices=["claude", "codex"], action="append", help="only this agent")
+    usage_parser.add_argument(
+        "--transcript", action="append", type=Path, metavar="PATH", help="read this transcript instead of searching"
+    )
+    usage_parser.add_argument("--since", help="only usage at or after this ISO 8601 time")
+    usage_parser.add_argument(
+        "--session", action="append", default=[], metavar="ID=TASK", help="assign every message of a session to a task"
+    )
+    usage_parser.set_defaults(handler=lambda args, paths: usage.run(paths, args))
+
+
 def _add_adapter_command(subparsers: SubParsers) -> None:
     adapter_parser = subparsers.add_parser("adapter", help="Generate the native configuration of a coding agent.")
     adapter_parser.add_argument("agent", choices=sorted(adapter.PLANNERS))
@@ -242,6 +257,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_orca_commands(subparsers)
     _add_scope_commands(subparsers)
     _add_adapter_command(subparsers)
+    _add_usage_command(subparsers)
     _add_hook_command(subparsers)
     return parser
 
