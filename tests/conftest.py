@@ -27,3 +27,11 @@ def project(tmp_path: Path) -> Path:
     shutil.copytree(templates_root(), root, ignore=shutil.ignore_patterns("runtime", "__pycache__"))
     (root / ".planning" / "PRD.md").write_text(PRD, encoding="utf-8")
     return root
+
+
+@pytest.fixture(autouse=True)
+def agent_homes(tmp_path_factory: pytest.TempPathFactory, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Point transcript discovery at empty folders, so no test reads the sessions of the machine running it."""
+    home = tmp_path_factory.mktemp("agent-homes")
+    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(home / "claude"))
+    monkeypatch.setenv("CODEX_HOME", str(home / "codex"))
