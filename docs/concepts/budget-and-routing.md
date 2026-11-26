@@ -36,7 +36,29 @@ Each record has four separate counts: uncached input, output, cache read and cac
 
 The cost comes from `.jotta/policy/pricing.json`, in US dollars per million tokens, keyed by exact model id or by a pattern such as `claude-opus-*`. Jotta ships no prices, since they change: copy them from the provider's price page. A missing cache price uses the input price; a model without prices is listed in `unpriced_models`, and its messages in `unpriced_messages`, never priced at zero.
 
-A message belongs to the task whose period contains it: `jotta prepare` opens a period and `jotta checkpoint` and `jotta finish` close it, in `.jotta/runtime/state/task-periods.json`. `--session` overrides the period for a whole session. Usage outside every period is reported as `unassigned`. The command only reads.
+A message belongs to the task whose period contains it: `jotta prepare` opens a period and `jotta checkpoint` and `jotta finish` close it, in `.jotta/runtime/state/task-periods.json`. The period also records the stage of the role being prepared: `orchestrator` is `planning`, `spec-author` is `spec`, `implementer` is `implementation`, `qa-reviewer` is `quality` and `reviewer` is `review`. `--session` overrides the period for a whole session. Usage outside every period is reported as `unassigned`. The command only reads.
+
+### Cost per feature
+
+`jotta status` shows the current run and where its tokens and cost went, per feature and stage:
+
+```text
+Run: run-f01-20261126225102 (running)
+Task: F03  Stage: implementing  Profile: lean
+
+Usage measured from 1 transcript(s), 1 session(s):
+Feature  Stage           Messages  Input  Output  Cache read  Cache write  Cost USD
+-------  --------------  --------  -----  ------  ----------  -----------  --------
+F01      implementation         2      0   1,500      50,000            0    1.5000
+F01      review                 1      0     200           0            0    0.2000
+F03      implementation         1      0     300           0            0         -
+Total                           4      0   2,000      50,000            0   1.7000*
+No price in pricing.json for gpt-unpriced: cost shown as - when unknown, * when partial.
+
+Budget: continue at 8.5% (execution, measured)
+```
+
+When no transcript of the run can be measured, it shows the estimates recorded per stage instead. `jotta status --json` prints the same data, with `measured.by_task_stage`, `measured.by_task`, `measured.by_model`, the estimated `usage_by_stage` and the budget decision.
 
 ### Measured usage in the budget
 

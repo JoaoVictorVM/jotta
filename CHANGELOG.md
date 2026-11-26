@@ -30,6 +30,7 @@ All notable changes to this project are recorded here.
 - The hooks read the quality gates from `HEAD` when they are committed, or from a snapshot taken at the start of the agent session, so an uncommitted edit to `gates.json` does not change the checks until it is committed or a new session starts. A receipt counts at `Stop` only when it ran the pinned commands. The first hook of a session and `jotta doctor` warn when the file on disk differs.
 - Adds `jotta usage`, which reads the local Claude Code and Codex session transcripts and reports input, output, cache read and cache creation tokens per model, agent and task, priced with the new `.jotta/policy/pricing.json`. `jotta prepare`, `checkpoint` and `finish` record the task periods it uses.
 - `jotta prepare` and `jotta checkpoint` measure the run's usage from the agent transcripts and store it in `usage.json` with `measurement: measured`, and the budget guard decides with it. The recorded estimates remain the fallback when nothing can be measured.
+- `jotta status` shows a table of the run's measured tokens, cache and cost per feature and stage, and the budget decision; `--json` prints the full status. It printed JSON before, so scripts must add `--json`. Task periods record the stage of the prepared role.
 
 ## 0.5.0
 
