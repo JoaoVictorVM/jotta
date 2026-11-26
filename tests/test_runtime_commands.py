@@ -116,7 +116,7 @@ def test_commit_gate_does_not_need_a_project(
 def test_a_fresh_project_starts_without_state_files(project: Path, capsys: pytest.CaptureFixture[str]) -> None:
     state = project / ".jotta" / "runtime" / "state"
     assert not state.exists()
-    code, status = run_json(capsys, "--root", str(project), "status")
+    code, status = run_json(capsys, "--root", str(project), "status", "--json")
     assert code == 0
     assert status["run"]["status"] == "idle"
     code, budget = run_json(capsys, "--root", str(project), "budget", "status")

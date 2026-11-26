@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 from jotta import __version__
 from jotta.adapters.permissions import PROFILES
 from jotta.budget import guard
-from jotta.commands import adapter, doctor, gates, install, run, scope, tasks, usage
+from jotta.commands import adapter, doctor, gates, install, run, scope, status, tasks, usage
 from jotta.core.paths import ProjectNotFoundError, ProjectPaths, find_root
 from jotta.hooks import command as hook_command
 from jotta.isolation import orca
@@ -56,9 +56,9 @@ def _add_lifecycle_commands(subparsers: SubParsers) -> None:
     subparsers.add_parser("doctor", help="Check the harness installation and configuration.").set_defaults(
         handler=lambda _args, paths: doctor.run(paths)
     )
-    subparsers.add_parser("status", help="Show the current run status.").set_defaults(
-        handler=lambda _args, paths: run.status(paths)
-    )
+    status_parser = subparsers.add_parser("status", help="Show the current run, its tokens and cost, and the budget.")
+    status_parser.add_argument("--json", action="store_true", help="print the full status as JSON")
+    status_parser.set_defaults(handler=lambda args, paths: status.run(paths, args.json))
     subparsers.add_parser("validate-prd", help="Validate the PRD feature table.").set_defaults(
         handler=lambda _args, paths: tasks.validate_prd(paths)
     )

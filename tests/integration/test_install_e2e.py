@@ -72,7 +72,7 @@ def test_install_into_a_git_repository_hides_the_harness_and_runs(tmp_path: Path
     for command in (["doctor"], ["models", "validate"], ["validate-prd"], ["sync-tasks"], ["budget", "status"]):
         run = jotta(*command, cwd=project / ".jotta")
         assert run.returncode == 0, (command, run.stdout, run.stderr)
-    status = jotta("status", cwd=project)
+    status = jotta("status", "--json", cwd=project)
     assert json.loads(status.stdout)["run"]["status"] == "idle"
 
 
