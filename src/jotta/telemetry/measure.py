@@ -35,8 +35,8 @@ def inside_periods(timestamp: str, periods: list[tuple[datetime, datetime | None
     return moment is not None and any(start <= moment and (end is None or moment < end) for start, end in periods)
 
 
-def measure_run(paths: ProjectPaths, run_id: str | None) -> JSONDict | None:
-    """The measured usage of the run's task periods, or ``None`` when nothing could be measured."""
+def run_report(paths: ProjectPaths, run_id: str | None) -> JSONDict | None:
+    """The run's measured usage per task and stage, or ``None`` when nothing could be measured."""
     if not run_id:
         return None
     periods = run_periods(paths, run_id)
@@ -52,13 +52,21 @@ def measure_run(paths: ProjectPaths, run_id: str | None) -> JSONDict | None:
     ]
     if not records:
         return None
-    summary = summarize(records, load_pricing(paths))
+    own = [period for period in load_periods(paths) if period.get("run_id") == run_id]
+    return {"transcripts": len(sources), **summarize(records, load_pricing(paths), own)}
+
+
+def measure_run(paths: ProjectPaths, run_id: str | None) -> JSONDict | None:
+    """The measured usage of the run's task periods, or ``None`` when nothing could be measured."""
+    summary = run_report(paths, run_id)
+    if summary is None:
+        return None
     return {
         "run_id": run_id,
         **summary["totals"],
         "unpriced_models": summary["unpriced_models"],
         "by_model": summary["by_model"],
-        "transcripts": len(sources),
+        "transcripts": summary["transcripts"],
         "measured_at": now(),
     }
 

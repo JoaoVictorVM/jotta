@@ -5,7 +5,8 @@ exact model id or a pattern such as ``claude-opus-*``; an exact id wins, then th
 without a price is reported under ``unpriced_models`` with a ``null`` cost: the harness never invents a price.
 
 A record belongs to a task when its session was assigned to that task, or else when its timestamp falls inside one
-of the task's periods, which ``jotta prepare`` opens and ``jotta checkpoint`` and ``jotta finish`` close.
+of the task's periods, which ``jotta prepare`` opens and ``jotta checkpoint`` and ``jotta finish`` close. A period
+also records the stage of the role that ``jotta prepare`` started, such as ``implementation`` or ``review``.
 """
 
 from __future__ import annotations
@@ -83,12 +84,12 @@ def close_open_periods(periods: list[JSONDict], moment: str) -> None:
             period["ended_at"] = moment
 
 
-def open_period(paths: ProjectPaths, task: str, run_id: str | None) -> None:
-    """Start a usage period for ``task``, closing the one before it."""
+def open_period(paths: ProjectPaths, task: str, run_id: str | None, stage: str | None = None) -> None:
+    """Start a usage period for ``task`` in ``stage``, closing the one before it."""
     periods = load_periods(paths)
     moment = now()
     close_open_periods(periods, moment)
-    periods.append({"task": task, "run_id": run_id, "started_at": moment, "ended_at": None})
+    periods.append({"task": task, "stage": stage, "run_id": run_id, "started_at": moment, "ended_at": None})
     write_json_atomic(periods_path(paths), {"schema_version": 1, "periods": periods})
 
 
@@ -100,18 +101,19 @@ def close_period(paths: ProjectPaths) -> None:
         write_json_atomic(periods_path(paths), {"schema_version": 1, "periods": periods})
 
 
-def task_for(record: Usage, periods: list[JSONDict], sessions: dict[str, str]) -> str:
+def task_for(record: Usage, periods: list[JSONDict], sessions: dict[str, str]) -> tuple[str, str]:
+    """The task and stage a record belongs to; a session assigned by hand has no stage."""
     if record.session_id in sessions:
-        return sessions[record.session_id]
+        return sessions[record.session_id], UNASSIGNED
     moment = parse_time(record.timestamp)
     if moment is None:
-        return UNASSIGNED
+        return UNASSIGNED, UNASSIGNED
     for period in reversed(periods):
         start = parse_time(period.get("started_at"))
         end = parse_time(period.get("ended_at"))
         if start is not None and start <= moment and (end is None or moment < end):
-            return str(period.get("task"))
-    return UNASSIGNED
+            return str(period.get("task")), str(period.get("stage") or UNASSIGNED)
+    return UNASSIGNED, UNASSIGNED
 
 
 def empty_totals() -> JSONDict:
@@ -143,6 +145,7 @@ def summarize(
     by_model: dict[str, JSONDict] = {}
     by_agent: dict[str, JSONDict] = {}
     by_task: dict[str, JSONDict] = {}
+    by_task_stage: dict[str, dict[str, JSONDict]] = {}
     unpriced: set[str] = set()
     session_ids: set[str] = set()
     for record in records:
@@ -150,11 +153,12 @@ def summarize(
         value = cost(record, prices) if prices is not None else None
         if value is None:
             unpriced.add(record.model)
-        task = task_for(record, periods or [], sessions or {})
+        task, stage = task_for(record, periods or [], sessions or {})
         for group in (overall, by_model.setdefault(record.model, empty_totals())):
             add(group, record, value)
         add(by_agent.setdefault(record.agent, empty_totals()), record, value)
         add(by_task.setdefault(task, empty_totals()), record, value)
+        add(by_task_stage.setdefault(task, {}).setdefault(stage, empty_totals()), record, value)
         session_ids.add(record.session_id)
     return {
         "sessions": len(session_ids),
@@ -162,5 +166,9 @@ def summarize(
         "by_model": {name: rounded(value) for name, value in sorted(by_model.items())},
         "by_agent": {name: rounded(value) for name, value in sorted(by_agent.items())},
         "by_task": {name: rounded(value) for name, value in sorted(by_task.items())},
+        "by_task_stage": {
+            name: {stage: rounded(value) for stage, value in sorted(stages.items())}
+            for name, stages in sorted(by_task_stage.items())
+        },
         "unpriced_models": sorted(unpriced),
     }
