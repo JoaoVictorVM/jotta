@@ -32,6 +32,7 @@ All notable changes to this project are recorded here.
 - `jotta prepare` and `jotta checkpoint` measure the run's usage from the agent transcripts and store it in `usage.json` with `measurement: measured`, and the budget guard decides with it. The recorded estimates remain the fallback when nothing can be measured.
 - `jotta status` shows a table of the run's measured tokens, cache and cost per feature and stage, and the budget decision; `--json` prints the full status. It printed JSON before, so scripts must add `--json`. Task periods record the stage of the prepared role.
 - Adds an optional OpenTelemetry export: `jotta export-trace`, and `jotta finish` when `telemetry.otel.enabled` is set, send the run's measured usage as an OTLP/HTTP trace with spans per run, feature, stage and model. It is off by default.
+- Adds `evals/`: the `tasks-api` fixture app with a PRD of five features, and seven eval cases in `evals/cases/` covering features, a bug, a refactor and a high-risk authentication task.
 
 ## 0.5.0
 

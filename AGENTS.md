@@ -11,6 +11,7 @@ Instructions for agents working on the Jotta source repository. The harness that
 | `tests/` | pytest suite: `tests/unit/` for modules, the top level for commands and installation |
 | `scripts/` | Repository tooling: public repository and package check |
 | `docs/` | Human documentation |
+| `evals/` | Fixture apps and eval cases that measure agents working with Jotta; do not fix the fixtures' planted problems |
 
 ## Development
 

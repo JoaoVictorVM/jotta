@@ -1,0 +1,15 @@
+id: tasks-api-f03-tags
+title: Tags and the tag filter
+fixture: tasks-api
+kind: feature
+workflow: product
+task: F03
+risk: normal
+depends_on:
+  - tasks-api-f01-status-filter
+prompt: |
+  Implement F03 from the PRD: tags on tasks and the tag filter.
+expected:
+  - A task accepts up to 10 distinct tags of 1 to 30 letters, digits or hyphens, normalized to lowercase.
+  - Invalid tags return 400 and change nothing.
+  - GET /tasks?tag=<tag> lists the tasks with that tag and combines with the done filter and with pagination.
