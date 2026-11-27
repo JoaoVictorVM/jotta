@@ -1,0 +1,14 @@
+[project]
+name = "tasks-api"
+version = "0.1.0"
+description = "A small task API used as the fixture of the Jotta evals."
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
