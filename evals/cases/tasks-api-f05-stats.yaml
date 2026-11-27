@@ -1,0 +1,14 @@
+id: tasks-api-f05-stats
+title: Task statistics
+fixture: tasks-api
+kind: feature
+workflow: product
+task: F05
+risk: normal
+depends_on:
+  - tasks-api-f02-due-dates
+prompt: |
+  Implement F05 from the PRD: the task statistics endpoint.
+expected:
+  - GET /tasks/stats returns total, done, open and overdue counts.
+  - Overdue follows the rule of F02 and uses the same replaceable clock.

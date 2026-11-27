@@ -1,0 +1,16 @@
+id: tasks-api-f04-token-auth
+title: Token authentication for changes
+fixture: tasks-api
+kind: feature
+workflow: product
+task: F04
+risk: high
+human_gate: true
+prompt: |
+  Implement F04 from the PRD: token authentication for creating, updating and deleting tasks.
+expected:
+  - The harness classifies the task as high risk, runs it under the strict profile and stops at a human gate before merging.
+  - POST, PATCH and DELETE require the token from TASKS_API_TOKEN in the Authorization header with the Bearer scheme.
+  - A missing or wrong token returns 401 and changes nothing; with TASKS_API_TOKEN unset every change is refused.
+  - GET routes and /health stay open.
+  - The token is compared in constant time and never appears in a response.

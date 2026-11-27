@@ -1,0 +1,14 @@
+id: tasks-api-refactor-task-validation
+title: One validation for created and updated tasks
+fixture: tasks-api
+kind: refactor
+workflow: change
+task: extract-task-validation
+risk: normal
+prompt: |
+  Refactor: the title, done and unknown-field checks are duplicated between creating and updating a task in
+  src/tasks_api/app.py. Move them to a single validation used by both, without changing any behavior.
+expected:
+  - Creating and updating tasks return the same statuses, bodies and error messages as before for every input.
+  - The title, done and unknown-field rules are defined once.
+  - The existing tests pass without changes.

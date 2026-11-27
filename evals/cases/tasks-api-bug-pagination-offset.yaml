@@ -1,0 +1,15 @@
+id: tasks-api-bug-pagination-offset
+title: The second page repeats and skips tasks after a deletion
+fixture: tasks-api
+kind: bug
+workflow: change
+task: fix-pagination-offset
+risk: normal
+prompt: |
+  Bug report: after I delete a task, paging through GET /tasks repeats one task and never shows another.
+  With tasks a, b, c, d and e, I deleted b. GET /tasks?limit=2 returns a and c, and
+  GET /tasks?limit=2&offset=2 returns c and d instead of d and e. Please fix it.
+expected:
+  - The change records the reproduction, the expected behavior and a regression test.
+  - offset skips that many tasks in list order, whatever their ids, so consecutive pages neither repeat nor skip a task.
+  - total, limit and the validation of limit and offset are unchanged.

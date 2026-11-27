@@ -1,0 +1,15 @@
+id: tasks-api-f02-due-dates
+title: Due dates and overdue tasks
+fixture: tasks-api
+kind: feature
+workflow: product
+task: F02
+risk: normal
+prompt: |
+  Implement F02 from the PRD: due dates and the list of overdue tasks.
+expected:
+  - A task accepts an optional due date in the YYYY-MM-DD format on creation and update, and null removes it.
+  - An invalid date returns 400 and changes nothing.
+  - GET /tasks/overdue lists the open tasks due before today, ordered by due date and then by id.
+  - Today's date comes from a clock that tests can replace.
+  - Due dates survive a restart when the store keeps a JSON file.

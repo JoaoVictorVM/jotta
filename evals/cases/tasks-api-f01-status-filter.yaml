@@ -1,0 +1,14 @@
+id: tasks-api-f01-status-filter
+title: Filter tasks by status
+fixture: tasks-api
+kind: feature
+workflow: product
+task: F01
+risk: normal
+prompt: |
+  Implement F01 from the PRD: filter the task list by status.
+expected:
+  - GET /tasks?done=true lists only completed tasks and GET /tasks?done=false only open ones.
+  - Any other value of done returns 400 with an error message.
+  - The filter combines with limit and offset, and total counts the filtered tasks.
+  - The existing routes and tests keep passing.
