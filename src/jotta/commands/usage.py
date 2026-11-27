@@ -1,4 +1,4 @@
-"""The ``jotta usage`` command: measured tokens and cost of the project's agent sessions."""
+"""The ``jotta usage`` and ``jotta export-trace`` commands: measured tokens, cost and their OTel export."""
 
 from __future__ import annotations
 
@@ -8,10 +8,11 @@ from pathlib import Path
 
 from jotta.core.paths import ProjectPaths
 from jotta.core.state import print_json
-from jotta.telemetry import transcripts
+from jotta.telemetry import otel, transcripts
 from jotta.telemetry.usage import load_periods, load_pricing, parse_time, summarize
 
 EXIT_OK = 0
+EXIT_FAILED = 1
 EXIT_INVALID = 2
 
 
@@ -47,3 +48,10 @@ def run(paths: ProjectPaths, args: argparse.Namespace) -> int:
     summary = summarize(records, pricing, load_periods(paths), sessions)
     print_json({"status": "measured", "measurement": "transcripts", "transcripts": len(sources), **summary})
     return EXIT_OK
+
+
+def export_trace(paths: ProjectPaths, run_id: str | None, dry_run: bool) -> int:
+    """Send a run to the configured OTLP endpoint, or print the payload with ``dry_run``."""
+    result = otel.export_run(paths, run_id, dry_run=dry_run)
+    print_json(result)
+    return EXIT_FAILED if result["status"] == "failed" else EXIT_OK

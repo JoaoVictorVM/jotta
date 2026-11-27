@@ -222,6 +222,12 @@ def _add_usage_command(subparsers: SubParsers) -> None:
         "--session", action="append", default=[], metavar="ID=TASK", help="assign every message of a session to a task"
     )
     usage_parser.set_defaults(handler=lambda args, paths: usage.run(paths, args))
+    export = subparsers.add_parser(
+        "export-trace", help="Export a run's measured usage as an OpenTelemetry trace over OTLP/HTTP."
+    )
+    export.add_argument("--run", dest="run_id", help="run id; defaults to the current run")
+    export.add_argument("--dry-run", action="store_true", help="print the OTLP payload without sending it")
+    export.set_defaults(handler=lambda args, paths: usage.export_trace(paths, args.run_id, args.dry_run))
 
 
 def _add_adapter_command(subparsers: SubParsers) -> None:
