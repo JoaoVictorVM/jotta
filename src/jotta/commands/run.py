@@ -8,7 +8,7 @@ import re
 from datetime import datetime, timezone
 
 from jotta.budget import guard
-from jotta.core.context import estimate_tokens, profile_token_estimates
+from jotta.core.context import estimate_tokens
 from jotta.core.git import in_git, run_git
 from jotta.core.paths import ProjectPaths
 from jotta.core.prd import feature_folder, feature_for, prd_excerpt
@@ -36,6 +36,13 @@ ROLE_ROUTES = {
     "spec-author": "spec-writer",
     "qa-reviewer": "final-qa",
     "orchestrator": "product-orchestrator",
+}
+ROLE_STAGES = {
+    "orchestrator": "planning",
+    "spec-author": "spec",
+    "implementer": "implementation",
+    "qa-reviewer": "quality",
+    "reviewer": "review",
 }
 BUDGET_SCOPES = {"product": "run", "next-wave": "wave"}
 RECOVERABLE_ERRORS = (OSError, ValueError, KeyError)
@@ -214,7 +221,7 @@ def prepare(paths: ProjectPaths, args: argparse.Namespace) -> int:
         write_json_atomic(packet_path, packet)
 
     write_json_atomic(paths.run, run)
-    open_period(paths, str(task["id"]), run.get("run_id"))
+    open_period(paths, str(task["id"]), run.get("run_id"), ROLE_STAGES.get(args.role, "implementation"))
     print_json(
         {
             "status": run["status"],
@@ -325,16 +332,3 @@ def checkpoint(paths: ProjectPaths, args: argparse.Namespace) -> int:
         write_json_atomic(paths.run, run)
     print_json({"status": run["status"], "task": task_id, "task_status": args.status, "budget": budget})
     return code
-
-
-def status(paths: ProjectPaths) -> int:
-    run = load_json(paths.run, default_run())
-    usage = load_json(paths.usage, default_usage())
-    print_json(
-        {
-            "run": run,
-            "usage_by_stage": usage.get("by_stage", {}),
-            "token_estimates": profile_token_estimates(paths.skills),
-        }
-    )
-    return 0
