@@ -14,6 +14,7 @@ from datetime import datetime
 from jotta.core.paths import ProjectPaths
 from jotta.core.state import JSONDict, default_usage, load_json, now, write_json_atomic
 from jotta.telemetry import transcripts
+from jotta.telemetry.transcripts import Usage
 from jotta.telemetry.usage import load_periods, load_pricing, parse_time, summarize
 
 # A transcript last written before the run started holds none of its messages. File times can trail the clock by a
@@ -35,13 +36,13 @@ def inside_periods(timestamp: str, periods: list[tuple[datetime, datetime | None
     return moment is not None and any(start <= moment and (end is None or moment < end) for start, end in periods)
 
 
-def run_report(paths: ProjectPaths, run_id: str | None) -> JSONDict | None:
-    """The run's measured usage per task and stage, or ``None`` when nothing could be measured."""
+def run_records(paths: ProjectPaths, run_id: str | None) -> tuple[int, list[Usage], list[JSONDict]]:
+    """The number of transcripts read, the messages inside the run's task periods, and those periods."""
     if not run_id:
-        return None
+        return 0, [], []
     periods = run_periods(paths, run_id)
     if not periods:
-        return None
+        return 0, [], []
     first = min(start for start, _ in periods).timestamp() - MTIME_TOLERANCE_SECONDS
     sources = [(agent, path) for agent, path in transcripts.discover(paths.root) if path.stat().st_mtime >= first]
     records = [
@@ -50,10 +51,16 @@ def run_report(paths: ProjectPaths, run_id: str | None) -> JSONDict | None:
         for record in transcripts.parse_file(path, agent)
         if inside_periods(record.timestamp, periods)
     ]
+    own = [period for period in load_periods(paths) if period.get("run_id") == run_id]
+    return len(sources), records, own
+
+
+def run_report(paths: ProjectPaths, run_id: str | None) -> JSONDict | None:
+    """The run's measured usage per task and stage, or ``None`` when nothing could be measured."""
+    count, records, own = run_records(paths, run_id)
     if not records:
         return None
-    own = [period for period in load_periods(paths) if period.get("run_id") == run_id]
-    return {"transcripts": len(sources), **summarize(records, load_pricing(paths), own)}
+    return {"transcripts": count, **summarize(records, load_pricing(paths), own)}
 
 
 def measure_run(paths: ProjectPaths, run_id: str | None) -> JSONDict | None:

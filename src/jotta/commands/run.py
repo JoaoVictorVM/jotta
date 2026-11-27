@@ -26,7 +26,7 @@ from jotta.core.state import (
 )
 from jotta.isolation.orca import OrcaError, cleanup, create_worktree
 from jotta.routing import router
-from jotta.telemetry import measure
+from jotta.telemetry import measure, otel
 from jotta.telemetry.usage import close_period, open_period
 
 PROFILES = {"manual-classic", "lean", "strict"}
@@ -293,7 +293,10 @@ def finish(paths: ProjectPaths, args: argparse.Namespace) -> int:
     write_json_atomic(paths.tasks, tasks)
     if args.stage and (args.input_tokens or args.output_tokens):
         record_usage(paths, args.stage, args.input_tokens, args.output_tokens, args.measurement)
-    print_json({"status": args.status, "cleanup": cleanup_result})
+    result: JSONDict = {"status": args.status, "cleanup": cleanup_result}
+    if otel.load_config(paths).enabled:
+        result["trace"] = {key: value for key, value in otel.export_run(paths).items() if key != "payload"}
+    print_json(result)
     return 0
 
 

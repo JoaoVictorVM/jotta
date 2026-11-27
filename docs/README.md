@@ -8,6 +8,7 @@
 - [Guides and sensors](./concepts/guides-and-sensors.md): what steers the agent before it acts and what checks it afterwards.
 - [State machine](./concepts/state-machine.md): runtime files, run and task states, and evidence.
 - [Budget and routing](./concepts/budget-and-routing.md): budget gates and model selection.
+- [OpenTelemetry export](./concepts/opentelemetry.md): a run's measured usage as a trace, with Langfuse and Claude Code setup.
 - [Hooks](./concepts/hooks.md): the checks that run before each tool call and block forbidden actions.
 - [Claude Code adapter](./concepts/claude-code.md): the settings, subagents and skills generated under `.claude/`.
 - [Codex adapter](./concepts/codex.md): the hooks, config, agents and skills generated for Codex, and the parity with Claude Code.
